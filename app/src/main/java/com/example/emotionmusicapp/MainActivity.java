@@ -89,18 +89,6 @@ public class MainActivity extends AppCompatActivity {
         setMainGreetingText();
     }
 
-    // set the animation for each control
-    public void setControlAnimation() {
-        appNameAndIconAni = AnimationUtils.loadAnimation(this, R.anim.instruction_icon_ani);
-        appNameAndIcon.startAnimation(appNameAndIconAni);
-
-        appNameAndIconAni = AnimationUtils.loadAnimation(this, R.anim.icon_menu_ani);
-        iconMenu.startAnimation(appNameAndIconAni);
-
-        startButtonAni = AnimationUtils.loadAnimation(this, R.anim.start_button_ani);
-        startButton.startAnimation(startButtonAni);
-    }
-
     // get the system time to set the greeting text
     public void setMainGreetingText() {
         Date currentTime = Calendar.getInstance().getTime();
@@ -114,14 +102,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    // set the animation for each control
+    public void setControlAnimation() {
+        appNameAndIconAni = AnimationUtils.loadAnimation(this, R.anim.instruction_icon_ani);
+        appNameAndIcon.startAnimation(appNameAndIconAni);
+
+        appNameAndIconAni = AnimationUtils.loadAnimation(this, R.anim.icon_menu_ani);
+        iconMenu.startAnimation(appNameAndIconAni);
+
+        startButtonAni = AnimationUtils.loadAnimation(this, R.anim.start_button_ani);
+        startButton.startAnimation(startButtonAni);
+    }
+
     // event for main screen touch to begin setting animation for all control
     public void onMainScreenTouchListener(View view) {
-        mainScreenBackground.animate().translationY(-670).setDuration(800).setStartDelay(300);
+        mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
 
         //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
-        cloverImg.animate().translationX(-1000).setDuration(800).setStartDelay(600);
+        cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);
 
-        appMainGreeting.animate().translationY(140).alpha(0).setDuration(800).setStartDelay(300);
+        appMainGreeting.animate().translationY(140).alpha(0).setDuration(500).setStartDelay(300);
 
         appNameAndIcon.setVisibility(View.VISIBLE);
         iconMenu.setVisibility(View.VISIBLE);

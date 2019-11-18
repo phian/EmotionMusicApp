@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">EmotionMusicApp</string>
+    <string name="main_greeting">Good Morning</string>
+    <string name="app_alert">(Touch screen to continue)</string>
+    <string name="about_us">About Us</string>
+    <string name="emotion_music_app_name">EMOTION MUSIC</string>
+    <string name="how_to_use_icon_text">How To Use</string>
+    <string name="enjoy_the_music_button">Enjoy The Music</string>
+    <string name="cry_icon_text">Cry</string>
+    <string name="sick_icon_text">Sick</string>
+    <string name="angry_icon_text">Angry</string>
+    <string name="happy_icon_text">Happy</string>
+    <string name="love_icon_text">Love</string>
+    <string name="boring_icon_text">Boring</string>
+    <string name="sad_icon_text">Sad</string>
+</resources>

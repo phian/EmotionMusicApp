@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainScreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    tools:context=".ChooseEmotionActivity">
+
+<!--    <LinearLayout-->
+<!--        android:translationY="-535dp"-->
+<!--        android:id="@+id/chooseEmotionMainBackGround"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@android:color/transparent">-->
+
+<!--        -->
+
+<!--    </LinearLayout>-->
+
+    <ImageView
+        android:id="@+id/chooseEmotionMainBackGround"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:id="@+id/iconScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/iconScrollViewLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/happyAndLoveIcLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:layout_marginTop="100dp"
+                        android:id="@+id/happyEarthEmotion"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/happy_earth_emotion" />
+
+                    <ImageView
+                        android:layout_marginTop="100dp"
+                        android:id="@+id/loveEarthEmotion"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:layout_marginLeft="150dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/love_earth_emotion" />
+
+                    <TextView
+                        android:id="@+id/happyEmotionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/happyEarthEmotion"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginTop="-30dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/happy_icon_text"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/loveEmotionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/loveEarthEmotion"
+                        android:layout_marginLeft="205dp"
+                        android:layout_marginTop="-30dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/love_icon_text"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/white"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sadAndBoredIcLay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:layout_marginTop="-15dp"
+                        android:id="@+id/sadEarthEmotion"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sad_earth_emotion" />
+
+                    <ImageView
+                        android:layout_marginTop="-15dp"
+                        android:id="@+id/boringEarthEmotion"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:layout_marginLeft="150dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/boring_earth_emotion" />
+
+                    <TextView
+                        android:id="@+id/sadEmotionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/sadEarthEmotion"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="-30dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/sad_icon_text"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/boringEmotionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/boringEarthEmotion"
+                        android:layout_marginLeft="200dp"
+                        android:layout_marginTop="-30dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/boring_icon_text"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/white"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cryAndSickIcLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:layout_marginTop="-15dp"
+                        android:id="@+id/cryEarthEmotion"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/cry_earth_emotion" />
+
+                    <ImageView
+                        android:layout_marginTop="-15dp"
+                        android:id="@+id/sickEarthEmotion"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:layout_marginLeft="150dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/sick_earth_emotion" />
+
+                    <TextView
+                        android:id="@+id/cryEmotionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/cryEarthEmotion"
+                        android:layout_marginLeft="65dp"
+                        android:layout_marginTop="-30dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/cry_icon_text"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/sickEmotionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/sickEarthEmotion"
+                        android:layout_marginLeft="210dp"
+                        android:layout_marginTop="-30dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/sick_icon_text"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/white"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/angryIconLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:layout_marginTop="-15dp"
+                        android:id="@+id/angryEarthEmotion"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/angry_earth_emotion" />
+
+                    <TextView
+                        android:id="@+id/angryEmotionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/angryEarthEmotion"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginTop="-30dp"
+                        android:background="@android:color/transparent"
+                        android:text="@string/angry_icon_text"
+                        android:textSize="25sp"
+                        android:textColor="@android:color/white"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/questionLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:elevation="6dp">
+
+        <TextView
+            android:layout_marginTop="0dp"
+            android:id="@+id/questionText"
+            android:layout_width="match_parent"
+            android:layout_height="115dp"
+            android:elevation="6dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:text="How Do You
+                          Feel Today?"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+</AbsoluteLayout>

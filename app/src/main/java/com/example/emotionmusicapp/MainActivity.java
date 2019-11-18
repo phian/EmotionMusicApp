@@ -154,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
                 howToUseTV.animate().translationX(80).alpha(0).setDuration(200).setStartDelay(0);
                 appName.animate().alpha(0).setDuration(100).setStartDelay(0);
                 startButton.animate().translationY(100).alpha(0).setDuration(200).setStartDelay(0);
-
             }
 
             @Override

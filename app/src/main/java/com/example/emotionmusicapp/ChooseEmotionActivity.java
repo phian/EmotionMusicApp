@@ -156,7 +156,7 @@ public class ChooseEmotionActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // set background for question text after finish all animation
+                // set background for question text after finish all animation to make a square for emotion icon
                 questionText = (TextView) findViewById(R.id.questionText);
 
                 Bitmap mainBackgroundBmp = ((BitmapDrawable) mainBackGround.getDrawable()).getBitmap();

@@ -172,6 +172,7 @@ public class ChooseEmotionActivity extends AppCompatActivity {
         });
     }
 
+    // check current day is which day of the werk to set the correct background
     public void setChooseEmotionScreenBackground() {
         switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
             case Calendar.MONDAY:

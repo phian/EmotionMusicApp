@@ -169,4 +169,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void onAboutUsClickListener(View view) {
+
+    }
 }

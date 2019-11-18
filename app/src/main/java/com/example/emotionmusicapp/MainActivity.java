@@ -2,8 +2,11 @@ package com.example.emotionmusicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView mainScreenBackground, cloverImg, aboutUsIcon, howToUseIcon;
 
-    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay;
+    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout;
     AbsoluteLayout mainScreen;
 
     Button startButton;
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         appNameAndIcon = (LinearLayout) findViewById(R.id.appNameAndInstructionIcon);
         iconMenu = (LinearLayout) findViewById(R.id.instructionIconLayout);
         startAppButLay = (LinearLayout) findViewById(R.id.startAppButtonLay);
+        instructionIconLayout = (LinearLayout) findViewById(R.id.instructionIconLayout);
 
         appNameAndIcon.setVisibility(View.INVISIBLE);
         iconMenu.setVisibility(View.INVISIBLE);
@@ -131,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
         setControlAnimation();
 
         mainScreen.setOnClickListener(null); // disable touch event after finish the animation
+
+        onAboutUsAndHowToUseIconTouchListener();
     }
 
     @Override
@@ -170,7 +176,37 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void onAboutUsClickListener(View view) {
+    @SuppressLint("ClickableViewAccessibility")
+    public void onAboutUsAndHowToUseIconTouchListener() {
+        aboutUsIcon.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this , R.anim.icon_zoom_out_ani);
+                instructionIconLayout.startAnimation(appNameAndIconAni);
 
+                appName.animate().alpha(0).setDuration(100).setStartDelay(0);
+                startButton.animate().translationY(100).alpha(0).setDuration(200).setStartDelay(0);
+                mainScreenBackground.animate().translationY(mainScreenBackground.getY() - 150).alpha(0).setDuration(200).setStartDelay(0);
+
+                aboutUsIcon.setOnTouchListener(null);
+                return false;
+            }
+        });
+
+        howToUseIcon.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this , R.anim.icon_zoom_out_ani);
+                instructionIconLayout.startAnimation(appNameAndIconAni);
+
+                appName.animate().alpha(0).setDuration(100).setStartDelay(0);
+                startButton.animate().translationY(100).alpha(0).setDuration(200).setStartDelay(0);
+                mainScreenBackground.animate().translationY(mainScreenBackground.getY() - 150).alpha(0).setDuration(200).setStartDelay(0);
+
+                howToUseIcon.setOnTouchListener(null);
+
+                return false;
+            }
+        });
     }
 }

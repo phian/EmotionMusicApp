@@ -3,7 +3,6 @@ package com.example.emotionmusicapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -189,6 +188,13 @@ public class MainActivity extends AppCompatActivity {
                 mainScreenBackground.animate().translationY(mainScreenBackground.getY() - 150).alpha(0).setDuration(200).setStartDelay(0);
 
                 aboutUsIcon.setOnTouchListener(null);
+                howToUseIcon.setOnTouchListener(null);
+                startButton.setOnClickListener(null);
+
+                Intent startAboutUsActivity = new Intent(MainActivity.this, ShowingAboutUsActivity.class);
+                startActivity(startAboutUsActivity);
+                finish();
+
                 return false;
             }
         });
@@ -204,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
                 mainScreenBackground.animate().translationY(mainScreenBackground.getY() - 150).alpha(0).setDuration(200).setStartDelay(0);
 
                 howToUseIcon.setOnTouchListener(null);
+                startButton.setOnClickListener(null);
+                aboutUsIcon.setOnClickListener(null);
 
                 return false;
             }

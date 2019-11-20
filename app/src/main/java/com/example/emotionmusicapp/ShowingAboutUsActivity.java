@@ -2,15 +2,22 @@ package com.example.emotionmusicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.widget.AbsoluteLayout;
 
 public class ShowingAboutUsActivity extends AppCompatActivity {
 
     AbsoluteLayout aboutUsActivityScreenLay;
+
+    public boolean isFinished;
 
     Animation showingAboutUsScreenAni;
 
@@ -25,9 +32,6 @@ public class ShowingAboutUsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_showing_about_us);
 
         castControl();
-
-//        showingAboutUsScreenAni = AnimationUtils.loadAnimation(ShowingAboutUsActivity.this, R.anim.slide_up_screen_ani);
-//        aboutUsActivityScreenLay.startAnimation(showingAboutUsScreenAni);
     }
 
     // cast all the control that need to interact in current activity
@@ -39,11 +43,19 @@ public class ShowingAboutUsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        isFinished = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        isFinished = false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -51,5 +63,9 @@ public class ShowingAboutUsActivity extends AppCompatActivity {
         super.finish();
 
         overridePendingTransition(0, R.anim.slide_down_screen_ani);
+        isFinished = true;
+
+//        Intent startMainActivity = new Intent(ShowingAboutUsActivity.this, MainActivity.class);
+//        startActivity(startMainActivity);
     }
 }

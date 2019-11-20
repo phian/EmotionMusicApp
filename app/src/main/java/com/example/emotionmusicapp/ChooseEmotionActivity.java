@@ -68,7 +68,7 @@ public class ChooseEmotionActivity extends AppCompatActivity {
         super.finish();
 
         // add animation when user back to previous screen
-        Intent startMainActivity = new Intent(this, MainActivity.class);
+        Intent startMainActivity = new Intent(ChooseEmotionActivity.this, MainActivity.class);
         startActivity(startMainActivity);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }

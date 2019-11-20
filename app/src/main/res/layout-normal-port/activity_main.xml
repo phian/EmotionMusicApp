@@ -181,18 +181,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:translationY="534dp"
-        android:id="@+id/activityShowingUsScreenLay">
-
-        <include layout="@layout/activity_showing_about_us"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent" />
-
-    </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/aboutUsHeaderTextLay"
         android:layout_width="match_parent"
@@ -221,5 +209,17 @@
             android:layout_alignRight="@id/aboutUsHeaderText"/>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="534dp"
+        android:id="@+id/activityShowingUsScreenLay">
+
+        <include layout="@layout/activity_showing_about_us"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
 
 </AbsoluteLayout>

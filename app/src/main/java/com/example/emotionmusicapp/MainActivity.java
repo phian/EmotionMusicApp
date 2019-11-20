@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView mainScreenBackground, cloverImg, aboutUsIcon, howToUseIcon;
 
-    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, showingAboutUsMaibScreeLay;
+    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, showingAboutUsMainScreeLay;
     AbsoluteLayout mainScreen;
 
     Button startButton;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         iconMenu = (LinearLayout) findViewById(R.id.instructionIconLayout);
         startAppButLay = (LinearLayout) findViewById(R.id.startAppButtonLay);
         instructionIconLayout = (LinearLayout) findViewById(R.id.instructionIconLayout);
-        showingAboutUsMaibScreeLay = (LinearLayout) findViewById(R.id.aboutUsActivityScreenLay);
+        showingAboutUsMainScreeLay = (LinearLayout) findViewById(R.id.activityShowingUsScreenLay);
 
         appNameAndIcon.setVisibility(View.INVISIBLE);
         iconMenu.setVisibility(View.INVISIBLE);
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(startAboutUsActivity);
 //                finish();
 
-                showingAboutUsMaibScreeLay.animate().translationY(100).setDuration(300).setStartDelay(0);
+                showingAboutUsMainScreeLay.animate().translationY(100).setDuration(300).setStartDelay(0);
 
                 return false;
             }

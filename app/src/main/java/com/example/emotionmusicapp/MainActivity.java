@@ -3,6 +3,7 @@ package com.example.emotionmusicapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -26,13 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView mainScreenBackground, cloverImg, aboutUsIcon, howToUseIcon;
 
-    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, showingAboutUsMainScreeLay;
+    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout;
     AbsoluteLayout mainScreen;
+    RelativeLayout aboutUsHeaderTextLay;
 
     Button startButton;
     TextView mainGreetingTV, aboutUsTV, howToUseTV, appName;
 
-    Animation appNameAndIconAni, startButtonAni;
+    Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +78,14 @@ public class MainActivity extends AppCompatActivity {
         iconMenu = (LinearLayout) findViewById(R.id.instructionIconLayout);
         startAppButLay = (LinearLayout) findViewById(R.id.startAppButtonLay);
         instructionIconLayout = (LinearLayout) findViewById(R.id.instructionIconLayout);
-        showingAboutUsMainScreeLay = (LinearLayout) findViewById(R.id.activityShowingUsScreenLay);
 
         appNameAndIcon.setVisibility(View.INVISIBLE);
         iconMenu.setVisibility(View.INVISIBLE);
         startAppButLay.setVisibility(View.INVISIBLE);
 
         mainScreen = (AbsoluteLayout) findViewById(R.id.mainScreen);
+
+        aboutUsHeaderTextLay = (RelativeLayout) findViewById(R.id.aboutUsHeaderTextLay);
 
         startButton = (Button) findViewById(R.id.startAppButton);
 
@@ -176,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // event for About Us and How To Use icon
     @SuppressLint("ClickableViewAccessibility")
     public void onAboutUsAndHowToUseIconTouchListener() {
         aboutUsIcon.setOnTouchListener(new View.OnTouchListener() {
@@ -192,11 +197,13 @@ public class MainActivity extends AppCompatActivity {
                 howToUseIcon.setOnTouchListener(null);
                 startButton.setOnClickListener(null);
 
-//                Intent startAboutUsActivity = new Intent(MainActivity.this, ShowingAboutUsActivity.class);
-//                startActivity(startAboutUsActivity);
-//                finish();
+                aboutUsHeaderTextLay.setAlpha(1);
+                aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_down_control_ani);
+                aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
-                showingAboutUsMainScreeLay.animate().translationY(100).setDuration(300).setStartDelay(0);
+                Intent startAboutUsActivity = new Intent(MainActivity.this, ShowingAboutUsActivity.class);
+                startActivity(startAboutUsActivity);
+                overridePendingTransition(R.anim.slide_up_screen_ani, 0);
 
                 return false;
             }

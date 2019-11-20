@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ShowingAboutUsActivity"
     android:background="@color/startButtonTextColor"
-    android:id="@+id/aboutUsScreenMainLay">
+    android:id="@+id/aboutUsScreenMainLay"
+    android:layout_marginTop="64dp">
 
     <LinearLayout
         android:id="@+id/aboutUsActivityScreenLay"

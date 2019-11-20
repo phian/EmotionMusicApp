@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShowingAboutUsActivity"
+    android:background="@color/startButtonTextColor"
+    android:id="@+id/aboutUsScreenMainLay">
+
+    <LinearLayout
+        android:id="@+id/aboutUsActivityScreenLay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="false"
+        android:orientation="vertical"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/aboutUsInfoLay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/aboutUsInfoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="App nghe nhạc xịn xò của sinh viên UIT =)))"
+                android:textSize="30sp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</AbsoluteLayout>

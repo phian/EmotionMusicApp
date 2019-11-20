@@ -181,4 +181,45 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="534dp"
+        android:id="@+id/activityShowingUsScreenLay">
+
+        <include layout="@layout/activity_showing_about_us"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/aboutUsHeaderTextLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:alpha="0">
+
+        <TextView
+            android:id="@+id/aboutUsHeaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="About Us"
+            android:textSize="40sp"
+            android:gravity="center"
+            android:textColor="@android:color/black"/>
+
+        <ImageButton
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="7dp"
+            android:id="@+id/dropDownScreenButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/drop_down_screen_button"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
+            android:layout_alignRight="@id/aboutUsHeaderText"/>
+
+    </RelativeLayout>
+
 </AbsoluteLayout>

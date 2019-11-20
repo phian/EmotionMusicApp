@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView mainScreenBackground, cloverImg, aboutUsIcon, howToUseIcon;
 
-    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout;
+    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, showingAboutUsMaibScreeLay;
     AbsoluteLayout mainScreen;
 
     Button startButton;
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         iconMenu = (LinearLayout) findViewById(R.id.instructionIconLayout);
         startAppButLay = (LinearLayout) findViewById(R.id.startAppButtonLay);
         instructionIconLayout = (LinearLayout) findViewById(R.id.instructionIconLayout);
+        showingAboutUsMaibScreeLay = (LinearLayout) findViewById(R.id.aboutUsActivityScreenLay);
 
         appNameAndIcon.setVisibility(View.INVISIBLE);
         iconMenu.setVisibility(View.INVISIBLE);
@@ -191,9 +192,11 @@ public class MainActivity extends AppCompatActivity {
                 howToUseIcon.setOnTouchListener(null);
                 startButton.setOnClickListener(null);
 
-                Intent startAboutUsActivity = new Intent(MainActivity.this, ShowingAboutUsActivity.class);
-                startActivity(startAboutUsActivity);
-                finish();
+//                Intent startAboutUsActivity = new Intent(MainActivity.this, ShowingAboutUsActivity.class);
+//                startActivity(startAboutUsActivity);
+//                finish();
+
+                showingAboutUsMaibScreeLay.animate().translationY(100).setDuration(300).setStartDelay(0);
 
                 return false;
             }

@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsoluteLayout;
@@ -153,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         aboutUsHeaderTextLay = (RelativeLayout) findViewById(R.id.aboutUsHeaderTextLay);
 
         startButton = (Button) findViewById(R.id.startAppButton);
+        dropDownScreenButton = (ImageButton) findViewById(R.id.dropDownScreenButton);
 
         mainGreetingTV = (TextView) findViewById(R.id.greetingTV);
         aboutUsTV = (TextView) findViewById(R.id.aboutUsTV);
@@ -221,12 +224,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // event when user click the start app button
+    @SuppressLint("ClickableViewAccessibility")
     public void onStartButtonClickListener() {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startButtonAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.start_button_gone_ani);
                 startButton.startAnimation(startButtonAni);
+
 
                 startButtonAni.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -259,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // event for About Us and How To Use icon
+    // event for About Us icon
     @SuppressLint("ClickableViewAccessibility")
     public void onAboutUsIconTouchListener() {
         aboutUsIcon.setOnTouchListener(new View.OnTouchListener() {
@@ -282,6 +287,8 @@ public class MainActivity extends AppCompatActivity {
                 aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_down_control_ani);
                 aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
+                onDropDownScreenButtonClickListener();
+
                 isAboutUsIconClick = true;
 
                 return false;
@@ -289,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // event for How To Use icon
     @SuppressLint("ClickableViewAccessibility")
     public void onHowToUseIconTouchListener() {
         howToUseIcon.setOnTouchListener(new View.OnTouchListener() {
@@ -308,6 +316,52 @@ public class MainActivity extends AppCompatActivity {
                 isAboutUsIconClick = true;
 
                 return false;
+            }
+        });
+    }
+
+    // event for drop down screen button click
+    @SuppressLint("ClickableViewAccessibility")
+    public void onDropDownScreenButtonClickListener() {
+        dropDownScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
+                aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
+
+                aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
+
+                appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_in_layout_ani);
+                instructionIconLayout.startAnimation(appNameAndIconAni);
+
+                appName.animate().alpha(1).setDuration(200).setStartDelay(0);
+                startButton.animate().translationY(0).alpha(1).setDuration(200).setStartDelay(0);
+                mainScreenBackground.animate().translationY(mainScreenBackground.getY() + 150).alpha(1).setDuration(200).setStartDelay(0);
+
+                onStartButtonClickListener();
+                onAboutUsIconTouchListener();
+                onHowToUseIconTouchListener();
+
+                isAboutUsIconClick = false;
+
+                aboutUsHeaderTextAni.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        aboutUsHeaderTextLay.setAlpha(0);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+                dropDownScreenButton.setOnClickListener(null);
             }
         });
     }

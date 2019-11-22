@@ -18,8 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ShowingAboutUsActivity"
-            android:theme="@style/AppTheme.sliderActivityTheme">
+        <activity android:name=".ShowingAboutUsActivity">
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

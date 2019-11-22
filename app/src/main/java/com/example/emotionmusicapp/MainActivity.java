@@ -3,11 +3,7 @@ package com.example.emotionmusicapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,7 +21,6 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,18 +28,17 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView mainScreenBackground, cloverImg, aboutUsIcon, howToUseIcon;
 
-    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout;
+    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, aboutUsContentLay;
     AbsoluteLayout mainScreen;
     RelativeLayout aboutUsHeaderTextLay;
 
     Button startButton;
+    ImageButton dropDownScreenButton;
     TextView mainGreetingTV, aboutUsTV, howToUseTV, appName;
 
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
-    boolean isAboutUsHowToUseIconClick;
-
-    ShowingAboutUsActivity object = new ShowingAboutUsActivity();
+    boolean isAboutUsIconClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         castControl();
+        onMainScreenTouchListener();
     }
 
     // check if application is running then update the greeting text
@@ -72,21 +68,53 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         setMainGreetingText(); // set the main greeting (Good morning,...)
-
-        if (object.isFinished == true) {
-            onStart();
-        }
     }
 
     // Check if user click back button to go back previous activity
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
 
-        if(isAboutUsHowToUseIconClick == true) {
+        if(isAboutUsIconClick == true) {
             aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
             aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
-            aboutUsHeaderTextLay.setAlpha(0);
+
+//            aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_down_screen_ani);
+//            aboutUsContentLay.startAnimation(aboutUsHeaderTextAni);
+
+            aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
+
+            appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_in_layout_ani);
+            instructionIconLayout.startAnimation(appNameAndIconAni);
+
+            appName.animate().alpha(1).setDuration(200).setStartDelay(0);
+            startButton.animate().translationY(0).alpha(1).setDuration(200).setStartDelay(0);
+            mainScreenBackground.animate().translationY(mainScreenBackground.getY() + 150).alpha(1).setDuration(200).setStartDelay(0);
+
+            onStartButtonClickListener();
+            onAboutUsIconTouchListener();
+            onHowToUseIconTouchListener();
+
+            isAboutUsIconClick = false;
+
+            aboutUsHeaderTextAni.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            return;
         }
     }
 
@@ -102,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         iconMenu = (LinearLayout) findViewById(R.id.instructionIconLayout);
         startAppButLay = (LinearLayout) findViewById(R.id.startAppButtonLay);
         instructionIconLayout = (LinearLayout) findViewById(R.id.instructionIconLayout);
+        aboutUsContentLay = (LinearLayout) findViewById(R.id.aboutUsContentLay);
 
         appNameAndIcon.setVisibility(View.INVISIBLE);
         iconMenu.setVisibility(View.INVISIBLE);
@@ -147,23 +176,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // event for main screen touch to begin setting animation for all control
-    public void onMainScreenTouchListener(View view) {
-        mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
+    public void onMainScreenTouchListener() {
+        mainScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
 
-        //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
-        cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);
+                //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
+                cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);
 
-        appMainGreeting.animate().translationY(140).alpha(0).setDuration(500).setStartDelay(300);
+                appMainGreeting.animate().translationY(140).alpha(0).setDuration(500).setStartDelay(300);
 
-        appNameAndIcon.setVisibility(View.VISIBLE);
-        iconMenu.setVisibility(View.VISIBLE);
-        startAppButLay.setVisibility(View.VISIBLE);
+                appNameAndIcon.setVisibility(View.VISIBLE);
+                iconMenu.setVisibility(View.VISIBLE);
+                startAppButLay.setVisibility(View.VISIBLE);
 
-        setControlAnimation();
+                setControlAnimation();
 
-        mainScreen.setOnClickListener(null); // disable touch event after finish the animation
+                mainScreen.setOnClickListener(null); // disable touch event after finish the animation
 
-        onAboutUsAndHowToUseIconTouchListener();
+                onAboutUsIconTouchListener();
+                onHowToUseIconTouchListener();
+                onStartButtonClickListener();
+            }
+        });
     }
 
     @Override
@@ -172,41 +208,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // event when user click the start app button
-    public void onStartButtonClickListener(View view) {
-        startButtonAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.start_button_gone_ani);
-        startButton.startAnimation(startButtonAni);
-
-        startButtonAni.setAnimationListener(new Animation.AnimationListener() {
+    public void onStartButtonClickListener() {
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-                mainScreenBackground.animate().translationY(mainScreenBackground.getY() - 150).alpha(0).setDuration(200).setStartDelay(0);
-                aboutUsIcon.animate().translationX(-80).alpha(0).setDuration(200).setStartDelay(0);
-                howToUseIcon.animate().translationX(80).alpha(0).setDuration(200).setStartDelay(0);
-                aboutUsTV.animate().translationX(-80).alpha(0).setDuration(200).setStartDelay(0);
-                howToUseTV.animate().translationX(80).alpha(0).setDuration(200).setStartDelay(0);
-                appName.animate().alpha(0).setDuration(100).setStartDelay(0);
-                startButton.animate().translationY(100).alpha(0).setDuration(200).setStartDelay(0);
-            }
+            public void onClick(View view) {
+                startButtonAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.start_button_gone_ani);
+                startButton.startAnimation(startButtonAni);
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                Intent startChooseEmotionScreen = new Intent(MainActivity.this, ChooseEmotionActivity.class);
-                startActivity(startChooseEmotionScreen);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+                startButtonAni.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        mainScreenBackground.animate().translationY(mainScreenBackground.getY() - 150).alpha(0).setDuration(200).setStartDelay(0);
+                        aboutUsIcon.animate().translationX(-80).alpha(0).setDuration(200).setStartDelay(0);
+                        howToUseIcon.animate().translationX(80).alpha(0).setDuration(200).setStartDelay(0);
+                        aboutUsTV.animate().translationX(-80).alpha(0).setDuration(200).setStartDelay(0);
+                        howToUseTV.animate().translationX(80).alpha(0).setDuration(200).setStartDelay(0);
+                        appName.animate().alpha(0).setDuration(100).setStartDelay(0);
+                        startButton.animate().translationY(100).alpha(0).setDuration(200).setStartDelay(0);
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        Intent startChooseEmotionScreen = new Intent(MainActivity.this, ChooseEmotionActivity.class);
+                        startActivity(startChooseEmotionScreen);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+                startButton.setOnClickListener(null);
             }
         });
     }
 
     // event for About Us and How To Use icon
     @SuppressLint("ClickableViewAccessibility")
-    public void onAboutUsAndHowToUseIconTouchListener() {
+    public void onAboutUsIconTouchListener() {
         aboutUsIcon.setOnTouchListener(new View.OnTouchListener() {
-
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_out_ani);
@@ -220,21 +263,21 @@ public class MainActivity extends AppCompatActivity {
                 howToUseIcon.setOnTouchListener(null);
                 startButton.setOnClickListener(null);
 
+                aboutUsContentLay.animate().translationY(95).setDuration(300).setStartDelay(0);
+
                 aboutUsHeaderTextLay.setAlpha(1);
                 aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_down_control_ani);
                 aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
-                Intent startAboutUsActivity = new Intent(MainActivity.this, ShowingAboutUsActivity.class);
-                startActivity(startAboutUsActivity);
-                finish();
-                overridePendingTransition(R.anim.slide_up_screen_ani, 0);
-
-                isAboutUsHowToUseIconClick = true; // check if user click About Us or How To Use icon to set up in onResume
+                isAboutUsIconClick = true;
 
                 return false;
             }
         });
+    }
 
+    @SuppressLint("ClickableViewAccessibility")
+    public void onHowToUseIconTouchListener() {
         howToUseIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -247,9 +290,9 @@ public class MainActivity extends AppCompatActivity {
 
                 howToUseIcon.setOnTouchListener(null);
                 startButton.setOnClickListener(null);
-                aboutUsIcon.setOnClickListener(null);
+                aboutUsIcon.setOnTouchListener(null);
 
-                isAboutUsHowToUseIconClick = true;
+                isAboutUsIconClick = true;
 
                 return false;
             }

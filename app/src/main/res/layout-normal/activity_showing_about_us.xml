@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".ShowingAboutUsActivity"
     android:background="@color/startButtonTextColor"
-    android:id="@+id/aboutUsScreenMainLay">
+    android:id="@+id/aboutUsScreenMainLay"
+    android:layout_marginTop="64dp">
 
     <LinearLayout
         android:id="@+id/aboutUsActivityScreenLay"
@@ -16,38 +18,6 @@
         android:focusable="false"
         android:orientation="vertical"
         android:background="@android:color/transparent">
-
-        <RelativeLayout
-            android:layout_marginTop="-50dp"
-            android:id="@+id/aboutUsHeaderTextLay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:alpha="1"
-            android:background="@color/startButtonTextColor">
-
-            <TextView
-                android:layout_marginTop="10dp"
-                android:id="@+id/aboutUsHeaderText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="About Us"
-                android:textSize="40sp"
-                android:gravity="center"
-                android:textColor="@android:color/black"/>
-
-            <ImageButton
-                android:layout_marginTop="23dp"
-                android:layout_marginRight="15dp"
-                android:id="@+id/dropDownScreenButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/drop_down_screen_button"
-                android:scaleType="fitXY"
-                android:background="@android:color/transparent"
-                android:layout_alignRight="@id/aboutUsHeaderText"/>
-
-        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/aboutUsInfoLay"

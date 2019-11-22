@@ -8,17 +8,8 @@
     android:layout_height="match_parent"
     android:background="#9999FF"
     tools:context=".MainActivity"
-    android:onClick="onMainScreenTouchListener"
     android:elevation="0dp"
     app:elevation="0dp">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/dimScreen"
-        android:alpha="0"
-        android:fitsSystemWindows="true"
-        android:background="@android:color/black"/>
 
     <ImageView
         android:id="@+id/mainBackGround"
@@ -125,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="55dp"
             android:layout_marginTop="-25dp"
-            android:src="@drawable/about_us" />
+            android:src="@drawable/about_us"/>
 
         <ImageView
             android:id="@+id/howToUseAppIcon"
@@ -133,7 +124,7 @@
             android:layout_height="100dp"
             android:layout_marginLeft="170dp"
             android:layout_marginTop="-350dp"
-            android:src="@drawable/how_to_use_app" />
+            android:src="@drawable/how_to_use_app"/>
 
         <TextView
             android:id="@+id/aboutUsTV"
@@ -176,8 +167,52 @@
             android:gravity="center"
             android:text="@string/enjoy_the_music_button"
             android:textColor="@android:color/holo_orange_dark"
-            android:textSize="20sp"
-            android:onClick="onStartButtonClickListener" />
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/aboutUsHeaderTextLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:alpha="0"
+        android:background="@color/startButtonTextColor">
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/aboutUsHeaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="About Us"
+            android:textSize="40sp"
+            android:gravity="center"
+            android:textColor="@android:color/black"/>
+
+        <ImageButton
+            android:layout_marginTop="23dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/dropDownScreenButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/drop_down_screen_button"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
+            android:layout_alignRight="@id/aboutUsHeaderText"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:elevation="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="535dp"
+        android:id="@+id/aboutUsContentLay">
+
+        <include
+            layout="@layout/activity_showing_about_us"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
 
     </LinearLayout>
 

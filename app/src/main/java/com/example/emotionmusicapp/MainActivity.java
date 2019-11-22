@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
-    boolean isAboutUsIconClick;
+    boolean isAboutUsIconClick, isHowToUseIconClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +75,9 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
 
-        if(isAboutUsIconClick == true) {
+        if (isAboutUsIconClick == true) {
             aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
             aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
-
-//            aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_down_screen_ani);
-//            aboutUsContentLay.startAnimation(aboutUsHeaderTextAni);
 
             aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
 
@@ -105,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-
+                    aboutUsHeaderTextLay.setAlpha(0);
                 }
 
                 @Override
@@ -113,6 +110,22 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+
+        } else if (isHowToUseIconClick == true) {
+            aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
+
+            appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_in_layout_ani);
+            instructionIconLayout.startAnimation(appNameAndIconAni);
+
+            appName.animate().alpha(1).setDuration(200).setStartDelay(0);
+            startButton.animate().translationY(0).alpha(1).setDuration(200).setStartDelay(0);
+            mainScreenBackground.animate().translationY(mainScreenBackground.getY() + 150).alpha(1).setDuration(200).setStartDelay(0);
+
+            onStartButtonClickListener();
+            onAboutUsIconTouchListener();
+            onHowToUseIconTouchListener();
+
+            isHowToUseIconClick = false;
 
             return;
         }

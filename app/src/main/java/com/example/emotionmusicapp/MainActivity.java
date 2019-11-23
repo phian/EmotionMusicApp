@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
-    boolean isAboutUsIconClick, isHowToUseIconClick;
+    boolean isAboutUsIconClick, isHowToUseIconClick, isMainScreenPrevious;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +73,7 @@ public class MainActivity extends AppCompatActivity {
     // Check if user click back button to go back previous activity
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-
-        if (isAboutUsIconClick == true) {
+        if (isAboutUsIconClick == true && isMainScreenPrevious == false) {
             aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
             aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
@@ -93,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             onHowToUseIconTouchListener();
 
             isAboutUsIconClick = false;
+            isMainScreenPrevious = true;
 
             aboutUsHeaderTextAni.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        } else if (isHowToUseIconClick == true) {
+        } else if (isHowToUseIconClick == true && isMainScreenPrevious == false) {
             aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
 
             appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_in_layout_ani);
@@ -126,8 +125,32 @@ public class MainActivity extends AppCompatActivity {
             onHowToUseIconTouchListener();
 
             isHowToUseIconClick = false;
+            isMainScreenPrevious = true;
 
             return;
+        } else if (isMainScreenPrevious == true && isAboutUsIconClick == false && isHowToUseIconClick == false) {
+            mainScreenBackground.animate().translationY(0).setDuration(500).setStartDelay(300);
+
+            //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
+            cloverImg.animate().translationX(0).setDuration(500).setStartDelay(600);
+
+            appMainGreeting.animate().translationY(0).alpha(1).setDuration(500).setStartDelay(300);
+
+            appNameAndIcon.setVisibility(View.INVISIBLE);
+            iconMenu.setAlpha(0);
+            startAppButLay.setVisibility(View.INVISIBLE);
+
+            onMainScreenTouchListener();
+
+            aboutUsIcon.setOnClickListener(null);
+            howToUseIcon.setOnClickListener(null);
+            startButton.setOnClickListener(null);
+
+            isMainScreenPrevious = false;
+
+            return;
+        } else if (false == false && false == false && false == false) {
+            finish();
         }
     }
 
@@ -183,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         appNameAndIcon.startAnimation(appNameAndIconAni);
 
         appNameAndIconAni = AnimationUtils.loadAnimation(this, R.anim.icon_menu_ani);
+        iconMenu.setAlpha(1);
         iconMenu.startAnimation(appNameAndIconAni);
 
         startButtonAni = AnimationUtils.loadAnimation(this, R.anim.start_button_ani);
@@ -212,6 +236,8 @@ public class MainActivity extends AppCompatActivity {
                 onAboutUsIconTouchListener();
                 onHowToUseIconTouchListener();
                 onStartButtonClickListener();
+
+                isMainScreenPrevious = true;
             }
         });
     }
@@ -288,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
                 onDropDownScreenButtonClickListener();
 
                 isAboutUsIconClick = true;
+                isMainScreenPrevious = false;
 
                 return false;
             }
@@ -312,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
                 aboutUsIcon.setOnTouchListener(null);
 
                 isAboutUsIconClick = true;
+                isMainScreenPrevious = false;
 
                 return false;
             }
@@ -351,6 +379,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         aboutUsHeaderTextLay.setAlpha(0);
+
+                        isMainScreenPrevious = true;
                     }
 
                     @Override

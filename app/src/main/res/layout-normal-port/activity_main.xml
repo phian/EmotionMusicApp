@@ -113,17 +113,17 @@
         <ImageView
             android:id="@+id/aboutUsIcon"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginLeft="55dp"
-            android:layout_marginTop="-25dp"
+            android:layout_marginTop="230dp"
             android:src="@drawable/about_us"/>
 
         <ImageView
             android:id="@+id/howToUseAppIcon"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="170dp"
-            android:layout_marginTop="-350dp"
+            android:layout_marginLeft="175dp"
+            android:layout_marginTop="-102dp"
             android:src="@drawable/how_to_use_app"/>
 
         <TextView

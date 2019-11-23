@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         castControl();
-        onMainScreenTouchListener();
     }
 
     // check if application is running then update the greeting text
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         setMainGreetingText(); // set the main greeting (Good morning,...)
+        onMainScreenTouchListener();
     }
 
     // check if application is resumed then update the greeting text
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     // Check if user click back button to go back previous activity
     @Override
     public void onBackPressed() {
-        if (isAboutUsIconClick == true && isMainScreenPrevious == false) {
+         if (isAboutUsIconClick == true && isMainScreenPrevious == false) {
             aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
             aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-
         } else if (isHowToUseIconClick == true && isMainScreenPrevious == false) {
             aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
 
@@ -126,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
             isHowToUseIconClick = false;
             isMainScreenPrevious = true;
-
-            return;
         } else if (isMainScreenPrevious == true && isAboutUsIconClick == false && isHowToUseIconClick == false) {
             mainScreenBackground.animate().translationY(0).setDuration(500).setStartDelay(300);
 
@@ -140,15 +137,13 @@ public class MainActivity extends AppCompatActivity {
             iconMenu.setAlpha(0);
             startAppButLay.setVisibility(View.INVISIBLE);
 
-            onMainScreenTouchListener();
-
-            aboutUsIcon.setOnClickListener(null);
-            howToUseIcon.setOnClickListener(null);
-            startButton.setOnClickListener(null);
-
             isMainScreenPrevious = false;
 
-            return;
+             aboutUsIcon.setOnTouchListener(null);
+             howToUseIcon.setOnTouchListener(null);
+             startButton.setOnClickListener(null);
+
+            onMainScreenTouchListener();
         } else if (false == false && false == false && false == false) {
             finish();
         }
@@ -233,11 +228,11 @@ public class MainActivity extends AppCompatActivity {
 
                 mainScreen.setOnClickListener(null); // disable touch event after finish the animation
 
+                isMainScreenPrevious = true;
+
                 onAboutUsIconTouchListener();
                 onHowToUseIconTouchListener();
                 onStartButtonClickListener();
-
-                isMainScreenPrevious = true;
             }
         });
     }
@@ -294,6 +289,9 @@ public class MainActivity extends AppCompatActivity {
         aboutUsIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                isAboutUsIconClick = true;
+                isMainScreenPrevious = false;
+
                 appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_out_ani);
                 instructionIconLayout.startAnimation(appNameAndIconAni);
 
@@ -313,10 +311,7 @@ public class MainActivity extends AppCompatActivity {
 
                 onDropDownScreenButtonClickListener();
 
-                isAboutUsIconClick = true;
-                isMainScreenPrevious = false;
-
-                return false;
+                return true;
             }
         });
     }
@@ -352,6 +347,9 @@ public class MainActivity extends AppCompatActivity {
         dropDownScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isAboutUsIconClick = false;
+                isMainScreenPrevious = true;
+
                 aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
                 aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
@@ -364,12 +362,6 @@ public class MainActivity extends AppCompatActivity {
                 startButton.animate().translationY(0).alpha(1).setDuration(200).setStartDelay(0);
                 mainScreenBackground.animate().translationY(mainScreenBackground.getY() + 150).alpha(1).setDuration(200).setStartDelay(0);
 
-                onStartButtonClickListener();
-                onAboutUsIconTouchListener();
-                onHowToUseIconTouchListener();
-
-                isAboutUsIconClick = false;
-
                 aboutUsHeaderTextAni.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -380,7 +372,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animation animation) {
                         aboutUsHeaderTextLay.setAlpha(0);
 
-                        isMainScreenPrevious = true;
+                        onStartButtonClickListener();
+                        onAboutUsIconTouchListener();
+                        onHowToUseIconTouchListener();
                     }
 
                     @Override

@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Check if user click back button to go back previous activity
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBackPressed() {
          if (isAboutUsIconClick == true && isMainScreenPrevious == false) {
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
             appMainGreeting.animate().translationY(0).alpha(1).setDuration(500).setStartDelay(300);
 
+            // disable animation of control in next screen
             appNameAndIcon.setVisibility(View.INVISIBLE);
             iconMenu.setAlpha(0);
             startAppButLay.setVisibility(View.INVISIBLE);

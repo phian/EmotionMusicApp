@@ -9,17 +9,6 @@
     android:scrollbarAlwaysDrawVerticalTrack="true"
     tools:context=".ChooseEmotionActivity">
 
-    <!--    <LinearLayout-->
-    <!--        android:translationY="-535dp"-->
-    <!--        android:id="@+id/chooseEmotionMainBackGround"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:background="@android:color/transparent">-->
-
-    <!--        -->
-
-    <!--    </LinearLayout>-->
-
     <ImageView
         android:id="@+id/chooseEmotionMainBackGround"
         android:layout_width="wrap_content"
@@ -30,6 +19,21 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/footerWaveLay">
+
+        <com.scwang.wave.MultiWaveHeader
+            android:id="@+id/footerWave"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleY="-1"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 
     <ScrollView
         android:scrollbarAlwaysDrawVerticalTrack="true"
@@ -54,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent">
 
-                    <ImageView
+                    <ImageButton
                         android:layout_marginTop="100dp"
                         android:id="@+id/happyEarthEmotion"
                         android:layout_width="170dp"
@@ -63,12 +67,13 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/happy_earth_emotion" />
 
-                    <ImageView
+                    <ImageButton
                         android:layout_marginTop="100dp"
                         android:id="@+id/loveEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
                         android:layout_marginLeft="150dp"
+                        android:scaleType="fitXY"
                         android:background="@android:color/transparent"
                         android:src="@drawable/love_earth_emotion" />
 
@@ -111,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent">
 
-                    <ImageView
+                    <ImageButton
                         android:layout_marginTop="-15dp"
                         android:id="@+id/sadEarthEmotion"
                         android:layout_width="170dp"
@@ -120,11 +125,12 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/sad_earth_emotion" />
 
-                    <ImageView
+                    <ImageButton
                         android:layout_marginTop="-15dp"
                         android:id="@+id/boringEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
+                        android:scaleType="fitXY"
                         android:layout_marginLeft="150dp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/boring_earth_emotion" />
@@ -168,7 +174,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent">
 
-                    <ImageView
+                    <ImageButton
                         android:layout_marginTop="-15dp"
                         android:id="@+id/cryEarthEmotion"
                         android:layout_width="170dp"
@@ -177,11 +183,12 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/cry_earth_emotion" />
 
-                    <ImageView
+                    <ImageButton
                         android:layout_marginTop="-15dp"
                         android:id="@+id/sickEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
+                        android:scaleType="fitXY"
                         android:layout_marginLeft="150dp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/sick_earth_emotion" />
@@ -225,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent">
 
-                    <ImageView
+                    <ImageButton
                         android:layout_marginTop="-15dp"
                         android:id="@+id/angryEarthEmotion"
                         android:layout_width="170dp"
@@ -254,6 +261,20 @@
 
     </ScrollView>
 
+<!--    <RelativeLayout-->
+<!--        android:elevation="6dp"-->
+<!--        android:id="@+id/headerWaveLay"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+<!--        <com.scwang.wave.MultiWaveHeader-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:id="@+id/headerWave"/>-->
+
+<!--    </RelativeLayout>-->
+
     <LinearLayout
         android:id="@+id/questionLayout"
         android:layout_width="wrap_content"
@@ -274,7 +295,7 @@
             android:text="How Do You
                           Feel Today?"
             android:textSize="30sp"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 

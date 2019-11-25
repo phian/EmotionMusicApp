@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.scwang.wave.MultiWaveHeader;
+
 import java.util.Calendar;
 
 public class ChooseEmotionActivity extends AppCompatActivity {
@@ -30,6 +33,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
     TextView questionText;
 
     Animation chooseEmotionScreenAni;
+
+    MultiWaveHeader waveHeader, waveFooter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +104,9 @@ public class ChooseEmotionActivity extends AppCompatActivity {
 
         angryEarthEmotion = (ImageView) findViewById(R.id.angryEarthEmotion);
         angryEarthEmotionText = (TextView) findViewById(R.id.angryEmotionText);
+
+//        waveHeader = (MultiWaveHeader) findViewById(R.id.headerWave);
+        waveFooter = (MultiWaveHeader) findViewById(R.id.footerWave);
     }
 
     // set animation for all emotion icon and textview
@@ -145,6 +153,22 @@ public class ChooseEmotionActivity extends AppCompatActivity {
         angryEarthEmotionText.startAnimation(chooseEmotionScreenAni);
 
         setQuestionTextBackground();
+
+//        waveHeader.setVelocity(1);
+//        waveHeader.setProgress(0.8F);
+//        waveHeader.isRunning();
+//        waveHeader.setGradientAngle(45);
+//        waveHeader.setWaveHeight(40);
+//        waveHeader.setStartColor(Color.RED);
+//        waveHeader.setCloseColor(Color.CYAN);
+
+        waveFooter.setVelocity(1);
+        waveFooter.setProgress(0.9F);
+        waveFooter.isRunning();
+        waveFooter.setGradientAngle(45);
+        waveFooter.setWaveHeight(40);
+        waveFooter.setStartColor(Color.MAGENTA);
+        waveFooter.setCloseColor(Color.YELLOW);
     }
 
     public void setQuestionTextBackground() {
@@ -202,80 +226,67 @@ public class ChooseEmotionActivity extends AppCompatActivity {
     // function to check which icon uer chose and start music play screen
     @SuppressLint("ClickableViewAccessibility")
     public void onEmotionChooseListener() {
-        happyEarthEmotion.setOnTouchListener(new View.OnTouchListener() {
+        happyEarthEmotion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-                return true;
             }
         });
 
-        loveEarthEmotion.setOnTouchListener(new View.OnTouchListener() {
+        loveEarthEmotion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-                return true;
             }
         });
 
-        sadEarthEmotion.setOnTouchListener(new View.OnTouchListener() {
+        sadEarthEmotion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-                return true;
             }
         });
 
-        boringEarthEmotion.setOnTouchListener(new View.OnTouchListener() {
+
+           boringEarthEmotion.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
+                   startActivity(startMusicPlayScreen);
+                   overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+               }
+        });
+
+        cryEarthEmotion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-                return true;
             }
         });
 
-        cryEarthEmotion.setOnTouchListener(new View.OnTouchListener() {
+        sickEarthEmotion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-                return true;
             }
         });
 
-        sickEarthEmotion.setOnTouchListener(new View.OnTouchListener() {
+        angryEarthEmotion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-                return true;
-            }
-        });
-
-        angryEarthEmotion.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                startActivity(startMusicPlayScreen);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-                return true;
             }
         });
     }

@@ -9,12 +9,14 @@
     android:fitsSystemWindows="true">
 
     <ImageView
+        android:id="@+id/playMusicScreenMainBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/nath"
         android:scaleType="fitXY"/>
 
     <LinearLayout
+        android:id="@+id/diskDisplayLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#40ffffff"
@@ -23,6 +25,7 @@
         android:orientation="vertical">
 
         <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/diskImageCIV"
             android:layout_width="210dp"
             android:layout_height="210dp"
             android:src="@drawable/nath"
@@ -62,6 +65,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/songLengthDisplayLay"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
@@ -70,6 +74,7 @@
             android:weightSum="5">
 
             <SeekBar
+                android:id="@+id/songLengthSeekBar"
                 android:layout_marginLeft="0dp"
                 android:layout_weight="4.5"
                 android:layout_width="wrap_content"
@@ -78,7 +83,8 @@
                 android:progressTint="#c4ff0e"/>
 
             <TextView
-                android:layout_marginTop="2dp"
+                android:id="@+id/songLengthTV"
+                android:layout_marginTop="1dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-4:00"
@@ -89,6 +95,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/skipAndPlayButtonLay"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,18 +131,23 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/mixAndReplayListButtonLay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
+            <ImageButton
+                android:background="@android:color/transparent"
+                android:id="@+id/replayListButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/repeat_music_button"
                 android:layout_marginLeft="60dp"
                 android:layout_marginTop="7dp"/>
 
-            <ImageView
+            <ImageButton
+                android:id="@+id/mixListButton"
+                android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/shuffle_music_button"

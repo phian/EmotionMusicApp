@@ -5,15 +5,33 @@
     android:id="@+id/playMusicMainScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayMusicScreen"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".PlayMusicScreen">
 
     <ImageView
         android:id="@+id/playMusicScreenMainBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/nath"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY"
+        android:src="@drawable/nath" />
+
+    <LinearLayout
+        android:id="@+id/musicIndicatorLay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.taishi.library.Indicator
+            android:id="@+id/musicIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_marginTop="30dp"
+            android:background="@android:color/transparent"
+            app:bar_color="#ef0c9c"
+            app:bar_num="50"
+            app:step_num="70"/>
+        <!--app:duration="18000"-->
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/diskDisplayLay"
@@ -21,20 +39,19 @@
         android:layout_height="match_parent"
         android:background="#40ffffff"
         android:gravity="center_horizontal|bottom"
-        android:paddingBottom="25dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="25dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/diskImageCIV"
             android:layout_width="210dp"
             android:layout_height="210dp"
             android:src="@drawable/nath"
-            app:civ_border_color="@android:color/white"
-            app:civ_shadow="true"
-            app:civ_shadow_radius="0"
-            app:civ_border_width="5dp"
             app:civ_border="true"
-            />
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="5dp"
+            app:civ_shadow="true"
+            app:civ_shadow_radius="0" />
 
         <LinearLayout
             android:id="@+id/singerAndSongNameLay"
@@ -46,87 +63,87 @@
                 android:id="@+id/songNameTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:layout_marginTop="5dp"
+                android:gravity="center"
                 android:text="A Song"
-                android:textSize="25sp"
-                android:gravity="center"/>
+                android:textColor="@android:color/white"
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/singerNameTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:layout_marginTop="5dp"
+                android:gravity="center"
                 android:text="NPA"
-                android:textSize="20sp"
-                android:gravity="center"/>
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/songLengthDisplayLay"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal"
             android:weightSum="5">
 
             <SeekBar
                 android:id="@+id/songLengthSeekBar"
-                android:layout_marginLeft="0dp"
-                android:layout_weight="4.5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:thumbTint="#c4ff0e"
-                android:progressTint="#c4ff0e"/>
+                android:layout_marginLeft="0dp"
+                android:layout_weight="4.5"
+                android:progressTint="#c4ff0e"
+                android:thumbTint="#c4ff0e" />
 
             <TextView
                 android:id="@+id/songLengthTV"
-                android:layout_marginTop="1dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-4:00"
+                android:layout_marginTop="1dp"
+                android:layout_weight="0.5"
+                android:text="-0:00"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_weight="0.5"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/skipAndPlayButtonLay"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <ImageButton
-                android:layout_marginLeft="60dp"
-                android:background="@android:color/transparent"
                 android:id="@+id/playMusicButton"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:src="@drawable/play_music_button" />
+                android:layout_marginLeft="60dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/play_music_button"/>
 
             <ImageButton
-                android:layout_marginTop="20dp"
                 android:id="@+id/skipPreviousButton"
-                android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/skip_previous_button"
-                android:layout_marginLeft="-130dp"/>
+                android:layout_marginLeft="-130dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/skip_previous_button" />
 
             <ImageButton
                 android:id="@+id/skipNextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/skip_next_button"
-                android:background="@android:color/transparent"
                 android:layout_marginLeft="130dp"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/skip_next_button" />
 
         </LinearLayout>
 
@@ -137,22 +154,22 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:background="@android:color/transparent"
                 android:id="@+id/replayListButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/repeat_music_button"
                 android:layout_marginLeft="60dp"
-                android:layout_marginTop="7dp"/>
+                android:layout_marginTop="7dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/repeat_music_button" />
 
             <ImageButton
                 android:id="@+id/mixListButton"
-                android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/shuffle_music_button"
                 android:layout_marginLeft="120dp"
-                android:layout_marginTop="7dp"/>
+                android:layout_marginTop="7dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/shuffle_music_button" />
 
         </LinearLayout>
 

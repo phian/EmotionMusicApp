@@ -5,7 +5,8 @@
     android:id="@+id/playMusicMainScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayMusicScreen">
+    tools:context=".PlayMusicScreen"
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:layout_width="match_parent"
@@ -21,36 +22,25 @@
         android:paddingBottom="25dp"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            android:layout_marginTop="50dp"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            app:cardCornerRadius="110dp"
-            android:background="@android:color/white">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="210dp"
-                android:layout_height="210dp"
-                app:cardCornerRadius="105dp"
-                android:background="@android:color/white"
-                android:layout_gravity="center">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/nath"
-                    android:scaleType="centerCrop"/>
-
-            </androidx.cardview.widget.CardView>
-
-        </androidx.cardview.widget.CardView>
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:layout_width="210dp"
+            android:layout_height="210dp"
+            android:src="@drawable/nath"
+            app:civ_border_color="@android:color/white"
+            app:civ_shadow="true"
+            app:civ_shadow_radius="0"
+            app:civ_border_width="5dp"
+            app:civ_border="true"
+            />
 
         <LinearLayout
+            android:id="@+id/singerAndSongNameLay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/songNameTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
@@ -60,6 +50,7 @@
                 android:gravity="center"/>
 
             <TextView
+                android:id="@+id/singerNameTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
@@ -84,13 +75,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:thumbTint="#c4ff0e"
-                android:progressTint="@android:color/holo_red_light"/>
+                android:progressTint="#c4ff0e"/>
 
             <TextView
+                android:layout_marginTop="2dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-4:00"
-                android:textSize="15dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 android:layout_weight="0.5"/>
 
         </LinearLayout>

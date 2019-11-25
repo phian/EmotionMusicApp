@@ -167,8 +167,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
         waveFooter.isRunning();
         waveFooter.setGradientAngle(45);
         waveFooter.setWaveHeight(40);
-        waveFooter.setStartColor(Color.MAGENTA);
-        waveFooter.setCloseColor(Color.YELLOW);
+        waveFooter.setStartColor(Color.CYAN);
+        waveFooter.setCloseColor(Color.rgb(23, 105, 255));
     }
 
     public void setQuestionTextBackground() {

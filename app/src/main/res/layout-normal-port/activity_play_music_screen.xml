@@ -28,7 +28,8 @@
             android:background="@android:color/transparent"
             app:bar_color="#ef0c9c"
             app:bar_num="50"
-            app:step_num="70"/>
+            app:step_num="70"
+            android:foreground="@android:color/transparent"/>
         <!--app:duration="18000"-->
 
     </LinearLayout>
@@ -91,13 +92,16 @@
             android:weightSum="5">
 
             <SeekBar
+                android:layout_marginTop="1dp"
                 android:id="@+id/songLengthSeekBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
                 android:layout_weight="4.5"
                 android:progressTint="#c4ff0e"
-                android:thumbTint="#c4ff0e" />
+                android:thumbTint="#c4ff0e"
+                android:progress="0"
+                android:max="100"/>
 
             <TextView
                 android:id="@+id/songLengthTV"
@@ -105,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:layout_weight="0.5"
-                android:text="-0:00"
+                android:text="-00:00"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 

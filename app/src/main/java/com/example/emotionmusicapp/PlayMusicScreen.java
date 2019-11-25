@@ -1,10 +1,12 @@
 package com.example.emotionmusicapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -17,7 +19,6 @@ import android.widget.TextView;
 import com.taishi.library.Indicator;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 public class PlayMusicScreen extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     Indicator musicIndicator;
     MediaPlayer musicMedia = new MediaPlayer();
 
-    boolean isPlay = true;
+    boolean isPlay = false;
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -56,7 +57,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     //method to check if user is playing music or not
     public void startSong(boolean isPlaying) {
-        if (!isPlaying) {
+        if (isPlaying) {
             if (musicMedia == null) {
                 playSong();
             } else {
@@ -70,9 +71,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     // method to start playing music
     public void playSong() {
         musicMedia = new MediaPlayer();
-
-        musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
         try {
+            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
             musicMedia.prepare();
 
             songLengthSB.setMax(musicMedia.getDuration());
@@ -91,19 +91,38 @@ public class PlayMusicScreen extends AppCompatActivity {
     }
 
     // method to pause playing music
+    @SuppressLint("DefaultLocale")
     public void pauseSong() {
         playButton.setImageResource(R.drawable.play_music_button);
 
         musicMedia.pause();
-        musicHandler.removeCallbacks(musicRunnable);
+
+        int currentTime = musicMedia.getCurrentPosition();
+        long songDuration = musicMedia.getDuration();
+
+        long leftTime = songDuration - currentTime;
+        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
     }
 
     // method to resume playing music
+    @SuppressLint("DefaultLocale")
     public void resumeSong() {
         playButton.setImageResource(R.drawable.pause_button);
+        musicHandler.removeCallbacks(musicRunnable);
+        songLengthSB.setMax(musicMedia.getDuration());
 
         musicMedia.start();
         update();
+
+        int currentTime = musicMedia.getCurrentPosition();
+        long songDuration = musicMedia.getDuration();
+
+        long leftTime = songDuration - currentTime;
+        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
     }
 
     // method to stop playing music
@@ -148,6 +167,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     //--------------------------------------------------------------------------------------------//
 
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +181,21 @@ public class PlayMusicScreen extends AppCompatActivity {
         castControl();
         onPlayMusicButtonClickListener();
         onMusicSeekBarLengthChangeListener();
+
+        // call music file
+        musicMedia = new MediaPlayer();
+        musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+
+        int currentTime = musicMedia.getCurrentPosition();
+        long songDuration = musicMedia.getDuration();
+
+        long leftTime = songDuration - currentTime;
+        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+        songLengthTV.setText(String.format("-" + "%2d:%2d", songLeftMin, songLeftSec));
+
+        musicIndicator.setAlpha(0);
+        musicIndicator.setDuration(18000);
     }
 
     @Override
@@ -181,8 +216,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         singerNameTV = (TextView) findViewById(R.id.singerNameTV);
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         musicIndicator = (Indicator) findViewById(R.id.musicIndicator);
-
-        musicIndicator.setDuration(0);
     }
 
     // event method for play music button
@@ -190,9 +223,17 @@ public class PlayMusicScreen extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                musicIndicator.setDuration(18000);
+                if(isPlay == false) {
+                    isPlay = true;
+                } else  {
+                    isPlay = false;
+                }
 
-                isPlay = !isPlay;
+                if(isPlay) {
+                    musicIndicator.setAlpha(1);
+                } else {
+                    musicIndicator.setAlpha(0);
+                }
 
                 startSong(isPlay);
             }
@@ -200,15 +241,6 @@ public class PlayMusicScreen extends AppCompatActivity {
     }
 
     public void onMusicSeekBarLengthChangeListener() {
-        int currentTime = musicMedia.getCurrentPosition();
-        long songDuration = musicMedia.getDuration();
-
-        long leftTime = songDuration - currentTime;
-        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
-
-        songLengthTV.setText(String.format("-" +"%02d:%02d",songLeftMin, songLeftSec));
-
         songLengthSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @SuppressLint("DefaultLocale")
             @Override
@@ -223,7 +255,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
                     long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
-                    songLengthTV.setText(String.format("-" + "%2d:%2d", songLeftMin, songLeftSec));
+                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 } else if (musicMedia == null && b) {
                     updateSeekBarTime(i);
                     update();
@@ -251,7 +283,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
                     long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
-                    songLengthTV.setText(String.format("-" + "%2d:%2d", songLeftMin, songLeftSec));
+                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
                     update();
                 }

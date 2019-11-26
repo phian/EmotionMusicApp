@@ -3,10 +3,11 @@ package com.example.emotionmusicapp;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.taishi.library.Indicator;
 
 import java.io.IOException;
@@ -27,8 +29,13 @@ public class PlayMusicScreen extends AppCompatActivity {
     SeekBar songLengthSB;
     Indicator musicIndicator;
     MediaPlayer musicMedia = new MediaPlayer();
+    CircularImageView diskImageCIV;
+
+    ObjectAnimator diskRotateAnimation;
+    AnimatorSet animateList;
 
     boolean isPlay = false;
+    long animationDuration;
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -81,6 +88,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
+
+                    animateList.start();
                 }
             });
         } catch (IOException e) {
@@ -147,12 +156,16 @@ public class PlayMusicScreen extends AppCompatActivity {
             musicMedia.prepare();
             musicMedia.seekTo(progressTime);
 
+            animateList.start();
+
             songLengthSB.setMax(musicMedia.getDuration());
 
             musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     stopSong();
+
+                    animateList.end();
                 }
             });
         } catch (IOException e) {
@@ -196,6 +209,14 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         musicIndicator.setAlpha(0);
         musicIndicator.setDuration(18000);
+
+        animationDuration = musicMedia.getDuration();
+
+        diskRotateAnimation = ObjectAnimator.ofFloat(diskImageCIV, "rotation", 0f, 360f);
+        diskRotateAnimation.setDuration(animationDuration);
+
+        animateList = new AnimatorSet();
+        animateList.playTogether(diskRotateAnimation);
     }
 
     @Override
@@ -216,6 +237,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         singerNameTV = (TextView) findViewById(R.id.singerNameTV);
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         musicIndicator = (Indicator) findViewById(R.id.musicIndicator);
+        diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
     }
 
     // event method for play music button
@@ -231,8 +253,13 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 if(isPlay) {
                     musicIndicator.setAlpha(1);
+
+                    animateList.start();
+
                 } else {
                     musicIndicator.setAlpha(0);
+
+                    animateList.end();
                 }
 
                 startSong(isPlay);

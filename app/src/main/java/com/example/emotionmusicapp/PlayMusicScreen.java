@@ -31,11 +31,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     MediaPlayer musicMedia = new MediaPlayer();
     CircularImageView diskImageCIV;
 
-    ObjectAnimator diskRotateAnimation;
-    AnimatorSet animateList;
-
     boolean isPlay = false;
-    long animationDuration;
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -88,8 +84,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
-
-                    animateList.start();
                 }
             });
         } catch (IOException e) {
@@ -156,16 +150,12 @@ public class PlayMusicScreen extends AppCompatActivity {
             musicMedia.prepare();
             musicMedia.seekTo(progressTime);
 
-            animateList.start();
-
             songLengthSB.setMax(musicMedia.getDuration());
 
             musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     stopSong();
-
-                    animateList.end();
                 }
             });
         } catch (IOException e) {
@@ -209,14 +199,6 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         musicIndicator.setAlpha(0);
         musicIndicator.setDuration(18000);
-
-        animationDuration = musicMedia.getDuration();
-
-        diskRotateAnimation = ObjectAnimator.ofFloat(diskImageCIV, "rotation", 0f, 360f);
-        diskRotateAnimation.setDuration(animationDuration);
-
-        animateList = new AnimatorSet();
-        animateList.playTogether(diskRotateAnimation);
     }
 
     @Override
@@ -254,12 +236,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 if(isPlay) {
                     musicIndicator.setAlpha(1);
 
-                    animateList.start();
-
                 } else {
                     musicIndicator.setAlpha(0);
-
-                    animateList.end();
                 }
 
                 startSong(isPlay);

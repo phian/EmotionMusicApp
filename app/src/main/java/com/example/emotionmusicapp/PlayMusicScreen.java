@@ -1,9 +1,7 @@
 package com.example.emotionmusicapp;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,6 +11,8 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,6 +30,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     Indicator musicIndicator;
     MediaPlayer musicMedia = new MediaPlayer();
     CircularImageView diskImageCIV;
+
+    ObjectAnimator diskImgAni;
 
     boolean isPlay = false;
 
@@ -199,6 +201,10 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         musicIndicator.setAlpha(0);
         musicIndicator.setDuration(18000);
+
+        diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
+        diskImgAni.setRepeatCount(Animation.INFINITE);
+        diskImgAni.setInterpolator(new LinearInterpolator());
     }
 
     @Override
@@ -236,8 +242,14 @@ public class PlayMusicScreen extends AppCompatActivity {
                 if(isPlay) {
                     musicIndicator.setAlpha(1);
 
+                    if(diskImgAni.isRunning()) {
+                        diskImgAni.resume();
+                    } else {
+                        diskImgAni.start();
+                    }
                 } else {
                     musicIndicator.setAlpha(0);
+                    diskImgAni.pause();
                 }
 
                 startSong(isPlay);

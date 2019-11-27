@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="startButtonTextColor">#E5B226</color>
     <color name="startButtonBackgroundColor">#FEBB19</color>
+    <color name="waveColors">#8B0A50</color>
 </resources>

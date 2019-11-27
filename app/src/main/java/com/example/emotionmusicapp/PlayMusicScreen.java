@@ -17,6 +17,10 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.cleveroad.audiovisualization.AudioVisualization;
+import com.cleveroad.audiovisualization.DbmHandler;
+import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
+import com.cleveroad.audiovisualization.VisualizerDbmHandler;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.taishi.library.Indicator;
 
@@ -27,9 +31,10 @@ public class PlayMusicScreen extends AppCompatActivity {
     ImageButton playButton;
     TextView songLengthTV, songNameTV, singerNameTV;
     SeekBar songLengthSB;
-    Indicator musicIndicator;
     MediaPlayer musicMedia = new MediaPlayer();
     CircularImageView diskImageCIV;
+
+    AudioVisualization musicWaveVisualization;
 
     ObjectAnimator diskImgAni;
 
@@ -198,13 +203,20 @@ public class PlayMusicScreen extends AppCompatActivity {
         long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
         long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
         songLengthTV.setText(String.format("-" + "%2d:%2d", songLeftMin, songLeftSec));
+        //----------------------------------------------------------------------------------------//
 
-        musicIndicator.setAlpha(0);
-        musicIndicator.setDuration(18000);
-
+        // animation for disk
         diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
         diskImgAni.setRepeatCount(Animation.INFINITE);
         diskImgAni.setInterpolator(new LinearInterpolator());
+
+        // set speech recognizer handler
+        SpeechRecognizerDbmHandler speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(PlayMusicScreen.this);
+        speechRecHandler.innerRecognitionListener();
+        musicWaveVisualization.linkTo(speechRecHandler);
+        // set audio visualization handler. This will REPLACE previously set speech recognizer handler
+        VisualizerDbmHandler vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(PlayMusicScreen.this, 0);
+        musicWaveVisualization.linkTo(vizualizerHandler);
     }
 
     @Override
@@ -224,8 +236,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         songNameTV = (TextView) findViewById(R.id.songNameTV);
         singerNameTV = (TextView) findViewById(R.id.singerNameTV);
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
-        musicIndicator = (Indicator) findViewById(R.id.musicIndicator);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
+        musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
     }
 
     // event method for play music button
@@ -240,7 +252,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 if (isPlay) {
-                    musicIndicator.setAlpha(1);
+                    musicWaveVisualization.onResume();
 
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
@@ -248,8 +260,9 @@ public class PlayMusicScreen extends AppCompatActivity {
                         diskImgAni.start();
                     }
                 } else {
-                    musicIndicator.setAlpha(0);
                     diskImgAni.pause();
+
+                    musicWaveVisualization.onPause();
                 }
 
                 startSong(isPlay);
@@ -291,10 +304,9 @@ public class PlayMusicScreen extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (musicMedia != null) {
                     if (seekBar.getProgress() == seekBar.getMax()) {
-                        musicIndicator.setAlpha(0);
                         diskImgAni.pause();
-
                         playButton.setImageResource(R.drawable.play_music_button);
+                        musicWaveVisualization.release();
                     } else {
                         musicHandler.removeCallbacks(musicRunnable); // remove thread playing song
                         musicMedia.seekTo(seekBar.getProgress());

@@ -9,28 +9,30 @@
     tools:context=".PlayMusicScreen">
 
     <ImageView
-        android:id="@+id/playMusicScreenMainBackground"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@drawable/nath" />
+    android:id="@+id/playMusicScreenMainBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scaleType="fitXY"
+    android:src="@drawable/nath" />
 
     <LinearLayout
         android:id="@+id/musicIndicatorLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.taishi.library.Indicator
-            android:id="@+id/musicIndicator"
+        <com.cleveroad.audiovisualization.GLAudioVisualizationView
+            android:id="@+id/musicWaveVisualization"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_marginTop="30dp"
-            android:background="@android:color/transparent"
-            app:bar_color="#ef0c9c"
-            app:bar_num="50"
-            app:step_num="70"
-            android:foreground="@android:color/transparent"/>
-        <!--app:duration="18000"-->
+            android:layout_height="match_parent"
+            app:av_bubblesSize="25dp"
+            app:av_bubblesRandomizeSizes="true"
+            app:av_wavesHeight="55dp"
+            app:av_wavesFooterHeight="110dp"
+            app:av_wavesCount="7"
+            app:av_layersCount="4"
+            app:av_backgroundColor="#800080"
+            app:av_bubblesPerLayer="16"
+            />
 
     </LinearLayout>
 

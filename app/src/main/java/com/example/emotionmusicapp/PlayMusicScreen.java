@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +13,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -22,21 +28,27 @@ import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.taishi.library.Indicator;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import me.alexrs.wavedrawable.WaveDrawable;
+
 public class PlayMusicScreen extends AppCompatActivity {
-    ImageButton playButton;
+    ImageButton playButton, skipNextButton, skipPreviousButton, repeatButton, shuffleButton;
     TextView songLengthTV, songNameTV, singerNameTV;
     SeekBar songLengthSB;
     MediaPlayer musicMedia = new MediaPlayer();
     CircularImageView diskImageCIV;
 
+    LinearLayout playButtonLay;
+
     AudioVisualization musicWaveVisualization;
 
     ObjectAnimator diskImgAni;
+
+    WaveDrawable controlClickWaveAni;
+    Interpolator controlInterpolator;
 
     boolean isPlay = false;
 
@@ -191,6 +203,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         castControl();
         onPlayMusicButtonClickListener();
         onMusicSeekBarLengthChangeListener();
+        setWaveClickAniForControl();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -232,12 +245,36 @@ public class PlayMusicScreen extends AppCompatActivity {
     // method use to cast all control need to interact in activity
     public void castControl() {
         playButton = (ImageButton) findViewById(R.id.playMusicButton);
+        skipNextButton = (ImageButton) findViewById(R.id.skipNextButton);
+        skipPreviousButton = (ImageButton) findViewById(R.id.skipPreviousButton);
+        repeatButton = (ImageButton) findViewById(R.id.replayListButton);
+        shuffleButton = (ImageButton) findViewById(R.id.mixListButton);
+
         songLengthTV = (TextView) findViewById(R.id.songLengthTV);
         songNameTV = (TextView) findViewById(R.id.songNameTV);
         singerNameTV = (TextView) findViewById(R.id.singerNameTV);
+
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
         musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
+
+        playButtonLay = (LinearLayout) findViewById(R.id.playMusicButtonLay);
+    }
+
+    // method to create wave click animation for all control
+    public void setWaveClickAniForControl() {
+        // set up for click control ani
+        controlClickWaveAni = new WaveDrawable(Color.parseColor("#8e44ad"), 100, 500);
+        controlInterpolator = new CycleInterpolator(5);
+
+        playButton.setBackgroundDrawable(controlClickWaveAni);
+        skipNextButton.setBackgroundDrawable(controlClickWaveAni);
+        skipPreviousButton.setBackgroundDrawable(controlClickWaveAni);
+        repeatButton.setBackgroundDrawable(controlClickWaveAni);
+//        shuffleButton.setBackgroundDrawable(controlClickWaveAni);
+        playButtonLay.setBackgroundDrawable(controlClickWaveAni);
+
+        controlClickWaveAni.setWaveInterpolator(controlInterpolator);
     }
 
     // event method for play music button
@@ -253,6 +290,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 if (isPlay) {
                     musicWaveVisualization.onResume();
+                    controlClickWaveAni.startAnimation();
+//                    controlClickWaveAni.stopAnimation();
 
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
@@ -261,7 +300,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
                 } else {
                     diskImgAni.pause();
-
                     musicWaveVisualization.onPause();
                 }
 

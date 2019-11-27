@@ -53,7 +53,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 songLengthSB.setProgress(currentTime);
 
-                songLengthTV.setText(String.format("-" +"%02d:%02d",songLeftMin, songLeftSec));
+                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
                 update(); // method use to update time for SeekBar and song length TV
             }
@@ -233,16 +233,16 @@ public class PlayMusicScreen extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isPlay == false) {
+                if (isPlay == false) {
                     isPlay = true;
-                } else  {
+                } else {
                     isPlay = false;
                 }
 
-                if(isPlay) {
+                if (isPlay) {
                     musicIndicator.setAlpha(1);
 
-                    if(diskImgAni.isRunning()) {
+                    if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
                     } else {
                         diskImgAni.start();
@@ -290,19 +290,26 @@ public class PlayMusicScreen extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (musicMedia != null) {
-                    musicHandler.removeCallbacks(musicRunnable); // remove thread playing song
-                    musicMedia.seekTo(seekBar.getProgress());
+                    if (seekBar.getProgress() == seekBar.getMax()) {
+                        musicIndicator.setAlpha(0);
+                        diskImgAni.pause();
 
-                    int currentTime = musicMedia.getCurrentPosition();
-                    long songDuration = musicMedia.getDuration();
+                        playButton.setImageResource(R.drawable.play_music_button);
+                    } else {
+                        musicHandler.removeCallbacks(musicRunnable); // remove thread playing song
+                        musicMedia.seekTo(seekBar.getProgress());
 
-                    long leftTime = songDuration - currentTime;
-                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+                        int currentTime = musicMedia.getCurrentPosition();
+                        long songDuration = musicMedia.getDuration();
 
-                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+                        long leftTime = songDuration - currentTime;
+                        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
-                    update();
+                        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+
+                        update();
+                    }
                 }
             }
         });

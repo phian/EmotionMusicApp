@@ -119,7 +119,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     // method to resume playing music
     @SuppressLint("DefaultLocale")
     public void resumeSong() {
-        playButton.setImageResource(R.drawable.pause_button);
+        playButton.setImageResource(R.drawable.pause_music_button);
         musicHandler.removeCallbacks(musicRunnable);
         songLengthSB.setMax(musicMedia.getDuration());
 

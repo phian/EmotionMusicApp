@@ -121,35 +121,38 @@
             android:id="@+id/skipAndPlayButtonLay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/playMusicButton"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="60dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/play_music_button"/>
+                android:src="@drawable/play_music_button"
+                android:scaleType="fitXY"/>
 
             <ImageButton
                 android:id="@+id/skipPreviousButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="-130dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="-120dp"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/skip_previous_button" />
+                android:src="@drawable/skip_previous_button"
+                android:scaleType="fitXY"/>
 
             <ImageButton
                 android:id="@+id/skipNextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="130dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="120dp"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/skip_next_button" />
+                android:src="@drawable/skip_next_button"
+                android:scaleType="fitXY"/>
 
         </LinearLayout>
 
@@ -161,21 +164,23 @@
 
             <ImageButton
                 android:id="@+id/replayListButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginLeft="60dp"
                 android:layout_marginTop="7dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/repeat_music_button" />
+                android:src="@drawable/repeat_music_button"
+                android:scaleType="fitXY"/>
 
             <ImageButton
                 android:id="@+id/mixListButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="120dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="125dp"
                 android:layout_marginTop="7dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/shuffle_music_button" />
+                android:src="@drawable/shuffle_music_button"
+                android:scaleType="fitXY"/>
 
         </LinearLayout>
 

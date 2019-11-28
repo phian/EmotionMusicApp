@@ -37,5 +37,4 @@ dependencies {
 //    implementation 'com.h6ah4i.android:openslmediaplayer:0.7.5'
     api 'com.taishi-y:musicindicator:0.1.0'
     implementation 'com.cleveroad:audiovisualization:1.0.1'
-    implementation 'me.alexrs:wave-drawable:1.0.0'
 }

@@ -55,10 +55,11 @@
                     android:background="@android:color/transparent">
 
                     <ImageView
-                        android:layout_marginTop="100dp"
                         android:id="@+id/happyEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="100dp"
                         android:background="@android:color/transparent"
                         android:scaleType="fitXY"
                         android:src="@drawable/happy_earth_emotion" />
@@ -67,7 +68,7 @@
                         android:id="@+id/loveEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
-                        android:layout_marginLeft="150dp"
+                        android:layout_marginLeft="220dp"
                         android:layout_marginTop="100dp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/love_earth_emotion" />
@@ -77,25 +78,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/happyEarthEmotion"
-                        android:layout_marginLeft="50dp"
+                        android:layout_marginLeft="80dp"
                         android:layout_marginTop="-30dp"
                         android:background="@android:color/transparent"
                         android:text="@string/happy_icon_text"
-                        android:textSize="25sp"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
 
                     <TextView
                         android:id="@+id/loveEmotionText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/loveEarthEmotion"
-                        android:layout_marginLeft="205dp"
+                        android:layout_marginLeft="275dp"
                         android:layout_marginTop="-30dp"
                         android:background="@android:color/transparent"
                         android:text="@string/love_icon_text"
-                        android:textSize="25sp"
-                        android:textColor="@android:color/white"/>
-
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -113,6 +113,7 @@
 
                     <ImageView
                         android:layout_marginTop="-15dp"
+                        android:layout_marginLeft="30dp"
                         android:id="@+id/sadEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
@@ -125,7 +126,7 @@
                         android:id="@+id/boringEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
-                        android:layout_marginLeft="150dp"
+                        android:layout_marginLeft="220dp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/boring_earth_emotion" />
 
@@ -134,7 +135,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/sadEarthEmotion"
-                        android:layout_marginLeft="60dp"
+                        android:layout_marginLeft="90dp"
                         android:layout_marginTop="-30dp"
                         android:background="@android:color/transparent"
                         android:text="@string/sad_icon_text"
@@ -146,7 +147,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/boringEarthEmotion"
-                        android:layout_marginLeft="200dp"
+                        android:layout_marginLeft="265dp"
                         android:layout_marginTop="-30dp"
                         android:background="@android:color/transparent"
                         android:text="@string/boring_icon_text"
@@ -170,6 +171,7 @@
 
                     <ImageView
                         android:layout_marginTop="-15dp"
+                        android:layout_marginLeft="30dp"
                         android:id="@+id/cryEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
@@ -182,7 +184,7 @@
                         android:id="@+id/sickEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
-                        android:layout_marginLeft="150dp"
+                        android:layout_marginLeft="220dp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/sick_earth_emotion" />
 
@@ -191,7 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/cryEarthEmotion"
-                        android:layout_marginLeft="65dp"
+                        android:layout_marginLeft="95dp"
                         android:layout_marginTop="-30dp"
                         android:background="@android:color/transparent"
                         android:text="@string/cry_icon_text"
@@ -203,7 +205,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/sickEarthEmotion"
-                        android:layout_marginLeft="210dp"
+                        android:layout_marginLeft="275dp"
                         android:layout_marginTop="-30dp"
                         android:background="@android:color/transparent"
                         android:text="@string/sick_icon_text"
@@ -227,6 +229,7 @@
 
                     <ImageView
                         android:layout_marginTop="-15dp"
+                        android:layout_marginLeft="220dp"
                         android:id="@+id/angryEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
@@ -239,7 +242,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/angryEarthEmotion"
-                        android:layout_marginLeft="50dp"
+                        android:layout_marginLeft="270dp"
                         android:layout_marginTop="-30dp"
                         android:background="@android:color/transparent"
                         android:text="@string/angry_icon_text"
@@ -252,16 +255,15 @@
 
         </LinearLayout>
 
-    </ScrollView>
-
+    </ScrollView >
     <LinearLayout
         android:id="@+id/questionLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_x="70dp"
         android:background="@android:color/transparent"
         android:elevation="6dp">
-
         <TextView
             android:layout_marginTop="0dp"
             android:id="@+id/questionText"

@@ -175,7 +175,7 @@
             app:buttonGradientEndColor="@color/colorAccent"
             app:buttonCornerRadius="20dp"
             app:buttonColor="#FF5252"
-            android:layout_marginLeft="47dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="420dp"/>
 
     </LinearLayout>

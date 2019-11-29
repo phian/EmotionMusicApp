@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     AbsoluteLayout mainScreen;
     RelativeLayout aboutUsHeaderTextLay;
 
-//    Button startButton;
+    //    Button startButton;
     ImageButton dropDownScreenButton, aboutUsIcon, howToUseIcon;
     RoundedButton startButton;
 
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBackPressed() {
-         if (isAboutUsIconClick == true && isMainScreenPrevious == false) {
+        if (isAboutUsIconClick == true && isMainScreenPrevious == false) {
             aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
             aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
@@ -126,12 +126,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-             // reset add click ani for button
-             PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
-                     .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
-                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
-                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
-                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
+            // reset add click ani for button
+            PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+                    .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                    .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                    .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                    .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
         } else if (isHowToUseIconClick == true && isMainScreenPrevious == false) {
             aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
 
@@ -161,18 +161,18 @@ public class MainActivity extends AppCompatActivity {
 
             isMainScreenPrevious = false;
 
-             aboutUsIcon.setOnTouchListener(null);
-             howToUseIcon.setOnTouchListener(null);
-             startButton.setOnClickListener(null);
+            aboutUsIcon.setOnTouchListener(null);
+            howToUseIcon.setOnTouchListener(null);
+            startButton.setOnClickListener(null);
 
             onMainScreenTouchListener();
 
-             // reset add click ani for button
-             PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
-                     .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
-                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
-                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
-                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
+            // reset add click ani for button
+            PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+                    .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                    .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                    .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                    .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
         } else if (false == false && false == false && false == false) {
             finish();
         }
@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
                 startButtonAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.start_button_gone_ani);
                 startButton.startAnimation(startButtonAni);
 
-
                 startButtonAni.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -307,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 startButton.setOnClickListener(null);
+                startButton.setEnabled(false);
             }
         });
     }

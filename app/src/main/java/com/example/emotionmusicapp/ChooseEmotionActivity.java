@@ -15,17 +15,20 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsoluteLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.scwang.wave.MultiWaveHeader;
+import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.util.Calendar;
 
 public class ChooseEmotionActivity extends AppCompatActivity {
 
-    ImageView mainBackGround, happyEarthEmotion, loveEarthEmotion, sadEarthEmotion, boringEarthEmotion, cryEarthEmotion, sickEarthEmotion, angryEarthEmotion;
+    ImageView mainBackGround;
+    ImageButton happyEarthEmotion, loveEarthEmotion, sadEarthEmotion, boringEarthEmotion, cryEarthEmotion, sickEarthEmotion, angryEarthEmotion;
     AbsoluteLayout mainScreen;
     LinearLayout questionTextLayout;
     TextView happyEarthEmotionText, loveEarthEmotionText, sadEarthEmotionText, boringEarthEmotionText, cryEarthEmotionText, sickEarthEmotionText, angryEarthEmotionText;
@@ -50,6 +53,13 @@ public class ChooseEmotionActivity extends AppCompatActivity {
         castControl();
         setChooseEmotionScreenBackground();
         setControlAnimation();
+
+        // Add click ani for button
+        PushDownAnim.setPushDownAnimTo(happyEarthEmotion, loveEarthEmotion, sadEarthEmotion, boringEarthEmotion, cryEarthEmotion, sickEarthEmotion, angryEarthEmotion)
+                .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
     }
 
     @Override
@@ -84,25 +94,25 @@ public class ChooseEmotionActivity extends AppCompatActivity {
         mainScreen = (AbsoluteLayout) findViewById(R.id.mainScreen);
         questionTextLayout = (LinearLayout) findViewById(R.id.questionLayout);
 
-        happyEarthEmotion = (ImageView) findViewById(R.id.happyEarthEmotion);
+        happyEarthEmotion = (ImageButton) findViewById(R.id.happyEarthEmotion);
         happyEarthEmotionText = (TextView) findViewById(R.id.happyEmotionText);
 
-        loveEarthEmotion = (ImageView) findViewById(R.id.loveEarthEmotion);
+        loveEarthEmotion = (ImageButton) findViewById(R.id.loveEarthEmotion);
         loveEarthEmotionText = (TextView) findViewById(R.id.loveEmotionText);
 
-        sadEarthEmotion = (ImageView) findViewById(R.id.sadEarthEmotion);
+        sadEarthEmotion = (ImageButton) findViewById(R.id.sadEarthEmotion);
         sadEarthEmotionText = (TextView) findViewById(R.id.sadEmotionText);
 
-        boringEarthEmotion = (ImageView) findViewById(R.id.boringEarthEmotion);
+        boringEarthEmotion = (ImageButton) findViewById(R.id.boringEarthEmotion);
         boringEarthEmotionText = (TextView) findViewById(R.id.boringEmotionText);
 
-        cryEarthEmotion = (ImageView) findViewById(R.id.cryEarthEmotion);
+        cryEarthEmotion = (ImageButton) findViewById(R.id.cryEarthEmotion);
         cryEarthEmotionText = (TextView) findViewById(R.id.cryEmotionText);
 
-        sickEarthEmotion = (ImageView) findViewById(R.id.sickEarthEmotion);
+        sickEarthEmotion = (ImageButton) findViewById(R.id.sickEarthEmotion);
         sickEarthEmotionText = (TextView) findViewById(R.id.sickEmotionText);
 
-        angryEarthEmotion = (ImageView) findViewById(R.id.angryEarthEmotion);
+        angryEarthEmotion = (ImageButton) findViewById(R.id.angryEarthEmotion);
         angryEarthEmotionText = (TextView) findViewById(R.id.angryEmotionText);
 
 //        waveHeader = (MultiWaveHeader) findViewById(R.id.headerWave);

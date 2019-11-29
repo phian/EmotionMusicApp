@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -121,6 +120,13 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+
+             // reset add click ani for button
+             PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+                     .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
         } else if (isHowToUseIconClick == true && isMainScreenPrevious == false) {
             aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
 
@@ -155,6 +161,13 @@ public class MainActivity extends AppCompatActivity {
              startButton.setOnClickListener(null);
 
             onMainScreenTouchListener();
+
+             // reset add click ani for button
+             PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+                     .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
         } else if (false == false && false == false && false == false) {
             finish();
         }
@@ -390,6 +403,13 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 dropDownScreenButton.setOnClickListener(null);
+
+                // reset add click ani for button
+                PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+                        .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                        .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                        .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                        .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
             }
         });
     }

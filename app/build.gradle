@@ -48,8 +48,8 @@ dependencies {
     api 'com.taishi-y:musicindicator:0.1.0'
     implementation 'com.cleveroad:audiovisualization:1.0.1'
     implementation 'com.github.varunest:sparkbutton:1.0.6'
-
     implementation( 'com.github.thekhaeng:pushdown-anim-click:1.1.1' ){
         exclude group: 'com.android.support'
     }
+    implementation 'info.hoang8f:fbutton:1.0.5'
 }

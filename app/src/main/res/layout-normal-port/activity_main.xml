@@ -110,7 +110,9 @@
         android:layout_height="630dp"
         android:orientation="vertical">
 
-        <ImageView
+        <ImageButton
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
             android:id="@+id/aboutUsIcon"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -118,7 +120,9 @@
             android:layout_marginTop="230dp"
             android:src="@drawable/about_us"/>
 
-        <ImageView
+        <ImageButton
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
             android:id="@+id/howToUseAppIcon"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -154,7 +158,8 @@
         android:background="@android:color/transparent"
         android:id="@+id/startAppButtonLay"
         android:layout_width="wrap_content"
-        android:layout_height="650dp">
+        android:layout_height="650dp"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/startAppButton"
@@ -197,7 +202,7 @@
             android:layout_height="35dp"
             android:src="@drawable/drop_down_screen_button"
             android:scaleType="fitXY"
-            android:background="@android:color/transparent"
+            android:background="?android:selectableItemBackground"
             android:layout_alignRight="@id/aboutUsHeaderText"/>
 
     </RelativeLayout>

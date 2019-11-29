@@ -89,21 +89,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="-5dp"
             android:orientation="horizontal"
             android:weightSum="5">
 
             <SeekBar
-                android:layout_marginTop="1dp"
                 android:id="@+id/songLengthSeekBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
+                android:layout_marginTop="1dp"
                 android:layout_weight="4.5"
-                android:progressTint="#c4ff0e"
-                android:thumbTint="#c4ff0e"
+                android:max="100"
                 android:progress="0"
-                android:max="100"/>
+                android:progressTint="#c4ff0e"
+                android:thumbTint="#c4ff0e" />
 
             <TextView
                 android:id="@+id/songLengthTV"
@@ -111,8 +111,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:layout_weight="0.5"
-                android:text="-00:00"
-                android:textSize="20dp"
+                android:text="@string/song_length_text"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -130,8 +130,8 @@
                 android:id="@+id/playMusicButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="?android:selectableItemBackground"
-                android:layout_marginLeft="50dp"
+                android:background="@android:color/transparent"
+                android:layout_marginLeft="65dp"
                 android:src="@drawable/play_music_button"
                 android:scaleType="fitXY"/>
 <!--android:background="?android:selectableItemBackground"-->
@@ -143,8 +143,8 @@
                 android:layout_marginLeft="-115dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/skip_previous_button"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"
+                android:src="@drawable/skip_previous_button" />
 
             <ImageButton
                 android:id="@+id/skipNextButton"
@@ -168,17 +168,17 @@
                 android:id="@+id/replayListButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="67dp"
                 android:layout_marginTop="7dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/repeat_music_button"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY" />
 
             <ImageButton
                 android:id="@+id/mixListButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="117dp"
+                android:layout_marginLeft="112dp"
                 android:layout_marginTop="7dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/shuffle_music_button"

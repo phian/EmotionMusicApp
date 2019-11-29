@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.thekhaeng.pushdownanim.PushDownAnim;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,20 +28,22 @@ public class MainActivity extends AppCompatActivity {
 
     // appNameAndInstructionIcon, instructionIconLayout, startAppButtonLay
 
-    ImageView mainScreenBackground, cloverImg, aboutUsIcon, howToUseIcon;
+    ImageView mainScreenBackground, cloverImg;
 
     LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, aboutUsContentLay;
     AbsoluteLayout mainScreen;
     RelativeLayout aboutUsHeaderTextLay;
 
     Button startButton;
-    ImageButton dropDownScreenButton;
+    ImageButton dropDownScreenButton, aboutUsIcon, howToUseIcon;
+
     TextView mainGreetingTV, aboutUsTV, howToUseTV, appName;
 
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
     boolean isAboutUsIconClick, isHowToUseIconClick, isMainScreenPrevious;
 
+    @SuppressLint({"ClickableViewAccessibility", "WrongConstant"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         castControl();
+
+        // Add click ani for button
+        PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+                .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
     }
 
     // check if application is running then update the greeting text
@@ -128,10 +139,8 @@ public class MainActivity extends AppCompatActivity {
             isMainScreenPrevious = true;
         } else if (isMainScreenPrevious == true && isAboutUsIconClick == false && isHowToUseIconClick == false) {
             mainScreenBackground.animate().translationY(0).setDuration(500).setStartDelay(300);
-
             //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
             cloverImg.animate().translationX(0).setDuration(500).setStartDelay(600);
-
             appMainGreeting.animate().translationY(0).alpha(1).setDuration(500).setStartDelay(300);
 
             // disable animation of control in next screen
@@ -155,8 +164,7 @@ public class MainActivity extends AppCompatActivity {
     public void castControl() {
         mainScreenBackground = (ImageView) findViewById(R.id.mainBackGround);
         cloverImg = (ImageView) findViewById(R.id.clover);
-        aboutUsIcon = (ImageView) findViewById(R.id.aboutUsIcon);
-        howToUseIcon = (ImageView) findViewById(R.id.howToUseAppIcon);
+
 
         appMainGreeting = (LinearLayout) findViewById(R.id.splashScreen);
         appNameAndIcon = (LinearLayout) findViewById(R.id.appNameAndInstructionIcon);
@@ -174,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
 
         startButton = (Button) findViewById(R.id.startAppButton);
         dropDownScreenButton = (ImageButton) findViewById(R.id.dropDownScreenButton);
+        aboutUsIcon = (ImageButton) findViewById(R.id.aboutUsIcon);
+        howToUseIcon = (ImageButton) findViewById(R.id.howToUseAppIcon);
 
         mainGreetingTV = (TextView) findViewById(R.id.greetingTV);
         aboutUsTV = (TextView) findViewById(R.id.aboutUsTV);
@@ -216,10 +226,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
-
                 //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
                 cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);
-
                 appMainGreeting.animate().translationY(140).alpha(0).setDuration(500).setStartDelay(300);
 
                 appNameAndIcon.setVisibility(View.VISIBLE);
@@ -288,9 +296,9 @@ public class MainActivity extends AppCompatActivity {
     // event for About Us icon
     @SuppressLint("ClickableViewAccessibility")
     public void onAboutUsIconTouchListener() {
-        aboutUsIcon.setOnTouchListener(new View.OnTouchListener() {
+        aboutUsIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 isAboutUsIconClick = true;
                 isMainScreenPrevious = false;
 
@@ -312,8 +320,6 @@ public class MainActivity extends AppCompatActivity {
                 aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
                 onDropDownScreenButtonClickListener();
-
-                return true;
             }
         });
     }
@@ -321,9 +327,9 @@ public class MainActivity extends AppCompatActivity {
     // event for How To Use icon
     @SuppressLint("ClickableViewAccessibility")
     public void onHowToUseIconTouchListener() {
-        howToUseIcon.setOnTouchListener(new View.OnTouchListener() {
+        howToUseIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_out_ani);
                 instructionIconLayout.startAnimation(appNameAndIconAni);
 
@@ -337,8 +343,6 @@ public class MainActivity extends AppCompatActivity {
 
                 isAboutUsIconClick = true;
                 isMainScreenPrevious = false;
-
-                return false;
             }
         });
     }

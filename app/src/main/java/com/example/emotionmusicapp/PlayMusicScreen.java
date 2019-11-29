@@ -22,6 +22,7 @@ import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -176,7 +177,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     //--------------------------------------------------------------------------------------------//
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "WrongConstant"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,6 +217,14 @@ public class PlayMusicScreen extends AppCompatActivity {
         // set audio visualization handler. This will REPLACE previously set speech recognizer handler
         VisualizerDbmHandler vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(PlayMusicScreen.this, 0);
         musicWaveVisualization.linkTo(vizualizerHandler);
+
+        // Add click ani for button
+        PushDownAnim.setPushDownAnimTo(playButton, skipPreviousButton, skipNextButton, repeatButton, shuffleButton)
+                .setScale(PushDownAnim.MODE_SCALE | PushDownAnim.MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_SCALE)
+                .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
+                .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
+                .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
+                .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
     }
 
     @Override

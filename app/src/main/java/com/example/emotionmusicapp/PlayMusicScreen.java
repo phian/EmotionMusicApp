@@ -287,6 +287,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for seek bar change
     public void onMusicSeekBarLengthChangeListener() {
         songLengthSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @SuppressLint("DefaultLocale")
@@ -373,6 +374,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for skip next button
     public void onSkipNextButtonClickListener() {
         skipNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -418,6 +420,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for skip previous button
     public void onSkipPreviousButtonClickListener() {
         skipPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override

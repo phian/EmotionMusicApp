@@ -397,11 +397,14 @@ public class PlayMusicScreen extends AppCompatActivity {
                 } else {
                     if (diskImgAni.isRunning() == true) {
                         diskImgAni.end();
+                    } else {
+                        diskImgAni.start();
                     }
-                    if (musicMedia.isPlaying() == true) {
+                    if (musicMedia.isPlaying() == false) {
                         musicWaveVisualization.release();
+                    } else {
+                        musicWaveVisualization.onResume();
                     }
-                    playButton.setImageResource(R.drawable.play_music_button);
                 }
             }
         });

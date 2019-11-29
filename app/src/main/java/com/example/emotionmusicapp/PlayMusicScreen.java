@@ -15,6 +15,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
@@ -24,6 +25,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
 
 public class PlayMusicScreen extends AppCompatActivity {
@@ -38,6 +40,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     ObjectAnimator diskImgAni;
 
     boolean isPlay = false;
+    int musicIndex = 0;
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -188,6 +191,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         castControl();
         onPlayMusicButtonClickListener();
         onMusicSeekBarLengthChangeListener();
+        onSkipNextButtonClickListener();
+        onSkipPreviousButtonClickListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -351,6 +356,97 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                         update();
                     }
+                }
+            }
+        });
+    }
+
+    public void onSkipNextButtonClickListener() {
+        skipNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (musicIndex < R.raw.class.getFields().length - 1) {
+                    musicIndex++;
+                } else {
+                    musicIndex = 0;
+                }
+
+                // call music file
+                musicMedia.release();
+                musicMedia = new MediaPlayer();
+
+                if (musicIndex == 0) {
+                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+                } else if (musicIndex == 1) {
+                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
+                } else {
+                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
+                }
+
+                if(isPlay == true) {
+                    musicMedia.start();
+
+                    if (diskImgAni.isRunning() == false) {
+                        diskImgAni.start();
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.onResume();
+                    }
+                    playButton.setImageResource(R.drawable.pause_music_button);
+                } else {
+                    if (diskImgAni.isRunning() == true) {
+                        diskImgAni.end();
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.release();
+                    }
+                    playButton.setImageResource(R.drawable.play_music_button);
+                }
+            }
+        });
+    }
+
+    public void onSkipPreviousButtonClickListener() {
+        skipPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (musicIndex > 0) {
+                    musicIndex--;
+                } else {
+                    musicIndex = R.raw.class.getFields().length - 1;
+                }
+
+                // call music file
+                musicMedia.release();
+                musicMedia = new MediaPlayer();
+
+                if (musicIndex == 0) {
+                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+                } else if (musicIndex == 1) {
+                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
+                } else {
+                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
+                }
+
+
+                if(isPlay == true) {
+                    musicMedia.start();
+
+                    if (diskImgAni.isRunning() == false) {
+                        diskImgAni.start();
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.onResume();
+                    }
+                    playButton.setImageResource(R.drawable.pause_music_button);
+                } else {
+                    if (diskImgAni.isRunning() == true) {
+                        diskImgAni.end();
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.release();
+                    }
+                    playButton.setImageResource(R.drawable.play_music_button);
                 }
             }
         });

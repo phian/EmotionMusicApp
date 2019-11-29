@@ -17,11 +17,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+
+import life.sabujak.roundedbutton.RoundedButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
     AbsoluteLayout mainScreen;
     RelativeLayout aboutUsHeaderTextLay;
 
-    Button startButton;
+//    Button startButton;
     ImageButton dropDownScreenButton, aboutUsIcon, howToUseIcon;
+    RoundedButton startButton;
 
     TextView mainGreetingTV, aboutUsTV, howToUseTV, appName;
 
@@ -193,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
         aboutUsHeaderTextLay = (RelativeLayout) findViewById(R.id.aboutUsHeaderTextLay);
 
-        startButton = (Button) findViewById(R.id.startAppButton);
+        startButton = (RoundedButton) findViewById(R.id.startAppButton);
         dropDownScreenButton = (ImageButton) findViewById(R.id.dropDownScreenButton);
         aboutUsIcon = (ImageButton) findViewById(R.id.aboutUsIcon);
         howToUseIcon = (ImageButton) findViewById(R.id.howToUseAppIcon);

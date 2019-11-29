@@ -51,5 +51,5 @@ dependencies {
     implementation( 'com.github.thekhaeng:pushdown-anim-click:1.1.1' ){
         exclude group: 'com.android.support'
     }
-    implementation 'info.hoang8f:fbutton:1.0.5'
+    implementation 'com.github.sabujak-sabujak:RoundedButton:v0.1.1'
 }

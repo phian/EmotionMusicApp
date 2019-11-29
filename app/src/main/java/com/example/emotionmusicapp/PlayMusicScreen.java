@@ -15,7 +15,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
@@ -25,7 +24,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
 
 public class PlayMusicScreen extends AppCompatActivity {
@@ -227,8 +225,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                 .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                 .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
-
-        Toast.makeText(PlayMusicScreen.this, String.valueOf(R.raw.class.getFields().length), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -309,23 +305,14 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mediaPlayer) {
-                            diskImgAni.end();
-                            musicWaveVisualization.release();
+                            if (diskImgAni.isRunning()) {
+                                diskImgAni.end();
+                            }
+                            if (musicMedia.isPlaying()) {
+                                musicWaveVisualization.release();
+                            }
                             playButton.setImageResource(R.drawable.play_music_button);
                             isPlay = false;
-
-                            // reset animation for disk
-                            diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
-                            diskImgAni.setRepeatCount(musicMedia.getDuration());
-                            diskImgAni.setInterpolator(new LinearInterpolator());
-
-                            // reset speech recognizer handler
-                            SpeechRecognizerDbmHandler speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(PlayMusicScreen.this);
-                            speechRecHandler.innerRecognitionListener();
-                            musicWaveVisualization.linkTo(speechRecHandler);
-                            // set audio visualization handler. This will REPLACE previously set speech recognizer handler
-                            VisualizerDbmHandler visualizerHandler = DbmHandler.Factory.newVisualizerHandler(PlayMusicScreen.this, 0);
-                            musicWaveVisualization.linkTo(visualizerHandler);
                         }
                     });
                 } else if (musicMedia == null && b) {
@@ -457,9 +444,13 @@ public class PlayMusicScreen extends AppCompatActivity {
                 } else {
                     if (diskImgAni.isRunning() == true) {
                         diskImgAni.end();
+                    } else {
+                        diskImgAni.start();
                     }
                     if (musicMedia.isPlaying() == false) {
                         musicWaveVisualization.release();
+                    } else {
+                        musicWaveVisualization.onResume();
                     }
                     playButton.setImageResource(R.drawable.play_music_button);
                 }

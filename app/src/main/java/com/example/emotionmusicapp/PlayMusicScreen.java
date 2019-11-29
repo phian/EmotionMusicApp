@@ -227,6 +227,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                 .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                 .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
+
+        Toast.makeText(PlayMusicScreen.this, String.valueOf(R.raw.class.getFields().length), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -306,13 +308,23 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mediaPlayer) {
-                            if (diskImgAni.isRunning()) {
-                                diskImgAni.end();
-                            }
-                            if (musicMedia.isPlaying()) {
-                                musicWaveVisualization.release();
-                            }
+                            diskImgAni.end();
+                            musicWaveVisualization.release();
                             playButton.setImageResource(R.drawable.play_music_button);
+                            isPlay = false;
+
+                            // reset animation for disk
+                            diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
+                            diskImgAni.setRepeatCount(musicMedia.getDuration());
+                            diskImgAni.setInterpolator(new LinearInterpolator());
+
+                            // reset speech recognizer handler
+                            SpeechRecognizerDbmHandler speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(PlayMusicScreen.this);
+                            speechRecHandler.innerRecognitionListener();
+                            musicWaveVisualization.linkTo(speechRecHandler);
+                            // set audio visualization handler. This will REPLACE previously set speech recognizer handler
+                            VisualizerDbmHandler visualizerHandler = DbmHandler.Factory.newVisualizerHandler(PlayMusicScreen.this, 0);
+                            musicWaveVisualization.linkTo(visualizerHandler);
                         }
                     });
                 } else if (musicMedia == null && b) {
@@ -365,7 +377,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         skipNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (musicIndex < R.raw.class.getFields().length - 1) {
+                if (musicIndex < R.raw.class.getFields().length - 2) {
                     musicIndex++;
                 } else {
                     musicIndex = 0;
@@ -383,7 +395,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
                 }
 
-                if(isPlay == true) {
+                if (isPlay == true) {
                     musicMedia.start();
 
                     if (diskImgAni.isRunning() == false) {
@@ -397,7 +409,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     if (diskImgAni.isRunning() == true) {
                         diskImgAni.end();
                     }
-                    if (musicMedia.isPlaying() == false) {
+                    if (musicMedia.isPlaying() == true) {
                         musicWaveVisualization.release();
                     }
                     playButton.setImageResource(R.drawable.play_music_button);
@@ -413,7 +425,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 if (musicIndex > 0) {
                     musicIndex--;
                 } else {
-                    musicIndex = R.raw.class.getFields().length - 1;
+                    musicIndex = R.raw.class.getFields().length - 2;
                 }
 
                 // call music file
@@ -429,7 +441,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
 
-                if(isPlay == true) {
+                if (isPlay == true) {
                     musicMedia.start();
 
                     if (diskImgAni.isRunning() == false) {

@@ -372,9 +372,14 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicIndex = 0;
                 }
 
-                // call music file
-                musicMedia.release();
-                musicMedia = new MediaPlayer();
+                // check if music media is null or not to create and call music file
+                if (musicMedia == null) {
+                    musicMedia = new MediaPlayer();
+                } else {
+                    musicMedia.release();
+                    musicMedia = new MediaPlayer();
+                }
+
 
                 if (musicIndex == 0) {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
@@ -394,17 +399,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicWaveVisualization.onResume();
                     }
                     playButton.setImageResource(R.drawable.pause_music_button);
-                } else {
-                    if (diskImgAni.isRunning() == true) {
-                        diskImgAni.end();
-                    } else {
-                        diskImgAni.start();
-                    }
-                    if (musicMedia.isPlaying() == false) {
-                        musicWaveVisualization.release();
-                    } else {
-                        musicWaveVisualization.onResume();
-                    }
                 }
             }
         });
@@ -421,9 +415,13 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicIndex = R.raw.class.getFields().length - 2;
                 }
 
-                // call music file
-                musicMedia.release();
-                musicMedia = new MediaPlayer();
+                // check if music media is null or not to create and call music file
+                if (musicMedia == null) {
+                    musicMedia = new MediaPlayer();
+                } else {
+                    musicMedia.release();
+                    musicMedia = new MediaPlayer();
+                }
 
                 if (musicIndex == 0) {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
@@ -444,18 +442,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicWaveVisualization.onResume();
                     }
                     playButton.setImageResource(R.drawable.pause_music_button);
-                } else {
-                    if (diskImgAni.isRunning() == true) {
-                        diskImgAni.end();
-                    } else {
-                        diskImgAni.start();
-                    }
-                    if (musicMedia.isPlaying() == false) {
-                        musicWaveVisualization.release();
-                    } else {
-                        musicWaveVisualization.onResume();
-                    }
-                    playButton.setImageResource(R.drawable.play_music_button);
                 }
             }
         });

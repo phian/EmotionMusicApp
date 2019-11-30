@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.emotionmusicapp">
 
+<!--  use for wave theme  -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+<!--    -->
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -17,9 +23,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ShowingAboutUsActivity">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:largeHeap="true">
+<!--        android:hardwareAccelerated="false"-->
+
+        <activity android:name=".PlayMusicScreen">
+
         </activity>
+
+        <activity android:name=".ShowingAboutUsActivity">
+
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ChooseEmotionActivity">
             <intent-filter>
                 <action android:name=".ChooseEmotionActivity" />

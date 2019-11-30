@@ -52,4 +52,5 @@ dependencies {
         exclude group: 'com.android.support'
     }
     implementation 'com.github.sabujak-sabujak:RoundedButton:v0.1.1'
+    implementation 'com.github.GwonHyeok:StickySwitch:0.0.15'
 }

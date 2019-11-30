@@ -8,4 +8,6 @@
     <color name="waveColors">#8B0A50</color>
     <color name="enjoyButtonSecondColor">#C0C0C0</color>
     <color name="enjoyButtonTextSecondColor">#808080</color>
+    <color name="switchStateColor">#03a9f4</color>
+    <color name="switchStateBackgroundColor">#66FF99</color>
 </resources>

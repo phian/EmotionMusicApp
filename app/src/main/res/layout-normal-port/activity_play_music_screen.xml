@@ -188,4 +188,31 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/lightAndNightModeIcLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <io.ghyeok.stickyswitch.widget.StickySwitch
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="210dp"
+            android:id="@+id/themeSwitch"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            app:ss_animationDuration="300"
+            app:ss_leftIcon="@drawable/light_mode_icon"
+            app:ss_rightIcon="@drawable/night_mode_icon"
+            app:ss_iconPadding="8dp"
+            app:ss_iconSize="25dp"
+            app:ss_selectedTextSize="14sp"
+            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
+            app:ss_switchColor="@color/switchStateColor"
+            app:ss_textColor="@android:color/white"
+            app:ss_textSize="12sp"
+            app:ss_animationType="line"
+            tools:ignore="ObsoleteLayoutParam" />
+
+    </LinearLayout>
+
 </RelativeLayout>

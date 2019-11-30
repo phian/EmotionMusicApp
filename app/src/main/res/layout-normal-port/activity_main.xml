@@ -12,20 +12,20 @@
     app:elevation="0dp">
 
     <ImageView
-        android:id="@+id/mainBackGround"
-        android:layout_width="match_parent"
-        android:layout_height="630dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="-1dp"
-        android:layout_x="-1dp"
-        android:layout_y="0dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitXY"
-        android:src="@drawable/app_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:id="@+id/mainBackGround"
+    android:layout_width="match_parent"
+    android:layout_height="630dp"
+    android:layout_marginStart="0dp"
+    android:layout_marginEnd="-1dp"
+    android:layout_x="-1dp"
+    android:layout_y="0dp"
+    android:background="@android:color/transparent"
+    android:scaleType="fitXY"
+    android:src="@drawable/app_background"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
     <!--        android:translationY="-470dp"-->
 
     <LinearLayout

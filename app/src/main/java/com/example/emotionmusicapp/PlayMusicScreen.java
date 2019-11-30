@@ -26,10 +26,13 @@ import com.thekhaeng.pushdownanim.PushDownAnim;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import io.ghyeok.stickyswitch.widget.StickySwitch;
+
 public class PlayMusicScreen extends AppCompatActivity {
     ImageButton playButton, skipNextButton, skipPreviousButton, repeatButton, shuffleButton;
     TextView songLengthTV, songNameTV, singerNameTV;
     SeekBar songLengthSB;
+    StickySwitch themeSwitch;
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
 

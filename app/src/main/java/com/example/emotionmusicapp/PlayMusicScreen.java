@@ -202,7 +202,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         long leftTime = songDuration - currentTime;
         long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
         long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
-        songLengthTV.setText(String.format("-" + "%2d:%2d", songLeftMin, songLeftSec));
+        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
         //----------------------------------------------------------------------------------------//
 
         // animation for disk
@@ -400,6 +400,16 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
                     playButton.setImageResource(R.drawable.pause_music_button);
                 }
+
+                // update time text
+                int currentTime = musicMedia.getCurrentPosition();
+                long songDuration = musicMedia.getDuration();
+
+                long leftTime = songDuration - currentTime;
+                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
             }
         });
     }
@@ -443,6 +453,16 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
                     playButton.setImageResource(R.drawable.pause_music_button);
                 }
+
+                // update time text
+                int currentTime = musicMedia.getCurrentPosition();
+                long songDuration = musicMedia.getDuration();
+
+                long leftTime = songDuration - currentTime;
+                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
             }
         });
     }

@@ -68,7 +68,6 @@
                         android:src="@drawable/happy_earth_emotion" />
 
                     <ImageButton
-                        android:layout_marginTop="100dp"
                         android:id="@+id/loveEarthEmotion"
                         android:layout_width="170dp"
                         android:layout_height="170dp"

@@ -25,15 +25,15 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:id="@+id/aboutUsInfoText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="App nghe nhạc xịn xò của sinh viên UIT =)))"
-                android:textSize="30sp"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"
                 android:gravity="center"
-                android:textColor="@android:color/black"/>
+                android:text="App nghe nhạc xịn xò của sinh viên UIT =)))"
+                android:textColor="@android:color/black"
+                android:textSize="30sp" />
 
         </LinearLayout>
 

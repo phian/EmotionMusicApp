@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -37,6 +40,9 @@ public class PlayMusicScreen extends AppCompatActivity {
     CircularImageView diskImageCIV;
 
     AudioVisualization musicWaveVisualization;
+
+    MediaVisualizerView musicVisualizerView;
+    Visualizer musicVisualizer;
 
     ObjectAnimator diskImgAni;
 
@@ -199,6 +205,9 @@ public class PlayMusicScreen extends AppCompatActivity {
         musicMedia = new MediaPlayer();
         musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
 
+        initAudio(); // init audio after create the song for music media
+
+        // set text for TextView song length
         int currentTime = musicMedia.getCurrentPosition();
         long songDuration = musicMedia.getDuration();
 
@@ -255,6 +264,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
         musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
+
+        musicVisualizerView = (MediaVisualizerView) findViewById(R.id.musicVisualizerView);
     }
 
     // event method for play music button
@@ -316,6 +327,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                             }
                             playButton.setImageResource(R.drawable.play_music_button);
                             isPlay = false;
+                            musicVisualizer.release();
+                            musicVisualizer.setEnabled(false);
                         }
                     });
                 } else if (musicMedia == null && b) {
@@ -367,6 +380,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     // event for skip next button
     public void onSkipNextButtonClickListener() {
         skipNextButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
                 if (musicIndex < R.raw.class.getFields().length - 2) {
@@ -383,17 +397,23 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = new MediaPlayer();
                 }
 
-
                 if (musicIndex == 0) {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+                    initAudio();
+                    musicVisualizerView.draw(new Canvas());
                 } else if (musicIndex == 1) {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
+                    initAudio();
+                    musicVisualizerView.draw(new Canvas());
                 } else {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
+                    initAudio();
+                    musicVisualizerView.draw(new Canvas());
                 }
 
                 if (isPlay == true) {
                     musicMedia.start();
+                    initAudio();
 
                     if (diskImgAni.isRunning() == false) {
                         diskImgAni.start();
@@ -420,6 +440,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     // event for skip previous button
     public void onSkipPreviousButtonClickListener() {
         skipPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
                 if (musicIndex > 0) {
@@ -444,9 +465,9 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
                 }
 
-
                 if (isPlay == true) {
                     musicMedia.start();
+                    initAudio();
 
                     if (diskImgAni.isRunning() == false) {
                         diskImgAni.start();
@@ -466,7 +487,51 @@ public class PlayMusicScreen extends AppCompatActivity {
                 long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
                 songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+
             }
         });
+    }
+
+    // method to init Audio for musicVisualizerView
+    public void initAudio() {
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        if (musicIndex == 0) {
+            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+        } else if (musicIndex == 1) {
+            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
+        } else {
+            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
+        }
+
+        setupVisualizerFxAndUI();
+
+        musicVisualizer.setEnabled(true);
+
+        musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                musicVisualizer.release();
+                musicVisualizer.setEnabled(false);
+            }
+        });
+    }
+
+    // method to set up visualizer fx and ui
+    private void setupVisualizerFxAndUI() {
+        // Create the Visualizer object and attach it to our media player.
+        musicVisualizer = new Visualizer(musicMedia.getAudioSessionId());
+        musicVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        musicVisualizer.setDataCaptureListener(
+                new Visualizer.OnDataCaptureListener() {
+                    public void onWaveFormDataCapture(Visualizer visualizer,
+                                                      byte[] bytes, int samplingRate) {
+                        musicVisualizerView.updateMediaVisualizerView(bytes);
+                    }
+
+                    public void onFftDataCapture(Visualizer visualizer,
+                                                 byte[] bytes, int samplingRate) {
+                    }
+                }, Visualizer.getMaxCaptureRate() / 2, true, false);
     }
 }

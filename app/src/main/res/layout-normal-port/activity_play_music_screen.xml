@@ -36,6 +36,17 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.emotionmusicapp.MediaVisualizerView
+            android:id="@+id/musicVisualizerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/diskDisplayLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -23,9 +20,7 @@ import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
-import com.h6ah4i.android.media.IBasicMediaPlayer;
-import com.h6ah4i.android.media.IMediaPlayerFactory;
-import com.h6ah4i.android.media.opensl.OpenSLMediaPlayerFactory;
+import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
@@ -41,6 +36,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     StickySwitch themeSwitch;
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
+
+    BlastVisualizer blastVisualizer;
 
     AudioVisualization musicWaveVisualization;
 
@@ -235,6 +232,11 @@ public class PlayMusicScreen extends AppCompatActivity {
                 .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                 .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                 .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
+
+        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+        int audioSessionId = musicMedia.getAudioSessionId();
+        if (audioSessionId != -1)
+            blastVisualizer.setAudioSessionId(audioSessionId);
     }
 
     @Override
@@ -262,6 +264,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
         musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
+
+        blastVisualizer = (BlastVisualizer) findViewById(R.id.blastVisualizer);
     }
 
     // event method for play music button
@@ -399,6 +403,11 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
                 }
 
+                //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                int audioSessionId = musicMedia.getAudioSessionId();
+                if (audioSessionId != -1)
+                    blastVisualizer.setAudioSessionId(audioSessionId);
+
                 if (isPlay == true) {
                     musicMedia.start();
 
@@ -451,6 +460,11 @@ public class PlayMusicScreen extends AppCompatActivity {
                 } else {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
                 }
+
+                //get the AudioSessionId from MediaPlayer and pass it to the visualizer
+                int audioSessionId = musicMedia.getAudioSessionId();
+                if (audioSessionId != -1)
+                    blastVisualizer.setAudioSessionId(audioSessionId);
 
                 if (isPlay == true) {
                     musicMedia.start();

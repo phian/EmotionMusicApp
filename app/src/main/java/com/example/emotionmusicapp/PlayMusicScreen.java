@@ -23,6 +23,9 @@ import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
+import com.h6ah4i.android.media.IBasicMediaPlayer;
+import com.h6ah4i.android.media.IMediaPlayerFactory;
+import com.h6ah4i.android.media.opensl.OpenSLMediaPlayerFactory;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
@@ -40,9 +43,6 @@ public class PlayMusicScreen extends AppCompatActivity {
     CircularImageView diskImageCIV;
 
     AudioVisualization musicWaveVisualization;
-
-    MediaVisualizerView musicVisualizerView;
-    Visualizer musicVisualizer;
 
     ObjectAnimator diskImgAni;
 
@@ -205,8 +205,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         musicMedia = new MediaPlayer();
         musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
 
-        initAudio(); // init audio after create the song for music media
-
         // set text for TextView song length
         int currentTime = musicMedia.getCurrentPosition();
         long songDuration = musicMedia.getDuration();
@@ -264,8 +262,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
         musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
-
-        musicVisualizerView = (MediaVisualizerView) findViewById(R.id.musicVisualizerView);
     }
 
     // event method for play music button
@@ -327,8 +323,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                             }
                             playButton.setImageResource(R.drawable.play_music_button);
                             isPlay = false;
-                            musicVisualizer.release();
-                            musicVisualizer.setEnabled(false);
                         }
                     });
                 } else if (musicMedia == null && b) {
@@ -399,21 +393,14 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 if (musicIndex == 0) {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
-                    initAudio();
-                    musicVisualizerView.draw(new Canvas());
                 } else if (musicIndex == 1) {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
-                    initAudio();
-                    musicVisualizerView.draw(new Canvas());
                 } else {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
-                    initAudio();
-                    musicVisualizerView.draw(new Canvas());
                 }
 
                 if (isPlay == true) {
                     musicMedia.start();
-                    initAudio();
 
                     if (diskImgAni.isRunning() == false) {
                         diskImgAni.start();
@@ -467,7 +454,6 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 if (isPlay == true) {
                     musicMedia.start();
-                    initAudio();
 
                     if (diskImgAni.isRunning() == false) {
                         diskImgAni.start();
@@ -490,48 +476,5 @@ public class PlayMusicScreen extends AppCompatActivity {
 
             }
         });
-    }
-
-    // method to init Audio for musicVisualizerView
-    public void initAudio() {
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-        if (musicIndex == 0) {
-            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
-        } else if (musicIndex == 1) {
-            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
-        } else {
-            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
-        }
-
-        setupVisualizerFxAndUI();
-
-        musicVisualizer.setEnabled(true);
-
-        musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                musicVisualizer.release();
-                musicVisualizer.setEnabled(false);
-            }
-        });
-    }
-
-    // method to set up visualizer fx and ui
-    private void setupVisualizerFxAndUI() {
-        // Create the Visualizer object and attach it to our media player.
-        musicVisualizer = new Visualizer(musicMedia.getAudioSessionId());
-        musicVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        musicVisualizer.setDataCaptureListener(
-                new Visualizer.OnDataCaptureListener() {
-                    public void onWaveFormDataCapture(Visualizer visualizer,
-                                                      byte[] bytes, int samplingRate) {
-                        musicVisualizerView.updateMediaVisualizerView(bytes);
-                    }
-
-                    public void onFftDataCapture(Visualizer visualizer,
-                                                 byte[] bytes, int samplingRate) {
-                    }
-                }, Visualizer.getMaxCaptureRate() / 2, true, false);
     }
 }

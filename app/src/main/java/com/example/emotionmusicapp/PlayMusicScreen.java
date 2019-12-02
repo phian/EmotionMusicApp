@@ -25,6 +25,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
 
 import io.ghyeok.stickyswitch.widget.StickySwitch;
@@ -45,6 +46,10 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     boolean isPlay = false;
     int musicIndex = 0;
+
+    Field[] songNameList;
+    int[] songIdList = new int[R.raw.class.getFields().length];
+    int indexCount = -1; // count index to insert song id
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -88,7 +93,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     public void playSong() {
         musicMedia = new MediaPlayer();
         try {
-            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+            musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[0]);
             musicMedia.prepare();
 
             songLengthSB.setMax(musicMedia.getDuration());
@@ -197,10 +202,11 @@ public class PlayMusicScreen extends AppCompatActivity {
         onMusicSeekBarLengthChangeListener();
         onSkipNextButtonClickListener();
         onSkipPreviousButtonClickListener();
+        readRawResourcesFileNameAndId();
 
         // call music file
         musicMedia = new MediaPlayer();
-        musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+        musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[0]);
 
         // set text for TextView song length
         int currentTime = musicMedia.getCurrentPosition();
@@ -237,6 +243,20 @@ public class PlayMusicScreen extends AppCompatActivity {
         int audioSessionId = musicMedia.getAudioSessionId();
         if (audioSessionId != -1)
             blastVisualizer.setAudioSessionId(audioSessionId);
+    }
+
+    // method to read all raw resources name and id
+    public void readRawResourcesFileNameAndId() {
+        songNameList = R.raw.class.getFields();
+
+        String unusedFile = "av_workaround_1min";
+
+        for (int i = 0; i < songNameList.length; i++) {
+            if (unusedFile.equals(songNameList[i].getName()) == false) {
+                indexCount++;
+                songIdList[indexCount] = this.getResources().getIdentifier(songNameList[i].getName(), "raw", this.getPackageName());
+            }
+        }
     }
 
     @Override
@@ -395,13 +415,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = new MediaPlayer();
                 }
 
-                if (musicIndex == 0) {
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
-                } else if (musicIndex == 1) {
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
-                } else {
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
-                }
+                musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
 
                 //get the AudioSessionId your MediaPlayer and pass it to the visualizer
                 int audioSessionId = musicMedia.getAudioSessionId();
@@ -453,13 +467,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = new MediaPlayer();
                 }
 
-                if (musicIndex == 0) {
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
-                } else if (musicIndex == 1) {
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.alone_alanwalker);
-                } else {
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.faded_alanwalker);
-                }
+                musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
 
                 //get the AudioSessionId from MediaPlayer and pass it to the visualizer
                 int audioSessionId = musicMedia.getAudioSessionId();

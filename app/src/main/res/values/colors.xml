@@ -11,4 +11,5 @@
     <color name="enjoyButtonTextSecondColor">#808080</color>
     <color name="switchStateColor">#03a9f4</color>
     <color name="switchStateBackgroundColor">#66FF99</color>
+    <color name="blastVisualizerWaveColor">#8B4513</color>
 </resources>

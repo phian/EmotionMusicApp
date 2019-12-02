@@ -16,7 +16,7 @@
     android:src="@drawable/nath" />
 
     <LinearLayout
-        android:id="@+id/musicIndicatorLay"
+        android:id="@+id/musicVisualizationViewLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -36,6 +36,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/blastVisualizerLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_y="-68dp">
@@ -47,7 +48,7 @@
             android:layout_height="match_parent"
             custom:avDensity="0.8"
             custom:avType="fill"
-            custom:avColor="@color/av_dark_blue"
+            custom:avColor="@color/blastVisualizerWaveColor"
             custom:avSpeed="normal"
             custom:avWidth="150dp"
             custom:avGravity="center"
@@ -207,31 +208,54 @@
 
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/lightAndNightModeIcLay"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
+    <LinearLayout
+        android:id="@+id/lightAndNightModeIcLay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-<!--        <io.ghyeok.stickyswitch.widget.StickySwitch-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_marginStart="210dp"-->
-<!--            android:id="@+id/themeSwitch"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_centerInParent="true"-->
-<!--            app:ss_animationDuration="300"-->
-<!--            app:ss_leftIcon="@drawable/light_mode_icon"-->
-<!--            app:ss_rightIcon="@drawable/night_mode_icon"-->
-<!--            app:ss_iconPadding="8dp"-->
-<!--            app:ss_iconSize="25dp"-->
-<!--            app:ss_selectedTextSize="14sp"-->
-<!--            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"-->
-<!--            app:ss_switchColor="@color/switchStateColor"-->
-<!--            app:ss_textColor="@android:color/white"-->
-<!--            app:ss_textSize="12sp"-->
-<!--            app:ss_animationType="line"-->
-<!--            tools:ignore="ObsoleteLayoutParam" />-->
+        <io.ghyeok.stickyswitch.widget.StickySwitch
+            android:layout_marginLeft="210dp"
+            android:layout_marginTop="15dp"
+            android:id="@+id/screenStyleSwitch"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            app:ss_animationDuration="300"
+            app:ss_leftIcon="@drawable/lovely_style_icon"
+            app:ss_rightIcon="@drawable/flash_style_icon"
+            app:ss_iconPadding="10dp"
+            app:ss_iconSize="15dp"
+            app:ss_selectedTextSize="14sp"
+            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
+            app:ss_switchColor="@color/switchStateColor"
+            app:ss_textColor="@android:color/white"
+            app:ss_textSize="12sp"
+            app:ss_animationType="line"
+            tools:ignore="ObsoleteLayoutParam" />
 
-<!--    </LinearLayout>-->
+        <io.ghyeok.stickyswitch.widget.StickySwitch
+            android:alpha="0"
+            android:layout_marginRight="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="210dp"
+            android:id="@+id/themeSwitch"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            app:ss_animationDuration="300"
+            app:ss_leftIcon="@drawable/light_mode_icon"
+            app:ss_rightIcon="@drawable/night_mode_icon"
+            app:ss_iconPadding="10dp"
+            app:ss_iconSize="15dp"
+            app:ss_selectedTextSize="14sp"
+            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
+            app:ss_switchColor="@color/switchStateColor"
+            app:ss_textColor="@android:color/white"
+            app:ss_textSize="12sp"
+            app:ss_animationType="line"
+            tools:ignore="ObsoleteLayoutParam" />
+
+    </LinearLayout>
 
 </AbsoluteLayout>

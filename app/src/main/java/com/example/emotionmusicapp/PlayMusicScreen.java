@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,6 +25,8 @@ import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
@@ -34,9 +37,10 @@ public class PlayMusicScreen extends AppCompatActivity {
     ImageButton playButton, skipNextButton, skipPreviousButton, repeatButton, shuffleButton;
     TextView songLengthTV, songNameTV, singerNameTV;
     SeekBar songLengthSB;
-    StickySwitch themeSwitch;
+    StickySwitch themeSwitch, screenStyleSwitch;
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
+    LinearLayout blastVisualizerLay, musicVisualizationViewLay;
 
     BlastVisualizer blastVisualizer;
 
@@ -207,6 +211,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         readRawResourcesFileNameAndId();
         cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
+        onScreenSwitchStyleChangeListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -309,11 +314,17 @@ public class PlayMusicScreen extends AppCompatActivity {
         songNameTV = (TextView) findViewById(R.id.songNameTV);
         singerNameTV = (TextView) findViewById(R.id.singerNameTV);
 
+        blastVisualizerLay = (LinearLayout) findViewById(R.id.blastVisualizerLay);
+        musicVisualizationViewLay = (LinearLayout) findViewById(R.id.musicVisualizationViewLay);
+
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
         musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
 
         blastVisualizer = (BlastVisualizer) findViewById(R.id.blastVisualizer);
+
+        themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
+        screenStyleSwitch = (StickySwitch) findViewById(R.id.screenStyleSwitch);
     }
 
     // event method for play music button
@@ -528,6 +539,36 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
+            }
+        });
+    }
+
+    // event for screen style switch changed
+    public void onScreenSwitchStyleChangeListener() {
+        screenStyleSwitch.setOnSelectedChangeListener(new StickySwitch.OnSelectedChangeListener() {
+            @Override
+            public void onSelectedChange(@NotNull StickySwitch.Direction direction, @NotNull String s) {
+                if (direction == StickySwitch.Direction.RIGHT) {
+                    if (isPlay && musicMedia != null) {
+                        musicWaveVisualization.onPause();
+
+                        //get the AudioSessionId from MediaPlayer and pass it to the visualizer
+                        int audioSessionId = musicMedia.getAudioSessionId();
+                        if (audioSessionId != -1)
+                            blastVisualizer.setAudioSessionId(audioSessionId);
+                    }
+                    musicVisualizationViewLay.setAlpha(0);
+                    themeSwitch.setAlpha(1);
+                    blastVisualizerLay.setAlpha(1);
+                } else {
+                    if (isPlay && musicMedia != null) {
+                        musicWaveVisualization.onResume();
+                        blastVisualizer.release();
+                    }
+                    musicVisualizationViewLay.setAlpha(1);
+                    themeSwitch.setAlpha(0);
+                    blastVisualizerLay.setAlpha(0);
+                }
             }
         });
     }

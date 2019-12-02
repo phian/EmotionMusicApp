@@ -48,8 +48,10 @@ public class PlayMusicScreen extends AppCompatActivity {
     int musicIndex = 0;
 
     Field[] songNameList;
-    int[] songIdList = new int[R.raw.class.getFields().length];
+    int[] songIdList = new int[R.raw.class.getFields().length - 1];
     int indexCount = -1; // count index to insert song id
+    String[] songNameArr = new String[R.raw.class.getFields().length - 1];
+    String[] singerNameArr = new String[R.raw.class.getFields().length - 1];
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -203,6 +205,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         onSkipNextButtonClickListener();
         onSkipPreviousButtonClickListener();
         readRawResourcesFileNameAndId();
+        cutSongNameAndSingerNameFromRawResource();
+        updateSongNameAndSingerNameTV(musicIndex);
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -257,6 +261,30 @@ public class PlayMusicScreen extends AppCompatActivity {
                 songIdList[indexCount] = this.getResources().getIdentifier(songNameList[i].getName(), "raw", this.getPackageName());
             }
         }
+
+        indexCount = -1;
+    }
+
+    public void cutSongNameAndSingerNameFromRawResource() {
+        songNameList = R.raw.class.getFields();
+
+        String unusedFile = "av_workaround_1min";
+
+        for (int i = 0; i < songNameList.length; i++) {
+            if (unusedFile.equals(songNameList[i].getName()) == false) {
+                indexCount++;
+                String[] temp = songNameList[i].getName().split("_");
+
+                songNameArr[indexCount] = temp[0];
+                singerNameArr[indexCount] = temp[1];
+            }
+        }
+    }
+
+    // method to update
+    public void updateSongNameAndSingerNameTV(int songIndex) {
+        songNameTV.setText(songNameArr[songIndex]);
+        singerNameTV.setText(singerNameArr[songIndex]);
     }
 
     @Override
@@ -417,6 +445,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
 
+                updateSongNameAndSingerNameTV(musicIndex);
+
                 //get the AudioSessionId your MediaPlayer and pass it to the visualizer
                 int audioSessionId = musicMedia.getAudioSessionId();
                 if (audioSessionId != -1)
@@ -468,6 +498,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                updateSongNameAndSingerNameTV(musicIndex);
 
                 //get the AudioSessionId from MediaPlayer and pass it to the visualizer
                 int audioSessionId = musicMedia.getAudioSessionId();

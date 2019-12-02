@@ -556,6 +556,13 @@ public class PlayMusicScreen extends AppCompatActivity {
                         int audioSessionId = musicMedia.getAudioSessionId();
                         if (audioSessionId != -1)
                             blastVisualizer.setAudioSessionId(audioSessionId);
+                    } else if (isPlay == false && musicMedia != null) {
+                        musicWaveVisualization.onPause();
+
+                        //get the AudioSessionId from MediaPlayer and pass it to the visualizer
+                        int audioSessionId = musicMedia.getAudioSessionId();
+                        if (audioSessionId != -1)
+                            blastVisualizer.setAudioSessionId(audioSessionId);
                     }
                     musicVisualizationViewLay.setAlpha(0);
                     themeSwitch.setAlpha(1);
@@ -564,6 +571,13 @@ public class PlayMusicScreen extends AppCompatActivity {
                     if (isPlay && musicMedia != null) {
                         musicWaveVisualization.onResume();
                         blastVisualizer.release();
+                    } else if (isPlay == false && musicMedia != null) {
+                        musicWaveVisualization.onPause();
+
+                        //get the AudioSessionId from MediaPlayer and pass it to the visualizer
+                        int audioSessionId = musicMedia.getAudioSessionId();
+                        if (audioSessionId != -1)
+                            blastVisualizer.setAudioSessionId(audioSessionId);
                     }
                     musicVisualizationViewLay.setAlpha(1);
                     themeSwitch.setAlpha(0);

@@ -339,7 +339,18 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 if (isPlay) {
-                    musicWaveVisualization.onResume();
+                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
+                        musicWaveVisualization.onResume();
+                        blastVisualizer.setEnabled(false);
+                    } else {
+                        musicWaveVisualization.onPause();
+                        blastVisualizer.setEnabled(true);
+
+                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                        int audioSessionId = musicMedia.getAudioSessionId();
+                        if (audioSessionId != -1)
+                            blastVisualizer.setAudioSessionId(audioSessionId);
+                    }
 
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
@@ -349,6 +360,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 } else {
                     diskImgAni.pause();
                     musicWaveVisualization.onPause();
+                    blastVisualizer.setEnabled(false);
                 }
 
                 startSong(isPlay);
@@ -458,10 +470,12 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
-                //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                int audioSessionId = musicMedia.getAudioSessionId();
-                if (audioSessionId != -1)
-                    blastVisualizer.setAudioSessionId(audioSessionId);
+                if (screenStyleSwitch.getDirection() != StickySwitch.Direction.LEFT) {
+                    //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                    int audioSessionId = musicMedia.getAudioSessionId();
+                    if (audioSessionId != -1)
+                        blastVisualizer.setAudioSessionId(audioSessionId);
+                }
 
                 if (isPlay == true) {
                     musicMedia.start();
@@ -512,10 +526,12 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
-                //get the AudioSessionId from MediaPlayer and pass it to the visualizer
-                int audioSessionId = musicMedia.getAudioSessionId();
-                if (audioSessionId != -1)
-                    blastVisualizer.setAudioSessionId(audioSessionId);
+                if (screenStyleSwitch.getDirection() != StickySwitch.Direction.LEFT) {
+                    //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                    int audioSessionId = musicMedia.getAudioSessionId();
+                    if (audioSessionId != -1)
+                        blastVisualizer.setAudioSessionId(audioSessionId);
+                }
 
                 if (isPlay == true) {
                     musicMedia.start();
@@ -551,6 +567,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 if (direction == StickySwitch.Direction.RIGHT) {
                     if (isPlay && musicMedia != null) {
                         musicWaveVisualization.onPause();
+                        blastVisualizer.setEnabled(true);
 
                         //get the AudioSessionId from MediaPlayer and pass it to the visualizer
                         int audioSessionId = musicMedia.getAudioSessionId();
@@ -558,6 +575,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                             blastVisualizer.setAudioSessionId(audioSessionId);
                     } else if (isPlay == false && musicMedia != null) {
                         musicWaveVisualization.onPause();
+                        blastVisualizer.setEnabled(true);
 
                         //get the AudioSessionId from MediaPlayer and pass it to the visualizer
                         int audioSessionId = musicMedia.getAudioSessionId();
@@ -570,14 +588,10 @@ public class PlayMusicScreen extends AppCompatActivity {
                 } else {
                     if (isPlay && musicMedia != null) {
                         musicWaveVisualization.onResume();
-                        blastVisualizer.release();
+                        blastVisualizer.setEnabled(false);
                     } else if (isPlay == false && musicMedia != null) {
                         musicWaveVisualization.onPause();
-
-                        //get the AudioSessionId from MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
+                        blastVisualizer.setEnabled(false);
                     }
                     musicVisualizationViewLay.setAlpha(1);
                     themeSwitch.setAlpha(0);

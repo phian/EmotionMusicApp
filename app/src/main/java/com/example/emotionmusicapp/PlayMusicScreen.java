@@ -249,9 +249,9 @@ public class PlayMusicScreen extends AppCompatActivity {
                 .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
 
         //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-        int audioSessionId = musicMedia.getAudioSessionId();
-        if (audioSessionId != -1)
-            blastVisualizer.setAudioSessionId(audioSessionId);
+//        int audioSessionId = musicMedia.getAudioSessionId();
+//        if (audioSessionId != -1)
+//            blastVisualizer.setAudioSessionId(audioSessionId);
     }
 
     // method to read all raw resources name and id
@@ -295,6 +295,9 @@ public class PlayMusicScreen extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
+
+        musicWaveVisualization.release();
+        blastVisualizer.release();
 
         // add animation when user back to previous screen
         Intent startMainActivity = new Intent(PlayMusicScreen.this, ChooseEmotionActivity.class);
@@ -342,14 +345,15 @@ public class PlayMusicScreen extends AppCompatActivity {
                     if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
                         musicWaveVisualization.onResume();
                         blastVisualizer.setEnabled(false);
+                        blastVisualizer.release();
                     } else {
                         musicWaveVisualization.onPause();
-                        blastVisualizer.setEnabled(true);
 
                         //get the AudioSessionId your MediaPlayer and pass it to the visualizer
                         int audioSessionId = musicMedia.getAudioSessionId();
                         if (audioSessionId != -1)
                             blastVisualizer.setAudioSessionId(audioSessionId);
+                        blastVisualizer.setEnabled(true);
                     }
 
                     if (diskImgAni.isRunning()) {
@@ -360,7 +364,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 } else {
                     diskImgAni.pause();
                     musicWaveVisualization.onPause();
-                    blastVisualizer.setEnabled(false);
                 }
 
                 startSong(isPlay);
@@ -567,7 +570,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 if (direction == StickySwitch.Direction.RIGHT) {
                     if (isPlay && musicMedia != null) {
                         musicWaveVisualization.onPause();
-                        blastVisualizer.setEnabled(true);
 
                         //get the AudioSessionId from MediaPlayer and pass it to the visualizer
                         int audioSessionId = musicMedia.getAudioSessionId();
@@ -575,7 +577,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                             blastVisualizer.setAudioSessionId(audioSessionId);
                     } else if (isPlay == false && musicMedia != null) {
                         musicWaveVisualization.onPause();
-                        blastVisualizer.setEnabled(true);
 
                         //get the AudioSessionId from MediaPlayer and pass it to the visualizer
                         int audioSessionId = musicMedia.getAudioSessionId();

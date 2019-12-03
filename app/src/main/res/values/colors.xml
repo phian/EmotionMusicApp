@@ -12,4 +12,9 @@
     <color name="switchStateColor">#03a9f4</color>
     <color name="switchStateBackgroundColor">#66FF99</color>
     <color name="blastVisualizerWaveColor">#8B4513</color>
+    <color name="lovelyVisualizerStyleColor">#FF00BCD4</color>
+    <color name="flashVisualizerStyleColor">#FFEB3B</color>
+    <color name="lightModeThemeColor">#8BC34A</color>
+    <color name="nightModeThemeColor">#FF66FF</color>
+    <color name="boomMenuColor">#673AB7</color>
 </resources>

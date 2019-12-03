@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,24 +24,24 @@ import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
 import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.nightonke.boommenu.BoomButtons.BoomButton;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.OnBoomListener;
 import com.thekhaeng.pushdownanim.PushDownAnim;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
 
-import io.ghyeok.stickyswitch.widget.StickySwitch;
-
 public class PlayMusicScreen extends AppCompatActivity {
     ImageButton playButton, skipNextButton, skipPreviousButton, repeatButton, shuffleButton;
     TextView songLengthTV, songNameTV, singerNameTV;
     SeekBar songLengthSB;
-    StickySwitch themeSwitch, screenStyleSwitch;
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
     LinearLayout blastVisualizerLay, musicVisualizationViewLay;
+    BoomMenuButton screenStyleMenu, themeMenu;
 
     BlastVisualizer blastVisualizer;
 
@@ -54,6 +55,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     Field[] songNameList;
     int[] songIdList = new int[R.raw.class.getFields().length - 1];
     int indexCount = -1; // count index to insert song id
+    int screenStyleIndex = 0; // get index of recent screen style to set event
     String[] songNameArr = new String[R.raw.class.getFields().length - 1];
     String[] singerNameArr = new String[R.raw.class.getFields().length - 1];
 
@@ -211,7 +213,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         readRawResourcesFileNameAndId();
         cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
-        onScreenSwitchStyleChangeListener();
+        onCreateScreenStyleAndThemeBoomButton();
+        onScreenStyleBoomMenuItemClickListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -305,6 +308,11 @@ public class PlayMusicScreen extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     // method use to cast all control need to interact in activity
     public void castControl() {
         playButton = (ImageButton) findViewById(R.id.playMusicButton);
@@ -326,8 +334,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         blastVisualizer = (BlastVisualizer) findViewById(R.id.blastVisualizer);
 
-        themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
-        screenStyleSwitch = (StickySwitch) findViewById(R.id.screenStyleSwitch);
+        screenStyleMenu = (BoomMenuButton) findViewById(R.id.screenStyleMenu);
+        themeMenu = (BoomMenuButton) findViewById(R.id.themeMenu);
     }
 
     // event method for play music button
@@ -342,7 +350,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 if (isPlay) {
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
+                    if (screenStyleIndex == 0) {
                         musicWaveVisualization.onResume();
                         blastVisualizer.setEnabled(false);
                         blastVisualizer.release();
@@ -473,7 +481,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
-                if (screenStyleSwitch.getDirection() != StickySwitch.Direction.LEFT) {
+                if (screenStyleIndex == 1) {
                     //get the AudioSessionId your MediaPlayer and pass it to the visualizer
                     int audioSessionId = musicMedia.getAudioSessionId();
                     if (audioSessionId != -1)
@@ -529,7 +537,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
-                if (screenStyleSwitch.getDirection() != StickySwitch.Direction.LEFT) {
+                if (screenStyleIndex == 1) {
                     //get the AudioSessionId your MediaPlayer and pass it to the visualizer
                     int audioSessionId = musicMedia.getAudioSessionId();
                     if (audioSessionId != -1)
@@ -562,12 +570,62 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
-    // event for screen style switch changed
-    public void onScreenSwitchStyleChangeListener() {
-        screenStyleSwitch.setOnSelectedChangeListener(new StickySwitch.OnSelectedChangeListener() {
+    public void onCreateScreenStyleAndThemeBoomButton() {
+        for (int i = 0; i < screenStyleMenu.getPiecePlaceEnum().pieceNumber(); i++) {
+            TextInsideCircleButton.Builder screenStyleMenuButton = new TextInsideCircleButton.Builder();
+
+            if (i == 0) {
+                screenStyleMenuButton.normalImageRes(R.drawable.lovely_style_icon)
+                        .normalText("Lovely visualizer style")
+                        .normalColorRes(R.color.lovelyVisualizerStyleColor)
+                        .normalTextColor(Color.DKGRAY);
+            } else {
+                screenStyleMenuButton.normalImageRes(R.drawable.flash_style_icon)
+                        .normalText("Crazy visualizer style")
+                        .normalColorRes(R.color.flashVisualizerStyleColor)
+                        .normalTextColor(Color.DKGRAY);
+            }
+
+            screenStyleMenu.addBuilder(screenStyleMenuButton);
+        }
+
+        for (int i = 0; i < themeMenu.getPiecePlaceEnum().pieceNumber(); i++) {
+            TextInsideCircleButton.Builder themeMenuButton = new TextInsideCircleButton.Builder();
+
+            if (i == 0) {
+                themeMenuButton.normalImageRes(R.drawable.light_mode_icon)
+                        .normalText("Light mode")
+                        .normalColorRes(R.color.lightModeThemeColor)
+                        .normalTextColor(Color.WHITE);
+            } else {
+                themeMenuButton.normalImageRes(R.drawable.night_mode_icon)
+                        .normalText("Dark mode")
+                        .normalColorRes(R.color.nightModeThemeColor)
+                        .normalTextColor(Color.WHITE);
+            }
+
+            themeMenu.addBuilder(themeMenuButton);
+        }
+    }
+
+    public void onScreenStyleBoomMenuItemClickListener() {
+        screenStyleMenu.setOnBoomListener(new OnBoomListener() {
             @Override
-            public void onSelectedChange(@NotNull StickySwitch.Direction direction, @NotNull String s) {
-                if (direction == StickySwitch.Direction.RIGHT) {
+            public void onClicked(int index, BoomButton boomButton) {
+                screenStyleIndex = index;
+
+                if (index == 0) {
+                    if (isPlay && musicMedia != null) {
+                        musicWaveVisualization.onResume();
+                        blastVisualizer.setEnabled(false);
+                    } else if (isPlay == false && musicMedia != null) {
+                        musicWaveVisualization.onPause();
+                        blastVisualizer.setEnabled(false);
+                    }
+                    musicVisualizationViewLay.setAlpha(1);
+                    themeMenu.setAlpha(0);
+                    blastVisualizerLay.setAlpha(0);
+                } else {
                     if (isPlay && musicMedia != null) {
                         musicWaveVisualization.onPause();
 
@@ -584,20 +642,34 @@ public class PlayMusicScreen extends AppCompatActivity {
                             blastVisualizer.setAudioSessionId(audioSessionId);
                     }
                     musicVisualizationViewLay.setAlpha(0);
-                    themeSwitch.setAlpha(1);
+                    themeMenu.setAlpha(1);
                     blastVisualizerLay.setAlpha(1);
-                } else {
-                    if (isPlay && musicMedia != null) {
-                        musicWaveVisualization.onResume();
-                        blastVisualizer.setEnabled(false);
-                    } else if (isPlay == false && musicMedia != null) {
-                        musicWaveVisualization.onPause();
-                        blastVisualizer.setEnabled(false);
-                    }
-                    musicVisualizationViewLay.setAlpha(1);
-                    themeSwitch.setAlpha(0);
-                    blastVisualizerLay.setAlpha(0);
                 }
+            }
+
+            @Override
+            public void onBackgroundClick() {
+
+            }
+
+            @Override
+            public void onBoomWillHide() {
+
+            }
+
+            @Override
+            public void onBoomDidHide() {
+
+            }
+
+            @Override
+            public void onBoomWillShow() {
+
+            }
+
+            @Override
+            public void onBoomDidShow() {
+
             }
         });
     }

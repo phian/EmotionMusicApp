@@ -209,52 +209,38 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/lightAndNightModeIcLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <io.ghyeok.stickyswitch.widget.StickySwitch
-            android:layout_marginLeft="210dp"
-            android:layout_marginTop="15dp"
-            android:id="@+id/screenStyleSwitch"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            app:ss_animationDuration="300"
-            app:ss_leftIcon="@drawable/lovely_style_icon"
-            app:ss_rightIcon="@drawable/flash_style_icon"
-            app:ss_iconPadding="10dp"
-            app:ss_iconSize="15dp"
-            app:ss_selectedTextSize="14sp"
-            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-            app:ss_switchColor="@color/switchStateColor"
-            app:ss_textColor="@android:color/white"
-            app:ss_textSize="12sp"
-            app:ss_animationType="line"
-            tools:ignore="ObsoleteLayoutParam" />
-
-        <io.ghyeok.stickyswitch.widget.StickySwitch
-            android:alpha="0"
-            android:layout_marginRight="100dp"
+        <com.nightonke.boommenu.BoomMenuButton
             android:layout_marginTop="10dp"
-            android:layout_marginStart="210dp"
-            android:id="@+id/themeSwitch"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            app:ss_animationDuration="300"
-            app:ss_leftIcon="@drawable/light_mode_icon"
-            app:ss_rightIcon="@drawable/night_mode_icon"
-            app:ss_iconPadding="10dp"
-            app:ss_iconSize="15dp"
-            app:ss_selectedTextSize="14sp"
-            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-            app:ss_switchColor="@color/switchStateColor"
-            app:ss_textColor="@android:color/white"
-            app:ss_textSize="12sp"
-            app:ss_animationType="line"
-            tools:ignore="ObsoleteLayoutParam" />
+            android:layout_marginLeft="250dp"
+            android:id="@+id/screenStyleMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_buttonEnum="textInsideCircle"
+            app:bmb_piecePlaceEnum="piecePlace_dot_2_1"
+            app:bmb_buttonPlaceEnum="buttonPlace_sc_2_1"
+            app:bmb_normalColor="@color/boomMenuColor"
+            app:bmb_rippleEffect="true"
+            app:bmb_shadowEffect="false"/>
+
+        <com.nightonke.boommenu.BoomMenuButton
+            android:alpha="0"
+            android:id="@+id/themeMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_buttonEnum="textInsideCircle"
+            app:bmb_piecePlaceEnum="piecePlace_dot_2_1"
+            app:bmb_buttonPlaceEnum="buttonPlace_sc_2_1"
+            android:layout_marginRight="100dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="250dp"
+            app:bmb_normalColor="@color/boomMenuColor"
+            app:bmb_rippleEffect="true"
+            app:bmb_shadowEffect="false"/>
+
 
     </LinearLayout>
 

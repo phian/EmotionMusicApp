@@ -30,9 +30,13 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.OnBoomListener;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
+
+import io.ghyeok.stickyswitch.widget.StickySwitch;
 
 public class PlayMusicScreen extends AppCompatActivity {
     ImageButton playButton, skipNextButton, skipPreviousButton, repeatButton, shuffleButton;
@@ -41,7 +45,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
     LinearLayout blastVisualizerLay, musicVisualizationViewLay;
-    BoomMenuButton screenStyleMenu, themeMenu;
+
+    StickySwitch screenStyleSwitch, themeSwitch;
 
     BlastVisualizer blastVisualizer;
 
@@ -55,7 +60,6 @@ public class PlayMusicScreen extends AppCompatActivity {
     Field[] songNameList;
     int[] songIdList = new int[R.raw.class.getFields().length - 1];
     int indexCount = -1; // count index to insert song id
-    int screenStyleIndex = 0; // get index of recent screen style to set event
     String[] songNameArr = new String[R.raw.class.getFields().length - 1];
     String[] singerNameArr = new String[R.raw.class.getFields().length - 1];
 
@@ -213,8 +217,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         readRawResourcesFileNameAndId();
         cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
-        onCreateScreenStyleAndThemeBoomButton();
-        onScreenStyleBoomMenuItemClickListener();
+        onScreenStyleSwitchChangeListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -334,8 +337,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         blastVisualizer = (BlastVisualizer) findViewById(R.id.blastVisualizer);
 
-        screenStyleMenu = (BoomMenuButton) findViewById(R.id.screenStyleMenu);
-        themeMenu = (BoomMenuButton) findViewById(R.id.themeMenu);
+        screenStyleSwitch = (StickySwitch) findViewById(R.id.screenStyleSwitch);
+        themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
     }
 
     // event method for play music button
@@ -350,7 +353,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 if (isPlay) {
-                    if (screenStyleIndex == 0) {
+                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
                         musicWaveVisualization.onResume();
                         blastVisualizer.setEnabled(false);
                         blastVisualizer.release();
@@ -481,7 +484,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
-                if (screenStyleIndex == 1) {
+                if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
                     //get the AudioSessionId your MediaPlayer and pass it to the visualizer
                     int audioSessionId = musicMedia.getAudioSessionId();
                     if (audioSessionId != -1)
@@ -537,7 +540,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
-                if (screenStyleIndex == 1) {
+                if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
                     //get the AudioSessionId your MediaPlayer and pass it to the visualizer
                     int audioSessionId = musicMedia.getAudioSessionId();
                     if (audioSessionId != -1)
@@ -570,51 +573,11 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
-    public void onCreateScreenStyleAndThemeBoomButton() {
-        for (int i = 0; i < screenStyleMenu.getPiecePlaceEnum().pieceNumber(); i++) {
-            TextInsideCircleButton.Builder screenStyleMenuButton = new TextInsideCircleButton.Builder();
-
-            if (i == 0) {
-                screenStyleMenuButton.normalImageRes(R.drawable.lovely_style_icon)
-                        .normalText("Lovely visualizer style")
-                        .normalColorRes(R.color.lovelyVisualizerStyleColor)
-                        .normalTextColor(Color.DKGRAY);
-            } else {
-                screenStyleMenuButton.normalImageRes(R.drawable.flash_style_icon)
-                        .normalText("Crazy visualizer style")
-                        .normalColorRes(R.color.flashVisualizerStyleColor)
-                        .normalTextColor(Color.DKGRAY);
-            }
-
-            screenStyleMenu.addBuilder(screenStyleMenuButton);
-        }
-
-        for (int i = 0; i < themeMenu.getPiecePlaceEnum().pieceNumber(); i++) {
-            TextInsideCircleButton.Builder themeMenuButton = new TextInsideCircleButton.Builder();
-
-            if (i == 0) {
-                themeMenuButton.normalImageRes(R.drawable.light_mode_icon)
-                        .normalText("Light mode")
-                        .normalColorRes(R.color.lightModeThemeColor)
-                        .normalTextColor(Color.WHITE);
-            } else {
-                themeMenuButton.normalImageRes(R.drawable.night_mode_icon)
-                        .normalText("Dark mode")
-                        .normalColorRes(R.color.nightModeThemeColor)
-                        .normalTextColor(Color.WHITE);
-            }
-
-            themeMenu.addBuilder(themeMenuButton);
-        }
-    }
-
-    public void onScreenStyleBoomMenuItemClickListener() {
-        screenStyleMenu.setOnBoomListener(new OnBoomListener() {
+    public void onScreenStyleSwitchChangeListener() {
+        screenStyleSwitch.setOnSelectedChangeListener(new StickySwitch.OnSelectedChangeListener() {
             @Override
-            public void onClicked(int index, BoomButton boomButton) {
-                screenStyleIndex = index;
-
-                if (index == 0) {
+            public void onSelectedChange(@NotNull StickySwitch.Direction direction, @NotNull String s) {
+                if (direction == StickySwitch.Direction.LEFT) {
                     if (isPlay && musicMedia != null) {
                         musicWaveVisualization.onResume();
                         blastVisualizer.setEnabled(false);
@@ -623,7 +586,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                         blastVisualizer.setEnabled(false);
                     }
                     musicVisualizationViewLay.setAlpha(1);
-                    themeMenu.setAlpha(0);
+                    themeSwitch.setAlpha(0);
                     blastVisualizerLay.setAlpha(0);
                 } else {
                     if (isPlay && musicMedia != null) {
@@ -642,34 +605,9 @@ public class PlayMusicScreen extends AppCompatActivity {
                             blastVisualizer.setAudioSessionId(audioSessionId);
                     }
                     musicVisualizationViewLay.setAlpha(0);
-                    themeMenu.setAlpha(1);
+                    themeSwitch.setAlpha(1);
                     blastVisualizerLay.setAlpha(1);
                 }
-            }
-
-            @Override
-            public void onBackgroundClick() {
-
-            }
-
-            @Override
-            public void onBoomWillHide() {
-
-            }
-
-            @Override
-            public void onBoomDidHide() {
-
-            }
-
-            @Override
-            public void onBoomWillShow() {
-
-            }
-
-            @Override
-            public void onBoomDidShow() {
-
             }
         });
     }

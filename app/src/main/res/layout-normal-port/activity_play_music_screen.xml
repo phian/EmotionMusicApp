@@ -211,36 +211,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <com.nightonke.boommenu.BoomMenuButton
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="250dp"
-            android:id="@+id/screenStyleMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:bmb_buttonEnum="textInsideCircle"
-            app:bmb_piecePlaceEnum="piecePlace_dot_2_1"
-            app:bmb_buttonPlaceEnum="buttonPlace_sc_2_1"
-            app:bmb_normalColor="@color/boomMenuColor"
-            app:bmb_rippleEffect="true"
-            app:bmb_shadowEffect="false"/>
-
-        <com.nightonke.boommenu.BoomMenuButton
+        <io.ghyeok.stickyswitch.widget.StickySwitch
             android:alpha="0"
-            android:id="@+id/themeMenu"
+            android:id="@+id/themeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:bmb_buttonEnum="textInsideCircle"
-            app:bmb_piecePlaceEnum="piecePlace_dot_2_1"
-            app:bmb_buttonPlaceEnum="buttonPlace_sc_2_1"
-            android:layout_marginRight="100dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="250dp"
-            app:bmb_normalColor="@color/boomMenuColor"
-            app:bmb_rippleEffect="true"
-            app:bmb_shadowEffect="false"/>
+            android:layout_centerInParent="true"
+            app:ss_animationDuration="300"
+            app:ss_iconPadding="15dp"
+            app:ss_iconSize="13dp"
+            app:ss_leftIcon="@drawable/light_mode_icon"
+            app:ss_rightIcon="@drawable/night_mode_icon"
+            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
+            app:ss_switchColor="@color/switchStateColor"
+            app:ss_animationType="curved"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="15dp"/>
 
+        <io.ghyeok.stickyswitch.widget.StickySwitch
+            android:id="@+id/screenStyleSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:ss_animationDuration="300"
+            app:ss_iconPadding="15dp"
+            app:ss_iconSize="13dp"
+            app:ss_leftIcon="@drawable/lovely_style_icon"
+            app:ss_rightIcon="@drawable/flash_style_icon"
+            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
+            app:ss_switchColor="@color/switchStateColor"
+            app:ss_animationType="curved"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"/>
 
     </LinearLayout>
 

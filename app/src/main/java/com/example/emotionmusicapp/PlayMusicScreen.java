@@ -586,7 +586,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                         blastVisualizer.setEnabled(false);
                     }
                     musicVisualizationViewLay.setAlpha(1);
-                    themeSwitch.setAlpha(0);
+                    themeSwitch.setVisibility(View.INVISIBLE);
                     blastVisualizerLay.setAlpha(0);
                 } else {
                     if (isPlay && musicMedia != null) {
@@ -605,7 +605,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                             blastVisualizer.setAudioSessionId(audioSessionId);
                     }
                     musicVisualizationViewLay.setAlpha(0);
-                    themeSwitch.setAlpha(1);
+                    themeSwitch.setVisibility(View.VISIBLE);
                     blastVisualizerLay.setAlpha(1);
                 }
             }

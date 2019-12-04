@@ -1,21 +1,29 @@
 package com.example.emotionmusicapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -28,7 +36,10 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.rahman.dialog.Activity.SmartDialog;
 import com.rahman.dialog.ListenerCallBack.SmartDialogClickListener;
 import com.rahman.dialog.Utilities.SmartDialogBuilder;
+import com.taishi.library.Indicator;
 import com.thekhaeng.pushdownanim.PushDownAnim;
+
+import net.igenius.customcheckbox.CustomCheckBox;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,14 +56,11 @@ public class PlayMusicScreen extends AppCompatActivity {
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
     LinearLayout blastVisualizerLay, musicVisualizationViewLay;
-
     StickySwitch screenStyleSwitch, themeSwitch;
-
     BlastVisualizer blastVisualizer;
-
     AudioVisualization musicWaveVisualization;
-
     ObjectAnimator diskImgAni;
+    ListView songList;
 
     boolean isPlay = false;
     int musicIndex = 0;
@@ -367,6 +375,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         screenStyleSwitch = (StickySwitch) findViewById(R.id.screenStyleSwitch);
         themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
+
+        songList = (ListView) findViewById(R.id.songLV);
     }
 
     // event method for play music button

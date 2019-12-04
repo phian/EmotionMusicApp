@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsoluteLayout;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,7 +22,6 @@ import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 
 import life.sabujak.roundedbutton.RoundedButton;
 
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView mainScreenBackground, cloverImg;
 
-    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, aboutUsContentLay;
+    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, aboutUsContentLay, aboutUsInfoLay;
     AbsoluteLayout mainScreen;
     RelativeLayout aboutUsHeaderTextLay;
 
@@ -190,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         startAppButLay = (LinearLayout) findViewById(R.id.startAppButtonLay);
         instructionIconLayout = (LinearLayout) findViewById(R.id.instructionIconLayout);
         aboutUsContentLay = (LinearLayout) findViewById(R.id.aboutUsContentLay);
+        aboutUsInfoLay = (LinearLayout) findViewById(R.id.aboutUsInfoLay);
 
         appNameAndIcon.setVisibility(View.INVISIBLE);
         iconMenu.setVisibility(View.INVISIBLE);
@@ -243,6 +242,10 @@ public class MainActivity extends AppCompatActivity {
         mainScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isMainScreenPrevious = true;
+                isAboutUsIconClick = false;
+                isHowToUseIconClick = false;
+
                 mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
                 //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
                 cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);

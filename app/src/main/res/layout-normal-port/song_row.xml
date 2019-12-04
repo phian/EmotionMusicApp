@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingTop="20dp">
+
+    <net.igenius.customcheckbox.CustomCheckBox
+        android:id="@+id/deleteSongCB"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="15dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/songNameLVTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="11dp"
+                android:text="Song Name"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/singerNameLVTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/songNameLVTV"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:text="Singer Name" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_marginTop="-10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <com.taishi.library.Indicator
+                android:id="@+id/songIndicator"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="20dp"
+                android:layout_marginBottom="20dp"
+                app:bar_color="#000"
+                app:bar_num="4"
+                app:duration="3000"
+                app:step_num="10" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

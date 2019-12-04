@@ -56,4 +56,6 @@ dependencies {
     implementation 'com.github.GwonHyeok:StickySwitch:0.0.15'
     implementation 'com.nightonke:boommenu:2.1.1'
     implementation 'com.github.TecOrb-Developers:SmartAlertDialog:v1.0'
+    implementation 'com.taishi-y:musicindicator:0.1.0'
+    implementation 'net.igenius:customcheckbox:1.3'
 }

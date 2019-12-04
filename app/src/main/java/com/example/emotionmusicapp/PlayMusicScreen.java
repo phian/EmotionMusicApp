@@ -70,6 +70,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     int indexCount = -1; // count index to insert song id
     String[] songNameArr = new String[R.raw.class.getFields().length - 1];
     String[] singerNameArr = new String[R.raw.class.getFields().length - 1];
+    CustomCheckBox[] checkBoxes = new CustomCheckBox[R.raw.class.getFields().length - 1];
+    Indicator[] indicators = new Indicator[R.raw.class.getFields().length - 1];
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -226,6 +228,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
         onScreenStyleSwitchChangeListener();
+        onCreateCheckBoxesAndIndicatorsForSongListScreen();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -648,5 +651,60 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onCreateCheckBoxesAndIndicatorsForSongListScreen() {
+        for (int i = 0; i < checkBoxes.length; i++) {
+            checkBoxes[i] = new CustomCheckBox(this);
+            indicators[i] = new Indicator(this);
+
+            checkBoxes[i].setChecked(false);
+
+            indicators[i].setStepNum(10);
+            indicators[i].setBarNum(4);
+            indicators[i].setDuration(3000);
+            indicators[i].setVisibility(View.INVISIBLE);
+        }
+
+        CustomAdapter songAdapter = new CustomAdapter(this, songNameArr, singerNameArr, checkBoxes, indicators);
+        songList.setAdapter(songAdapter);
+    }
+
+    class CustomAdapter extends ArrayAdapter<String> {
+        Context context;
+        String songNameArr[];
+        String singerNameArr[];
+        CustomCheckBox checkBoxes[];
+        Indicator indicators[];
+
+        public CustomAdapter(Context context, String[] songName, String[] singerName, CustomCheckBox[] checkBoxes, Indicator[] indicators) {
+            super(context, R.layout.song_row, R.id.songNameLVTV, songName);
+
+            this.songNameArr = songName;
+            this.singerNameArr = singerName;
+            this.checkBoxes = checkBoxes;
+            this.indicators = indicators;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert layoutInflater != null;
+            @SuppressLint("ViewHolder") View row = layoutInflater.inflate(R.layout.song_row, parent, false);
+
+            TextView songNameTV = row.findViewById(R.id.songNameLVTV);
+            TextView singerNameTV = row.findViewById(R.id.singerNameLVTV);
+            CustomCheckBox deleteCB = row.findViewById(R.id.deleteSongCB);
+            Indicator indicator = row.findViewById(R.id.songIndicator);
+
+            // set resources to view
+            songNameTV.setText(songNameArr[position]);
+            singerNameTV.setText(singerNameArr[position]);
+            deleteCB.setChecked(checkBoxes[position].isChecked());
+            indicator = indicators[position];
+
+            return row;
+        }
     }
 }

@@ -63,7 +63,7 @@
         android:background="#40ffffff"
         android:gravity="center_horizontal|bottom"
         android:orientation="vertical"
-        android:paddingBottom="35dp">
+        android:paddingBottom="30dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/diskImageCIV"
@@ -214,14 +214,13 @@
         android:orientation="horizontal">
 
         <io.ghyeok.stickyswitch.widget.StickySwitch
-            android:visibility="invisible"
             android:id="@+id/themeSwitch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_centerInParent="true"
             app:ss_animationDuration="300"
-            app:ss_iconPadding="15dp"
-            app:ss_iconSize="13dp"
+            app:ss_iconPadding="12dp"
+            app:ss_iconSize="20dp"
             app:ss_leftIcon="@drawable/light_mode_icon"
             app:ss_rightIcon="@drawable/night_mode_icon"
             app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
@@ -233,18 +232,18 @@
         <io.ghyeok.stickyswitch.widget.StickySwitch
             android:id="@+id/screenStyleSwitch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
             app:ss_animationDuration="300"
-            app:ss_iconPadding="15dp"
-            app:ss_iconSize="13dp"
+            app:ss_animationType="curved"
+            app:ss_iconPadding="12dp"
+            app:ss_iconSize="20dp"
             app:ss_leftIcon="@drawable/lovely_style_icon"
             app:ss_rightIcon="@drawable/flash_style_icon"
             app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-            app:ss_switchColor="@color/switchStateColor"
-            app:ss_animationType="curved"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"/>
+            app:ss_switchColor="@color/switchStateColor" />
 
     </LinearLayout>
 

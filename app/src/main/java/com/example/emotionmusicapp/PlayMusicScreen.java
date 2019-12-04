@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,10 +25,9 @@ import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
 import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.nightonke.boommenu.BoomButtons.BoomButton;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.OnBoomListener;
+import com.rahman.dialog.Activity.SmartDialog;
+import com.rahman.dialog.ListenerCallBack.SmartDialogClickListener;
+import com.rahman.dialog.Utilities.SmartDialogBuilder;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import org.jetbrains.annotations.NotNull;
@@ -301,19 +301,47 @@ public class PlayMusicScreen extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-
-        musicWaveVisualization.release();
-        blastVisualizer.release();
-
-        // add animation when user back to previous screen
-        Intent startMainActivity = new Intent(PlayMusicScreen.this, ChooseEmotionActivity.class);
-        startActivity(startMainActivity);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        new SmartDialogBuilder(this)
+                .setTitle("Alert")
+                .setSubTitle("Are you sure you want to stop the music?")
+                .setSubTitleFont(Typeface.SANS_SERIF)
+                .setNegativeButtonHide(false)
+                .setPositiveButton("Yes, stop it", new SmartDialogClickListener() {
+                    @Override
+                    public void onClick(SmartDialog smartDialog) {
+                        musicWaveVisualization.release();
+                        blastVisualizer.release();
+
+                        // add animation when user back to previous screen
+                        Intent startMainActivity = new Intent(PlayMusicScreen.this, ChooseEmotionActivity.class);
+                        startActivity(startMainActivity);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                        if (musicMedia.isPlaying()) {
+                            musicMedia.stop();
+                        }
+                        musicMedia = null;
+                        musicWaveVisualization.release();
+                        blastVisualizer.release();
+
+                        smartDialog.dismiss();
+
+                        finish();
+                    }
+                })
+                .setNegativeButton("No, continue the music", new SmartDialogClickListener() {
+                    @Override
+                    public void onClick(SmartDialog smartDialog) {
+                        smartDialog.dismiss();
+                        onResume();
+
+                        return;
+                    }
+                }).build().show();
     }
 
     // method use to cast all control need to interact in activity

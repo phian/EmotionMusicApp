@@ -3,6 +3,7 @@ package com.example.emotionmusicapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +24,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -46,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import io.ghyeok.stickyswitch.widget.StickySwitch;
@@ -61,7 +62,6 @@ public class PlayMusicScreen extends AppCompatActivity {
     BlastVisualizer blastVisualizer;
     AudioVisualization musicWaveVisualization;
     ObjectAnimator diskImgAni;
-    ListView songList;
     RecyclerView songRV;
     RecyclerView.Adapter songListAdapter;
     RecyclerView.LayoutManager songLisLayoutManager;
@@ -76,6 +76,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     String[] singerNameArr = new String[R.raw.class.getFields().length - 1];
     CustomCheckBox[] checkBoxes = new CustomCheckBox[R.raw.class.getFields().length - 1];
     Indicator[] indicators = new Indicator[R.raw.class.getFields().length - 1];
+
+    ArrayList<CustomRecyclerViewItem> customItems = new ArrayList<>();
 
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
@@ -233,6 +235,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         updateSongNameAndSingerNameTV(musicIndex);
         onScreenStyleSwitchChangeListener();
         onCreateCheckBoxesAndIndicatorsForSongListScreen();
+        onCreateSongRecyclerView();
+        onSongListItemDragListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -273,20 +277,6 @@ public class PlayMusicScreen extends AppCompatActivity {
 //        int audioSessionId = musicMedia.getAudioSessionId();
 //        if (audioSessionId != -1)
 //            blastVisualizer.setAudioSessionId(audioSessionId);
-
-        ArrayList<CustomRecyclerViewItem> customItems = new ArrayList<>();
-
-        for (int i = 0; i < songNameArr.length; i++) {
-            customItems.add(new CustomRecyclerViewItem(songNameArr[i], singerNameArr[i], checkBoxes[i], indicators[i]));
-        }
-
-        songRV.setHasFixedSize(true);
-
-        songLisLayoutManager = new LinearLayoutManager(this);
-        songListAdapter = new CustomRecyclerViewAdapter(customItems);
-
-        songRV.setLayoutManager(songLisLayoutManager);
-        songRV.setAdapter(songListAdapter);
     }
 
     // method to read all raw resources name and id
@@ -397,7 +387,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         screenStyleSwitch = (StickySwitch) findViewById(R.id.screenStyleSwitch);
         themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
 
-        songList = (ListView) findViewById(R.id.songLV);
         songRV = (RecyclerView) findViewById(R.id.songRV);
     }
 
@@ -684,47 +673,43 @@ public class PlayMusicScreen extends AppCompatActivity {
             indicators[i].setDuration(3000);
             indicators[i].setVisibility(View.INVISIBLE);
         }
-
-        CustomAdapter songAdapter = new CustomAdapter(this, songNameArr, singerNameArr, checkBoxes, indicators);
-        songList.setAdapter(songAdapter);
     }
 
-    class CustomAdapter extends ArrayAdapter<String> {
-        Context context;
-        String songNameArr[];
-        String singerNameArr[];
-        CustomCheckBox checkBoxes[];
-        Indicator indicators[];
-
-        public CustomAdapter(Context context, String[] songName, String[] singerName, CustomCheckBox[] checkBoxes, Indicator[] indicators) {
-            super(context, R.layout.song_row, R.id.songNameLVTV, songName);
-
-            this.songNameArr = songName;
-            this.singerNameArr = singerName;
-            this.checkBoxes = checkBoxes;
-            this.indicators = indicators;
-            this.context = context;
+    // method to create song list for recycler view
+    public void onCreateSongRecyclerView() {
+        for (int i = 0; i < songNameArr.length; i++) {
+            customItems.add(new CustomRecyclerViewItem(songNameArr[i], singerNameArr[i], checkBoxes[i], indicators[i]));
         }
 
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            assert layoutInflater != null;
-            @SuppressLint("ViewHolder") View row = layoutInflater.inflate(R.layout.song_row, parent, false);
+        songRV.setHasFixedSize(true);
 
-            TextView songNameTV = row.findViewById(R.id.songNameLVTV);
-            TextView singerNameTV = row.findViewById(R.id.singerNameLVTV);
-            CustomCheckBox deleteCB = row.findViewById(R.id.deleteSongCB);
-            Indicator indicator = row.findViewById(R.id.songIndicator);
+        songLisLayoutManager = new LinearLayoutManager(this);
+        songListAdapter = new CustomRecyclerViewAdapter(customItems);
 
-            // set resources to view
-            songNameTV.setText(songNameArr[position]);
-            singerNameTV.setText(singerNameArr[position]);
-            deleteCB.setChecked(checkBoxes[position].isChecked());
-            indicator = indicators[position];
+        songRV.setLayoutManager(songLisLayoutManager);
+        songRV.setAdapter(songListAdapter);
+    }
 
-            return row;
-        }
+    // event for song list item change position listener
+    public void onSongListItemDragListener() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder draggedViewHolder, @NonNull RecyclerView.ViewHolder target) {
+                int draggedPosition = draggedViewHolder.getAdapterPosition();
+                int targetPosition = target.getAdapterPosition();
+
+                Collections.swap(customItems, draggedPosition, targetPosition);
+                songListAdapter.notifyItemMoved(draggedPosition, targetPosition);
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+
+        itemTouchHelper.attachToRecyclerView(songRV);
     }
 }

@@ -3,7 +3,6 @@ package com.example.emotionmusicapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.ghyeok.stickyswitch.widget.StickySwitch;
@@ -62,6 +62,9 @@ public class PlayMusicScreen extends AppCompatActivity {
     AudioVisualization musicWaveVisualization;
     ObjectAnimator diskImgAni;
     ListView songList;
+    RecyclerView songRV;
+    RecyclerView.Adapter songListAdapter;
+    RecyclerView.LayoutManager songLisLayoutManager;
 
     boolean isPlay = false;
     int musicIndex = 0;
@@ -270,6 +273,20 @@ public class PlayMusicScreen extends AppCompatActivity {
 //        int audioSessionId = musicMedia.getAudioSessionId();
 //        if (audioSessionId != -1)
 //            blastVisualizer.setAudioSessionId(audioSessionId);
+
+        ArrayList<CustomRecyclerViewItem> customItems = new ArrayList<>();
+
+        for (int i = 0; i < songNameArr.length; i++) {
+            customItems.add(new CustomRecyclerViewItem(songNameArr[i], singerNameArr[i], checkBoxes[i], indicators[i]));
+        }
+
+        songRV.setHasFixedSize(true);
+
+        songLisLayoutManager = new LinearLayoutManager(this);
+        songListAdapter = new CustomRecyclerViewAdapter(customItems);
+
+        songRV.setLayoutManager(songLisLayoutManager);
+        songRV.setAdapter(songListAdapter);
     }
 
     // method to read all raw resources name and id
@@ -381,6 +398,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
 
         songList = (ListView) findViewById(R.id.songLV);
+        songRV = (RecyclerView) findViewById(R.id.songRV);
     }
 
     // event method for play music button
@@ -685,6 +703,7 @@ public class PlayMusicScreen extends AppCompatActivity {
             this.singerNameArr = singerName;
             this.checkBoxes = checkBoxes;
             this.indicators = indicators;
+            this.context = context;
         }
 
         @NonNull

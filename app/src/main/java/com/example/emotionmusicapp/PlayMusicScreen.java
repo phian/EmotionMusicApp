@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -61,6 +62,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     RecyclerView.LayoutManager songLisLayoutManager;
     BottomSheetBehavior songListBottomSheetBe;
     View songListBottomSheet;
+    ViewPager screenSlideVP;
 
     boolean isPlay = false;
     int musicIndex = 0;

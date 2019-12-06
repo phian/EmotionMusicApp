@@ -1,7 +1,6 @@
 package com.example.emotionmusicapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +27,7 @@ import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
 import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.rahman.dialog.Activity.SmartDialog;
 import com.rahman.dialog.ListenerCallBack.SmartDialogClickListener;
@@ -61,6 +61,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     RecyclerView songRV;
     RecyclerView.Adapter songListAdapter;
     RecyclerView.LayoutManager songLisLayoutManager;
+    BottomSheetBehavior songListBottomSheetBe;
+    View songListBottomSheet;
 
     boolean isPlay = false;
     int musicIndex = 0;
@@ -233,6 +235,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         onCreateCheckBoxesAndIndicatorsForSongListScreen();
         onCreateSongRecyclerView();
         onSongListItemDragListener();
+        onCreateSongListScreenBottomSheetBehavior();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -384,6 +387,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
 
         songRV = (RecyclerView) findViewById(R.id.songRV);
+        songListBottomSheet = findViewById(R.id.songListScreenBottomSheet);
     }
 
     // event method for play music button
@@ -684,6 +688,13 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         songRV.setLayoutManager(songLisLayoutManager);
         songRV.setAdapter(songListAdapter);
+        songRV.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
+            @Override
+            public void OnItemClick(View view, int position) {
+                RemoveSongBottomModalSheetDialog bottomSheetDialog = new RemoveSongBottomModalSheetDialog();
+                bottomSheetDialog.show(getSupportFragmentManager(), "removeSongBottomSheet");
+            }
+        }));
     }
 
     // event for song list item change position listener
@@ -707,5 +718,33 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
 
         itemTouchHelper.attachToRecyclerView(songRV);
+    }
+
+    // method to create behavior for song list screen bottom sheet
+    public void onCreateSongListScreenBottomSheetBehavior() {
+        songListBottomSheetBe = BottomSheetBehavior.from(songListBottomSheet);
+
+        songListBottomSheetBe.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                switch (i) {
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        if (songListBottomSheetBe.getPeekHeight() < 65) {
+                            songListBottomSheetBe.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        songListBottomSheetBe.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
     }
 }

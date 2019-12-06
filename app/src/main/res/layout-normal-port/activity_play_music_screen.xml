@@ -273,4 +273,18 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:translationY="534dp"
+        android:translationX="-323dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/removeSongListBottomSheetLay"
+        android:orientation="vertical">
+
+        <include layout="@layout/remove_song_modal_bottom_sheet_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
 </AbsoluteLayout>

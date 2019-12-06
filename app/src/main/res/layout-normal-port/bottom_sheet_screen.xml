@@ -98,11 +98,11 @@
                 android:orientation="horizontal">
 
                 <com.mikhaellopez.circularimageview.CircularImageView
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginLeft="10dp"
                     android:id="@+id/diskImageCIV"
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     android:src="@drawable/nath"
                     app:civ_border="true"
                     app:civ_border_color="@android:color/white"
@@ -116,7 +116,35 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_marginLeft="15dp"
+                        android:id="@+id/mixAndReplayListButtonLay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/replayListButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginTop="15dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/repeat_music_button"
+                            android:scaleType="fitXY" />
+
+                        <ImageButton
+                            android:id="@+id/mixListButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="60dp"
+                            android:layout_marginTop="15dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/shuffle_music_button"
+                            android:scaleType="fitXY"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginLeft="0dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
@@ -131,24 +159,6 @@
                             app:step_num="10" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_marginTop="0dp"
-                        android:layout_marginLeft="15dp"
-                        android:id="@+id/songListSongNameTV2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Song Name"
-                        android:textSize="22sp"/>
-
-                    <TextView
-                        android:id="@+id/songListSingerNameTV2"
-                        android:layout_marginLeft="15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Singer Name"
-                        android:layout_below="@id/songListSongNameTV"
-                        android:textSize="15sp"/>
 
                 </LinearLayout>
 

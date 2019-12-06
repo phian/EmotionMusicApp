@@ -3,14 +3,13 @@ package com.example.emotionmusicapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.taishi.library.Indicator;
-
-import net.igenius.customcheckbox.CustomCheckBox;
 
 import java.util.ArrayList;
 
@@ -19,15 +18,15 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
 
     public static class CustomRecyclerViewHolder extends RecyclerView.ViewHolder {
         public TextView songNameTV, singerNameTV;
-        public CustomCheckBox deleteCB;
         public Indicator songIndicator;
+        public ImageButton removeSongButton;
 
         public CustomRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
             songNameTV = itemView.findViewById(R.id.songNameLVTV);
             singerNameTV = itemView.findViewById(R.id.singerNameLVTV);
-            deleteCB = itemView.findViewById(R.id.deleteSongCB);
+            removeSongButton = itemView.findViewById(R.id.removeSongButton);
             songIndicator = itemView.findViewById(R.id.songIndicator);
         }
     }
@@ -41,9 +40,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
     public CustomRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_row, parent, false);
 
-        CustomRecyclerViewHolder customHolder = new CustomRecyclerViewHolder(view);
-
-        return customHolder;
+        return new CustomRecyclerViewHolder(view);
     }
 
     @Override
@@ -52,7 +49,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
 
         holder.songNameTV.setText(currentItem.getSongName());
         holder.singerNameTV.setText(currentItem.getSingerName());
-        holder.deleteCB.setChecked(currentItem.getDeleteCB().isChecked());
+        holder.removeSongButton.setImageResource(R.drawable.remove_song_ic);
         holder.songIndicator = currentItem.getSongIndicator();
     }
 

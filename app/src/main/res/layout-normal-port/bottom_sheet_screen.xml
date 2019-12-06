@@ -100,7 +100,7 @@
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="10dp"
-                    android:id="@+id/diskImageCIV"
+                    android:id="@+id/songListDiskImageCIV"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:src="@drawable/nath"
@@ -116,13 +116,13 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/mixAndReplayListButtonLay"
+                        android:id="@+id/songListMixAndReplayListButtonLay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <ImageButton
-                            android:id="@+id/replayListButton"
+                            android:id="@+id/songListReplayListButton"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_marginLeft="0dp"
@@ -132,7 +132,7 @@
                             android:scaleType="fitXY" />
 
                         <ImageButton
-                            android:id="@+id/mixListButton"
+                            android:id="@+id/songListMixListButton"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_marginLeft="60dp"
@@ -149,7 +149,7 @@
                         android:layout_height="wrap_content">
 
                         <com.taishi.library.Indicator
-                            android:id="@+id/songIndicator"
+                            android:id="@+id/songListSongIndicator"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:layout_margin="20dp"

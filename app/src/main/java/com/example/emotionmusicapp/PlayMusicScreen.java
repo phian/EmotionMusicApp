@@ -35,8 +35,6 @@ import com.rahman.dialog.Utilities.SmartDialogBuilder;
 import com.taishi.library.Indicator;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
-import net.igenius.customcheckbox.CustomCheckBox;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -53,7 +51,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     SeekBar songLengthSB;
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
-    LinearLayout blastVisualizerLay, musicVisualizationViewLay;
+    LinearLayout blastVisualizerLay, musicVisualizationViewLay, removeSongListBottomSheetLay;
     StickySwitch screenStyleSwitch, themeSwitch;
     BlastVisualizer blastVisualizer;
     AudioVisualization musicWaveVisualization;
@@ -72,7 +70,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     int indexCount = -1; // count index to insert song id
     String[] songNameArr = new String[R.raw.class.getFields().length - 1];
     String[] singerNameArr = new String[R.raw.class.getFields().length - 1];
-    CustomCheckBox[] checkBoxes = new CustomCheckBox[R.raw.class.getFields().length - 1];
+    ImageButton[] removeSongButtons = new ImageButton[R.raw.class.getFields().length - 1];
     Indicator[] indicators = new Indicator[R.raw.class.getFields().length - 1];
 
     ArrayList<CustomRecyclerViewItem> customItems = new ArrayList<>();
@@ -232,7 +230,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
         onScreenStyleSwitchChangeListener();
-        onCreateCheckBoxesAndIndicatorsForSongListScreen();
+        onCreateRemoveButtonAndIndicatorsForSongListScreen();
         onCreateSongRecyclerView();
         onSongListItemDragListener();
         onCreateSongListScreenBottomSheetBehavior();
@@ -661,12 +659,12 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
-    public void onCreateCheckBoxesAndIndicatorsForSongListScreen() {
-        for (int i = 0; i < checkBoxes.length; i++) {
-            checkBoxes[i] = new CustomCheckBox(this);
+    public void onCreateRemoveButtonAndIndicatorsForSongListScreen() {
+        for (int i = 0; i < removeSongButtons.length; i++) {
+            removeSongButtons[i] = new ImageButton(this);
             indicators[i] = new Indicator(this);
 
-            checkBoxes[i].setChecked(false);
+            removeSongButtons[i].setImageResource(R.drawable.remove_song_ic);
 
             indicators[i].setStepNum(10);
             indicators[i].setBarNum(4);
@@ -678,7 +676,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     // method to create song list for recycler view
     public void onCreateSongRecyclerView() {
         for (int i = 0; i < songNameArr.length; i++) {
-            customItems.add(new CustomRecyclerViewItem(songNameArr[i], singerNameArr[i], checkBoxes[i], indicators[i]));
+            customItems.add(new CustomRecyclerViewItem(songNameArr[i], singerNameArr[i], indicators[i], removeSongButtons[i]));
         }
 
         songRV.setHasFixedSize(true);
@@ -691,8 +689,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         songRV.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
             @Override
             public void OnItemClick(View view, int position) {
-                RemoveSongBottomModalSheetDialog bottomSheetDialog = new RemoveSongBottomModalSheetDialog();
-                bottomSheetDialog.show(getSupportFragmentManager(), "removeSongBottomSheet");
+
             }
         }));
     }

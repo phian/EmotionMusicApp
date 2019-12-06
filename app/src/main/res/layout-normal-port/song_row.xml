@@ -8,12 +8,24 @@
     android:paddingTop="20dp"
     app:cardCornerRadius="5dp">
 
-    <net.igenius.customcheckbox.CustomCheckBox
-        android:id="@+id/deleteSongCB"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="12dp" />
+    <LinearLayout
+        android:layout_marginTop="-10dp"
+        android:layout_marginLeft="-10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <com.taishi.library.Indicator
+            android:id="@+id/songIndicator"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:layout_marginBottom="20dp"
+            app:bar_color="#000"
+            app:bar_num="4"
+            app:duration="3000"
+            app:step_num="10" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,14 +33,14 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/songNameLVTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="75dp"
                 android:layout_marginTop="8dp"
                 android:text="Song Name"
                 android:textSize="25sp" />
@@ -38,32 +50,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/songNameLVTV"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="75dp"
                 android:layout_marginTop="5dp"
                 android:text="Singer Name"
                 android:textSize="15sp" />
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_marginTop="-10dp"
-            android:layout_marginLeft="70dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
-            <com.taishi.library.Indicator
-                android:id="@+id/songIndicator"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="20dp"
-                android:layout_marginBottom="20dp"
-                app:bar_color="#000"
-                app:bar_num="4"
-                app:duration="3000"
-                app:step_num="10" />
-
-        </LinearLayout>
-
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/removeSongButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="220dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/remove_song_ic"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"/>
 
 </androidx.cardview.widget.CardView>

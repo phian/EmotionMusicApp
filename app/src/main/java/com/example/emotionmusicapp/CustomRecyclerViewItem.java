@@ -1,16 +1,24 @@
 package com.example.emotionmusicapp;
 
-import android.content.Context;
+import android.widget.ImageButton;
 
 import com.taishi.library.Indicator;
 
-import net.igenius.customcheckbox.CustomCheckBox;
 
 public class CustomRecyclerViewItem {
     private String songName;
     private String singerName;
-    private CustomCheckBox deleteCB;
     private Indicator songIndicator;
+
+    public ImageButton getRemoveSongButton() {
+        return removeSongButton;
+    }
+
+    public void setRemoveSongButton(ImageButton removeSongButton) {
+        this.removeSongButton = removeSongButton;
+    }
+
+    private ImageButton removeSongButton;
 
     public String getSongName() {
         return songName;
@@ -28,14 +36,6 @@ public class CustomRecyclerViewItem {
         this.singerName = singerName;
     }
 
-    public CustomCheckBox getDeleteCB() {
-        return deleteCB;
-    }
-
-    public void setDeleteCB(CustomCheckBox deleteCB) {
-        this.deleteCB = deleteCB;
-    }
-
     public Indicator getSongIndicator() {
         return songIndicator;
     }
@@ -44,10 +44,10 @@ public class CustomRecyclerViewItem {
         this.songIndicator = songIndicator;
     }
 
-    public CustomRecyclerViewItem(String songName, String singerName, CustomCheckBox deleteCB, Indicator songIndicator) {
+    public CustomRecyclerViewItem(String songName, String singerName, Indicator songIndicator, ImageButton removeSongButton) {
         this.songName = songName;
         this.singerName = singerName;
-        this.deleteCB = deleteCB;
         this.songIndicator = songIndicator;
+        this.removeSongButton = removeSongButton;
     }
 }

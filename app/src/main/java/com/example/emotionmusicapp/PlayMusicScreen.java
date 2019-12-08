@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ObjectAnimator;
@@ -52,7 +53,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     SeekBar songLengthSB;
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV;
-    LinearLayout blastVisualizerLay, musicVisualizationViewLay, removeSongListBottomSheetLay;
+    LinearLayout blastVisualizerLay, musicVisualizationViewLay;
     StickySwitch screenStyleSwitch, themeSwitch;
     BlastVisualizer blastVisualizer;
     AudioVisualization musicWaveVisualization;
@@ -62,10 +63,10 @@ public class PlayMusicScreen extends AppCompatActivity {
     RecyclerView.LayoutManager songLisLayoutManager;
     BottomSheetBehavior songListBottomSheetBe;
     View songListBottomSheet;
-    ViewPager screenSlideVP;
 
     boolean isPlay = false;
     int musicIndex = 0;
+    float dX;
 
     Field[] songNameList;
     int[] songIdList = new int[R.raw.class.getFields().length - 1];

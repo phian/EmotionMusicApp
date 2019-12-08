@@ -9,11 +9,11 @@
     tools:context=".PlayMusicScreen">
 
     <ImageView
-    android:id="@+id/playMusicScreenMainBackground"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scaleType="fitXY"
-    android:src="@drawable/nath" />
+        android:id="@+id/playMusicScreenMainBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/nath" />
 
     <LinearLayout
         android:id="@+id/musicVisualizationViewLay"
@@ -41,18 +41,16 @@
         android:layout_height="match_parent"
         android:layout_y="-68dp">
 
-        <com.gauravk.audiovisualizer.visualizer.BlastVisualizer
-            xmlns:custom="http://schemas.android.com/apk/res-auto"
+        <com.gauravk.audiovisualizer.visualizer.BlastVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/blastVisualizer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            custom:avDensity="0.8"
-            custom:avType="fill"
             custom:avColor="@color/blastVisualizerWaveColor"
-            custom:avSpeed="normal"
-            custom:avWidth="150dp"
+            custom:avDensity="0.8"
             custom:avGravity="center"
-            />
+            custom:avSpeed="normal"
+            custom:avType="fill"
+            custom:avWidth="150dp" />
 
     </LinearLayout>
 
@@ -146,15 +144,15 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:layout_gravity="center"
                 android:id="@+id/playMusicButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@android:color/transparent"
+                android:layout_gravity="center"
                 android:layout_marginLeft="65dp"
-                android:src="@drawable/play_music_button"
-                android:scaleType="fitXY"/>
-<!--android:background="?android:selectableItemBackground"-->
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/play_music_button" />
+            <!--android:background="?android:selectableItemBackground"-->
 
             <ImageButton
                 android:id="@+id/skipPreviousButton"
@@ -173,8 +171,8 @@
                 android:layout_marginLeft="120dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/skip_next_button"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"
+                android:src="@drawable/skip_next_button" />
 
         </LinearLayout>
 
@@ -191,8 +189,8 @@
                 android:layout_marginLeft="67dp"
                 android:layout_marginTop="7dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/repeat_music_button"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:src="@drawable/repeat_music_button" />
 
             <ImageButton
                 android:id="@+id/mixListButton"
@@ -201,8 +199,8 @@
                 android:layout_marginLeft="112dp"
                 android:layout_marginTop="7dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/shuffle_music_button"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"
+                android:src="@drawable/shuffle_music_button" />
 
         </LinearLayout>
 
@@ -214,21 +212,21 @@
         android:orientation="horizontal">
 
         <io.ghyeok.stickyswitch.widget.StickySwitch
-            android:visibility="invisible"
             android:id="@+id/themeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="15dp"
+            android:visibility="invisible"
             app:ss_animationDuration="300"
+            app:ss_animationType="curved"
             app:ss_iconPadding="12dp"
             app:ss_iconSize="20dp"
             app:ss_leftIcon="@drawable/light_mode_icon"
             app:ss_rightIcon="@drawable/night_mode_icon"
             app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-            app:ss_switchColor="@color/switchStateColor"
-            app:ss_animationType="curved"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="15dp"/>
+            app:ss_switchColor="@color/switchStateColor" />
 
         <io.ghyeok.stickyswitch.widget.StickySwitch
             android:id="@+id/screenStyleSwitch"
@@ -249,37 +247,17 @@
     </LinearLayout>
 
     <LinearLayout
-        android:translationX="-323dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/songListScreenLay">
-
-        <include layout="@layout/song_list_screen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:translationX="-323dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/songListBottomSheetLay"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:translationX="-323dp">
 
-        <include layout="@layout/bottom_sheet_screen"
+        <include
+            layout="@layout/activity_song_list_bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/screenSlideVP"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-
-    </androidx.viewpager.widget.ViewPager>
 
 </AbsoluteLayout>

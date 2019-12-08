@@ -48,7 +48,7 @@ dependencies {
 //    implementation 'com.h6ah4i.android:openslmediaplayer:0.7.5'
     implementation 'com.cleveroad:audiovisualization:1.0.1'
     implementation 'com.github.varunest:sparkbutton:1.0.6'
-    implementation( 'com.github.thekhaeng:pushdown-anim-click:1.1.1' ){
+    implementation('com.github.thekhaeng:pushdown-anim-click:1.1.1') {
         exclude group: 'com.android.support'
     }
     implementation 'com.github.sabujak-sabujak:RoundedButton:v0.1.1'

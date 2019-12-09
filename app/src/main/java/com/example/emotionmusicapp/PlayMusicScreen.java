@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -15,10 +13,12 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
+import android.widget.AbsoluteLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -63,10 +63,12 @@ public class PlayMusicScreen extends AppCompatActivity {
     RecyclerView.LayoutManager songLisLayoutManager;
     BottomSheetBehavior songListBottomSheetBe;
     View songListBottomSheet;
+    AbsoluteLayout mainScreenScrollLayout;
+    LinearLayout songListBottomSheetLay;
 
     boolean isPlay = false;
     int musicIndex = 0;
-    float dX;
+    float x1, x2, y1, y2;
 
     Field[] songNameList;
     int[] songIdList = new int[R.raw.class.getFields().length - 1];
@@ -295,6 +297,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         indexCount = -1;
     }
 
+    // method to cut all song and singer name and add to arr to update textview
     public void cutSongNameAndSingerNameFromRawResource() {
         songNameList = R.raw.class.getFields();
 
@@ -389,6 +392,9 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         songRV = (RecyclerView) findViewById(R.id.songRV);
         songListBottomSheet = findViewById(R.id.songListScreenBottomSheet);
+
+        mainScreenScrollLayout = (AbsoluteLayout) findViewById(R.id.mainScreenScrollLayout);
+        songListBottomSheetLay = (LinearLayout) findViewById(R.id.songListBottomSheetLay);
     }
 
     // event method for play music button
@@ -746,5 +752,30 @@ public class PlayMusicScreen extends AppCompatActivity {
 
             }
         });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                y1 = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                y2 = event.getY();
+
+                if (x1 < x2) {
+                    mainScreenScrollLayout.animate().translationX(480).setDuration(300).setStartDelay(0);
+                    songListBottomSheetLay.animate().translationX(0).setDuration(300).setStartDelay(0);
+                } else if (x1 > x2) {
+                    mainScreenScrollLayout.animate().translationX(0).setDuration(300).setStartDelay(0);
+                    songListBottomSheetLay.animate().translationX(-323).setDuration(300).setStartDelay(0);
+                }
+                break;
+        }
+
+        return true;
     }
 }

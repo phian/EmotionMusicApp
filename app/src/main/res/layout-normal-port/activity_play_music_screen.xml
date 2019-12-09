@@ -8,243 +8,250 @@
     android:fitsSystemWindows="true"
     tools:context=".PlayMusicScreen">
 
-    <ImageView
-        android:id="@+id/playMusicScreenMainBackground"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@drawable/nath" />
-
-    <LinearLayout
-        android:id="@+id/musicVisualizationViewLay"
+    <AbsoluteLayout
+        android:id="@+id/mainScreenScrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.cleveroad.audiovisualization.GLAudioVisualizationView
-            android:id="@+id/musicWaveVisualization"
+        <ImageView
+            android:id="@+id/playMusicScreenMainBackground"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:av_backgroundColor="@color/waveBackgroundColor"
-            app:av_bubblesPerLayer="16"
-            app:av_bubblesRandomizeSizes="true"
-            app:av_bubblesSize="25dp"
-            app:av_layersCount="4"
-            app:av_wavesCount="7"
-            app:av_wavesFooterHeight="110dp"
-            app:av_wavesHeight="55dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/blastVisualizerLay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_y="-68dp">
-
-        <com.gauravk.audiovisualizer.visualizer.BlastVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/blastVisualizer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            custom:avColor="@color/blastVisualizerWaveColor"
-            custom:avDensity="0.8"
-            custom:avGravity="center"
-            custom:avSpeed="normal"
-            custom:avType="fill"
-            custom:avWidth="150dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/diskDisplayLay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#40ffffff"
-        android:gravity="center_horizontal|bottom"
-        android:orientation="vertical"
-        android:paddingBottom="30dp">
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/diskImageCIV"
-            android:layout_width="209dp"
-            android:layout_height="209dp"
-            android:src="@drawable/nath"
-            app:civ_border="true"
-            app:civ_border_color="@android:color/white"
-            app:civ_border_width="0dp"
-            app:civ_shadow="true"
-            app:civ_shadow_radius="0" />
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/nath" />
 
         <LinearLayout
-            android:id="@+id/singerAndSongNameLay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:id="@+id/musicVisualizationViewLay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/songNameTV"
+            <com.cleveroad.audiovisualization.GLAudioVisualizationView
+                android:id="@+id/musicWaveVisualization"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="A Song"
-                android:textColor="@android:color/white"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/singerNameTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="NPA"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                app:av_backgroundColor="@color/waveBackgroundColor"
+                app:av_bubblesPerLayer="16"
+                app:av_bubblesRandomizeSizes="true"
+                app:av_bubblesSize="25dp"
+                app:av_layersCount="4"
+                app:av_wavesCount="7"
+                app:av_wavesFooterHeight="110dp"
+                app:av_wavesHeight="55dp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/songLengthDisplayLay"
+            android:id="@+id/blastVisualizerLay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="-5dp"
-            android:orientation="horizontal"
-            android:weightSum="5">
+            android:layout_height="match_parent"
+            android:layout_y="-68dp">
 
-            <SeekBar
-                android:id="@+id/songLengthSeekBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="1dp"
-                android:layout_weight="4.5"
-                android:max="100"
-                android:progress="0"
-                android:progressTint="#c4ff0e"
-                android:thumbTint="#c4ff0e" />
-
-            <TextView
-                android:id="@+id/songLengthTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:layout_weight="0.5"
-                android:text="@string/song_length_text"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <com.gauravk.audiovisualizer.visualizer.BlastVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/blastVisualizer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                custom:avColor="@color/blastVisualizerWaveColor"
+                custom:avDensity="0.8"
+                custom:avGravity="center"
+                custom:avSpeed="normal"
+                custom:avType="fill"
+                custom:avWidth="150dp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/skipAndPlayButtonLay"
+            android:id="@+id/diskDisplayLay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:background="#40ffffff"
+            android:gravity="center_horizontal|bottom"
+            android:orientation="vertical"
+            android:paddingBottom="30dp">
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/diskImageCIV"
+                android:layout_width="209dp"
+                android:layout_height="209dp"
+                android:src="@drawable/nath"
+                app:civ_border="true"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="0dp"
+                app:civ_shadow="true"
+                app:civ_shadow_radius="0" />
+
+            <LinearLayout
+                android:id="@+id/singerAndSongNameLay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/songNameTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="A Song"
+                    android:textColor="@android:color/white"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/singerNameTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="NPA"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/songLengthDisplayLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="-5dp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <SeekBar
+                    android:id="@+id/songLengthSeekBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_weight="4.5"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressTint="#c4ff0e"
+                    android:thumbTint="#c4ff0e" />
+
+                <TextView
+                    android:id="@+id/songLengthTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:layout_weight="0.5"
+                    android:text="@string/song_length_text"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/skipAndPlayButtonLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/playMusicButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="65dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/play_music_button" />
+                <!--android:background="?android:selectableItemBackground"-->
+
+                <ImageButton
+                    android:id="@+id/skipPreviousButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="-115dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/skip_previous_button" />
+
+                <ImageButton
+                    android:id="@+id/skipNextButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="120dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/skip_next_button" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mixAndReplayListButtonLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/replayListButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="67dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/repeat_music_button" />
+
+                <ImageButton
+                    android:id="@+id/mixListButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="112dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/shuffle_music_button" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/playMusicButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="65dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/play_music_button" />
-            <!--android:background="?android:selectableItemBackground"-->
-
-            <ImageButton
-                android:id="@+id/skipPreviousButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="-115dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/skip_previous_button" />
-
-            <ImageButton
-                android:id="@+id/skipNextButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+            <io.ghyeok.stickyswitch.widget.StickySwitch
+                android:id="@+id/themeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
                 android:layout_marginLeft="120dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/skip_next_button" />
+                android:layout_marginTop="15dp"
+                android:visibility="invisible"
+                app:ss_animationDuration="300"
+                app:ss_animationType="curved"
+                app:ss_iconPadding="12dp"
+                app:ss_iconSize="20dp"
+                app:ss_leftIcon="@drawable/light_mode_icon"
+                app:ss_rightIcon="@drawable/night_mode_icon"
+                app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
+                app:ss_switchColor="@color/switchStateColor" />
+
+            <io.ghyeok.stickyswitch.widget.StickySwitch
+                android:id="@+id/screenStyleSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                app:ss_animationDuration="300"
+                app:ss_animationType="curved"
+                app:ss_iconPadding="12dp"
+                app:ss_iconSize="20dp"
+                app:ss_leftIcon="@drawable/lovely_style_icon"
+                app:ss_rightIcon="@drawable/flash_style_icon"
+                app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
+                app:ss_switchColor="@color/switchStateColor" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/mixAndReplayListButtonLay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/replayListButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="67dp"
-                android:layout_marginTop="7dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/repeat_music_button" />
-
-            <ImageButton
-                android:id="@+id/mixListButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="112dp"
-                android:layout_marginTop="7dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/shuffle_music_button" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <io.ghyeok.stickyswitch.widget.StickySwitch
-            android:id="@+id/themeSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="15dp"
-            android:visibility="invisible"
-            app:ss_animationDuration="300"
-            app:ss_animationType="curved"
-            app:ss_iconPadding="12dp"
-            app:ss_iconSize="20dp"
-            app:ss_leftIcon="@drawable/light_mode_icon"
-            app:ss_rightIcon="@drawable/night_mode_icon"
-            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-            app:ss_switchColor="@color/switchStateColor" />
-
-        <io.ghyeok.stickyswitch.widget.StickySwitch
-            android:id="@+id/screenStyleSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            app:ss_animationDuration="300"
-            app:ss_animationType="curved"
-            app:ss_iconPadding="12dp"
-            app:ss_iconSize="20dp"
-            app:ss_leftIcon="@drawable/lovely_style_icon"
-            app:ss_rightIcon="@drawable/flash_style_icon"
-            app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-            app:ss_switchColor="@color/switchStateColor" />
-
-    </LinearLayout>
+    </AbsoluteLayout>
 
     <LinearLayout
         android:id="@+id/songListBottomSheetLay"
@@ -254,10 +261,13 @@
         android:translationX="-323dp">
 
         <include
+            android:id="@+id/songListBottomSheet"
             layout="@layout/activity_song_list_bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
+
+
 
 </AbsoluteLayout>

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,7 +14,6 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,6 +28,7 @@ import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
+import com.cunoraz.gifview.library.GifView;
 import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -57,7 +58,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     StickySwitch screenStyleSwitch, themeSwitch;
     BlastVisualizer blastVisualizer;
     AudioVisualization musicWaveVisualization;
-    ObjectAnimator diskImgAni;
+    ObjectAnimator diskImgAni, passScreenButtonAni;
     RecyclerView songRV;
     RecyclerView.Adapter songListAdapter;
     RecyclerView.LayoutManager songLisLayoutManager;
@@ -65,10 +66,10 @@ public class PlayMusicScreen extends AppCompatActivity {
     View songListBottomSheet;
     AbsoluteLayout mainScreenScrollLayout;
     LinearLayout songListBottomSheetLay;
+    GifView passScreenButton;
 
-    boolean isPlay = false;
+    boolean isPlay = false, isOnSongListScreen = false;
     int musicIndex = 0;
-    float x1, x2, y1, y2;
 
     Field[] songNameList;
     int[] songIdList = new int[R.raw.class.getFields().length - 1];
@@ -239,6 +240,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         onCreateSongRecyclerView();
         onSongListItemDragListener();
         onCreateSongListScreenBottomSheetBehavior();
+        onPassButtonGifViewClickListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -268,12 +270,16 @@ public class PlayMusicScreen extends AppCompatActivity {
         musicWaveVisualization.linkTo(visualizerHandler);
 
         // Add click ani for button
-        PushDownAnim.setPushDownAnimTo(playButton, skipPreviousButton, skipNextButton, repeatButton, shuffleButton)
+        PushDownAnim.setPushDownAnimTo(playButton, skipPreviousButton, skipNextButton, repeatButton, shuffleButton, passScreenButton)
                 .setScale(PushDownAnim.MODE_SCALE | PushDownAnim.MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_SCALE)
                 .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
                 .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                 .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                 .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
+
+        // set up for pass screen button
+        passScreenButton.setVisibility(View.VISIBLE);
+        passScreenButton.pause();
 
         //get the AudioSessionId your MediaPlayer and pass it to the visualizer
 //        int audioSessionId = musicMedia.getAudioSessionId();
@@ -395,6 +401,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         mainScreenScrollLayout = (AbsoluteLayout) findViewById(R.id.mainScreenScrollLayout);
         songListBottomSheetLay = (LinearLayout) findViewById(R.id.songListBottomSheetLay);
+
+        passScreenButton = (GifView) findViewById(R.id.passScreenButton);
     }
 
     // event method for play music button
@@ -754,28 +762,87 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = event.getX();
-                y1 = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = event.getX();
-                y2 = event.getY();
+    public void onPassButtonGifViewClickListener() {
+        passScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passScreenButton.play();
 
-                if (x1 < x2) {
+                // check of user is on music list screen or not
+                if (isOnSongListScreen == false) {
                     mainScreenScrollLayout.animate().translationX(480).setDuration(300).setStartDelay(0);
                     songListBottomSheetLay.animate().translationX(0).setDuration(300).setStartDelay(0);
-                } else if (x1 > x2) {
-                    mainScreenScrollLayout.animate().translationX(0).setDuration(300).setStartDelay(0);
-                    songListBottomSheetLay.animate().translationX(-323).setDuration(300).setStartDelay(0);
-                }
-                break;
-        }
 
-        return true;
+                    // animation for pass screen button
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.ROTATION, 0f, 180f).setDuration(300);
+                    passScreenButtonAni.setInterpolator(new LinearInterpolator());
+                    passScreenButtonAni.setStartDelay(300);
+                    passScreenButtonAni.start();
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.TRANSLATION_X, 350).setDuration(600);
+                    passScreenButtonAni.setStartDelay(600);
+                    passScreenButtonAni.start();
+
+                    passScreenButtonAni.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            passScreenButton.pause();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+
+                    isOnSongListScreen = true;
+                } else {
+                    mainScreenScrollLayout.animate().translationX(0).setDuration(300).setStartDelay(0);
+                    songListBottomSheetLay.animate().translationX(-480).setDuration(300).setStartDelay(0);
+
+                    // animation for pass screen button
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.ROTATION, 180f, 0f).setDuration(300);
+                    passScreenButtonAni.setInterpolator(new LinearInterpolator());
+                    passScreenButtonAni.setStartDelay(300);
+                    passScreenButtonAni.start();
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.TRANSLATION_X, 0).setDuration(600);
+                    passScreenButtonAni.setStartDelay(600);
+                    passScreenButtonAni.start();
+
+                    passScreenButtonAni.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            passScreenButton.pause();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+
+                    isOnSongListScreen = false;
+                }
+            }
+        });
     }
 }

@@ -471,14 +471,61 @@ public class PlayMusicScreen extends AppCompatActivity {
                         @Override
                         public void onCompletion(MediaPlayer mediaPlayer) {
                             if (repeatedClickTime == 0 || repeatedClickTime == 3) { // if user don't repeat the list
-                                if (diskImgAni.isRunning()) {
-                                    diskImgAni.end();
+                                if (musicIndex == songIdList.length - 1) { // check if current index is the last song of the list
+                                    if (diskImgAni.isRunning()) {
+                                        diskImgAni.end();
+                                    }
+                                    if (musicMedia.isPlaying()) {
+                                        musicWaveVisualization.release();
+                                    }
+                                    playButton.setImageResource(R.drawable.play_music_button);
+                                    isPlay = false;
+                                } else { // check if current index is not the last song of the list
+                                    musicIndex++;
+
+                                    // check if music media is null or not to create and call music file
+                                    if (musicMedia == null) {
+                                        musicMedia = new MediaPlayer();
+                                    } else {
+                                        musicMedia.release();
+                                        musicMedia = new MediaPlayer();
+                                    }
+
+                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                                    songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+
+                                    updateSongNameAndSingerNameTV(musicIndex);
+
+                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
+                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                                        int audioSessionId = musicMedia.getAudioSessionId();
+                                        if (audioSessionId != -1)
+                                            blastVisualizer.setAudioSessionId(audioSessionId);
+                                    }
+
+                                    if (isPlay == true) {
+                                        musicMedia.start();
+
+                                        if (diskImgAni.isRunning() == false) {
+                                            diskImgAni.start();
+                                        }
+                                        if (musicMedia.isPlaying() == false) {
+                                            musicWaveVisualization.onResume();
+                                        }
+                                        playButton.setImageResource(R.drawable.pause_music_button);
+                                    }
+
+                                    // update time text
+                                    int currentTime = musicMedia.getCurrentPosition();
+                                    long songDuration = musicMedia.getDuration();
+
+                                    long leftTime = songDuration - currentTime;
+                                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                                 }
-                                if (musicMedia.isPlaying()) {
-                                    musicWaveVisualization.release();
-                                }
-                                playButton.setImageResource(R.drawable.play_music_button);
-                                isPlay = false;
                             } else if (repeatedClickTime == 1) { // if user repeat only the current song
                                 musicMedia.start();
 

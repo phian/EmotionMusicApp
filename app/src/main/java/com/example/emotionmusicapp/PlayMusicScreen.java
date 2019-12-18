@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.ghyeok.stickyswitch.widget.StickySwitch;
@@ -70,6 +71,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
     int musicIndex = 0, repeatedClickTime = 0;
+
+    Random randMusicIndex = new Random(); // use for shuffle button click
 
     Field[] songNameList;
     int[] songIdList = new int[R.raw.class.getFields().length - 1];
@@ -494,6 +497,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
 
                                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                    songLengthSB.setProgress(0);
 
                                     updateSongNameAndSingerNameTV(musicIndex);
 
@@ -546,6 +550,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
 
                                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                    songLengthSB.setProgress(0);
 
                                     updateSongNameAndSingerNameTV(musicIndex);
 
@@ -591,6 +596,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
 
                                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                    songLengthSB.setProgress(0);
 
                                     updateSongNameAndSingerNameTV(musicIndex);
 
@@ -645,14 +651,66 @@ public class PlayMusicScreen extends AppCompatActivity {
                 if (musicMedia != null) {
                     if (seekBar.getProgress() == seekBar.getMax()) {
                         if (repeatedClickTime == 0 || repeatedClickTime == 3) {
-                            if (diskImgAni.isRunning()) {
-                                diskImgAni.end();
+                            if (musicIndex == songIdList.length - 1 && isPlay) {
+                                if (diskImgAni.isRunning()) {
+                                    diskImgAni.end();
+                                }
+                                if (musicMedia.isPlaying()) {
+                                    musicWaveVisualization.release();
+                                }
+                                playButton.setImageResource(R.drawable.play_music_button);
+                                isPlay = false;
+                            } else if (musicIndex < songIdList.length - 1 && isPlay) {
+                                musicIndex++;
+
+                                // check if music media is null or not to create and call music file
+                                if (musicMedia == null) {
+                                    musicMedia = new MediaPlayer();
+                                } else {
+                                    musicMedia.release();
+                                    musicMedia = new MediaPlayer();
+                                }
+
+                                musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                songLengthSB.setProgress(0);
+
+                                updateSongNameAndSingerNameTV(musicIndex);
+
+                                if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
+                                    //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                                    int audioSessionId = musicMedia.getAudioSessionId();
+                                    if (audioSessionId != -1)
+                                        blastVisualizer.setAudioSessionId(audioSessionId);
+                                }
+
+                                if (isPlay == true) {
+                                    musicMedia.start();
+
+                                    if (diskImgAni.isRunning() == false) {
+                                        diskImgAni.start();
+                                    }
+                                    if (musicMedia.isPlaying() == false) {
+                                        musicWaveVisualization.onResume();
+                                    }
+                                    playButton.setImageResource(R.drawable.pause_music_button);
+                                }
+
+                                // update time text
+                                int currentTime = musicMedia.getCurrentPosition();
+                                long songDuration = musicMedia.getDuration();
+
+                                long leftTime = songDuration - currentTime;
+                                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+
+                                update();
+
+                                return;
                             }
-                            if (musicMedia.isPlaying()) {
-                                musicWaveVisualization.release();
-                            }
-                            playButton.setImageResource(R.drawable.play_music_button);
-                            isPlay = false;
                         }
                     } else {
                         musicHandler.removeCallbacks(musicRunnable); // remove thread playing song
@@ -1038,6 +1096,5 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
             }
         });
-
     }
 }

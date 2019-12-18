@@ -44,9 +44,10 @@
             android:id="@+id/blastVisualizerLay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_y="-68dp">
+            android:layout_y="-50dp">
 
-            <com.gauravk.audiovisualizer.visualizer.BlastVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
+            <com.gauravk.audiovisualizer.visualizer.BlastVisualizer
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/blastVisualizer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -66,7 +67,7 @@
             android:background="#40ffffff"
             android:gravity="center_horizontal|bottom"
             android:orientation="vertical"
-            android:paddingBottom="30dp">
+            android:paddingBottom="60dp">
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/diskImageCIV"
@@ -141,73 +142,74 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/skipAndPlayButtonLay"
+                android:id="@+id/skipPlayRepeatAndShuffleButtonLay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
-                android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/playMusicButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="65dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/play_music_button" />
-                <!--android:background="?android:selectableItemBackground"-->
+                    <ImageButton
+                        android:id="@+id/playMusicButton"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="135dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/play_music_button" />
+                    <!--android:background="?android:selectableItemBackground"-->
 
-                <ImageButton
-                    android:id="@+id/skipPreviousButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="-115dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/skip_previous_button" />
+                    <ImageButton
+                        android:id="@+id/skipPreviousButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="-105dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/skip_previous_button" />
 
-                <ImageButton
-                    android:id="@+id/skipNextButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="120dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/skip_next_button" />
+                    <ImageButton
+                        android:id="@+id/skipNextButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="100dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/skip_next_button" />
 
-            </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/replayListButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="-225dp"
+                        android:layout_marginTop="11dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/repeat_button" />
 
-            <LinearLayout
-                android:id="@+id/mixAndReplayListButtonLay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/mixListButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="212dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/shuffle_button" />
 
-                <ImageButton
-                    android:id="@+id/replayListButton"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="67dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/repeat_music_button" />
+                </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/mixListButton"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="112dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/shuffle_music_button" />
+        </LinearLayout>
 
-            </LinearLayout>
+        <LinearLayout
+            android:id="@+id/mixAndReplayListButtonLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
 
         </LinearLayout>
 

@@ -68,8 +68,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     LinearLayout songListBottomSheetLay;
     GifView passScreenButton;
 
-    boolean isPlay = false, isOnSongListScreen = false;
-    int musicIndex = 0;
+    boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
+    int musicIndex = 0, repeatedClickTime = 0;
 
     Field[] songNameList;
     int[] songIdList = new int[R.raw.class.getFields().length - 1];
@@ -241,6 +241,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         onSongListItemDragListener();
         onCreateSongListScreenBottomSheetBehavior();
         onPassButtonGifViewClickListener();
+        onRepeatListButtonClickListener();
+        onShuffleListButtonClickListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -844,5 +846,44 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onRepeatListButtonClickListener() {
+        repeatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (repeatedClickTime < 3) {
+                    repeatedClickTime++;
+                }
+
+                if (repeatedClickTime == 1) {
+                    repeatButton.setImageResource(R.drawable.repeat_one_button);
+                } else if (repeatedClickTime == 2) {
+                    repeatButton.setImageResource(R.drawable.repeated_button);
+                } else {
+                    repeatButton.setImageResource(R.drawable.repeat_button);
+
+                    repeatedClickTime = 0;
+                }
+            }
+        });
+    }
+
+    public void onShuffleListButtonClickListener() {
+        shuffleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isShuffled) {
+                    shuffleButton.setImageResource(R.drawable.shuffle_button);
+
+                    isShuffled = false;
+                } else {
+                    shuffleButton.setImageResource(R.drawable.shuffled_button);
+
+                    isShuffled = true;
+                }
+            }
+        });
+
     }
 }

@@ -470,14 +470,113 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mediaPlayer) {
-                            if (diskImgAni.isRunning()) {
-                                diskImgAni.end();
+                            if (repeatedClickTime == 0 || repeatedClickTime == 3) { // if user don't repeat the list
+                                if (diskImgAni.isRunning()) {
+                                    diskImgAni.end();
+                                }
+                                if (musicMedia.isPlaying()) {
+                                    musicWaveVisualization.release();
+                                }
+                                playButton.setImageResource(R.drawable.play_music_button);
+                                isPlay = false;
+                            } else if (repeatedClickTime == 1) { // if user repeat only the current song
+                                musicMedia.start();
+
+                                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                songLengthSB.setProgress(0);
+                            } else if (repeatedClickTime == 2) { // if user repeat the list
+                                if (musicIndex == songIdList.length - 1) {
+                                    musicIndex = 0;
+
+                                    // check if music media is null or not to create and call music file
+                                    if (musicMedia == null) {
+                                        musicMedia = new MediaPlayer();
+                                    } else {
+                                        musicMedia.release();
+                                        musicMedia = new MediaPlayer();
+                                    }
+
+                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                                    songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+
+                                    updateSongNameAndSingerNameTV(musicIndex);
+
+                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
+                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                                        int audioSessionId = musicMedia.getAudioSessionId();
+                                        if (audioSessionId != -1)
+                                            blastVisualizer.setAudioSessionId(audioSessionId);
+                                    }
+
+                                    if (isPlay == true) {
+                                        musicMedia.start();
+
+                                        if (diskImgAni.isRunning() == false) {
+                                            diskImgAni.start();
+                                        }
+                                        if (musicMedia.isPlaying() == false) {
+                                            musicWaveVisualization.onResume();
+                                        }
+                                        playButton.setImageResource(R.drawable.pause_music_button);
+                                    }
+
+                                    // update time text
+                                    int currentTime = musicMedia.getCurrentPosition();
+                                    long songDuration = musicMedia.getDuration();
+
+                                    long leftTime = songDuration - currentTime;
+                                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+                                } else {
+                                    musicIndex++;
+
+                                    // check if music media is null or not to create and call music file
+                                    if (musicMedia == null) {
+                                        musicMedia = new MediaPlayer();
+                                    } else {
+                                        musicMedia.release();
+                                        musicMedia = new MediaPlayer();
+                                    }
+
+                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                                    songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+
+                                    updateSongNameAndSingerNameTV(musicIndex);
+
+                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
+                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                                        int audioSessionId = musicMedia.getAudioSessionId();
+                                        if (audioSessionId != -1)
+                                            blastVisualizer.setAudioSessionId(audioSessionId);
+                                    }
+
+                                    if (isPlay == true) {
+                                        musicMedia.start();
+
+                                        if (diskImgAni.isRunning() == false) {
+                                            diskImgAni.start();
+                                        }
+                                        if (musicMedia.isPlaying() == false) {
+                                            musicWaveVisualization.onResume();
+                                        }
+                                        playButton.setImageResource(R.drawable.pause_music_button);
+                                    }
+
+                                    // update time text
+                                    int currentTime = musicMedia.getCurrentPosition();
+                                    long songDuration = musicMedia.getDuration();
+
+                                    long leftTime = songDuration - currentTime;
+                                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+                                }
                             }
-                            if (musicMedia.isPlaying()) {
-                                musicWaveVisualization.release();
-                            }
-                            playButton.setImageResource(R.drawable.play_music_button);
-                            isPlay = false;
                         }
                     });
                 } else if (musicMedia == null && b) {
@@ -498,14 +597,16 @@ public class PlayMusicScreen extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (musicMedia != null) {
                     if (seekBar.getProgress() == seekBar.getMax()) {
-                        if (diskImgAni.isRunning()) {
-                            diskImgAni.end();
+                        if (repeatedClickTime == 0 || repeatedClickTime == 3) {
+                            if (diskImgAni.isRunning()) {
+                                diskImgAni.end();
+                            }
+                            if (musicMedia.isPlaying()) {
+                                musicWaveVisualization.release();
+                            }
+                            playButton.setImageResource(R.drawable.play_music_button);
+                            isPlay = false;
                         }
-                        if (musicMedia.isPlaying()) {
-                            musicWaveVisualization.release();
-                        }
-                        playButton.setImageResource(R.drawable.play_music_button);
-                        isPlay = false;
                     } else {
                         musicHandler.removeCallbacks(musicRunnable); // remove thread playing song
                         musicMedia.seekTo(seekBar.getProgress());
@@ -547,6 +648,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
@@ -603,6 +706,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
 
                 updateSongNameAndSingerNameTV(musicIndex);
 
@@ -848,14 +953,16 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for repeat music button click
     public void onRepeatListButtonClickListener() {
         repeatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (repeatedClickTime < 3) {
-                    repeatedClickTime++;
+                    repeatedClickTime++; // increase choice time
                 }
 
+                // check the choice of the user
                 if (repeatedClickTime == 1) {
                     repeatButton.setImageResource(R.drawable.repeat_one_button);
                 } else if (repeatedClickTime == 2) {

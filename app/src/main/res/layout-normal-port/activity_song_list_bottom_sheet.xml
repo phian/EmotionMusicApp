@@ -164,7 +164,7 @@
                             app:bar_color="#000"
                             app:bar_num="4"
                             app:duration="3000"
-                            app:step_num="10" />
+                            app:step_num="10"/>
 
                     </LinearLayout>
 

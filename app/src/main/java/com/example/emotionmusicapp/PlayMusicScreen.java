@@ -54,12 +54,12 @@ public class PlayMusicScreen extends AppCompatActivity {
     TextView songLengthTV, songNameTV, singerNameTV, songListSongNameTV, songListSingerNameTV;
     SeekBar songLengthSB;
     MediaPlayer musicMedia = null;
-    CircularImageView diskImageCIV;
+    CircularImageView diskImageCIV, songListDiskImageCIV;
     LinearLayout blastVisualizerLay, musicVisualizationViewLay;
     StickySwitch screenStyleSwitch, themeSwitch;
     BlastVisualizer blastVisualizer;
     AudioVisualization musicWaveVisualization;
-    ObjectAnimator diskImgAni, passScreenButtonAni;
+    ObjectAnimator diskImgAni, passScreenButtonAni, songListDiskImgAni;
     RecyclerView songRV;
     RecyclerView.Adapter songListAdapter;
     RecyclerView.LayoutManager songLisLayoutManager;
@@ -68,6 +68,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     AbsoluteLayout mainScreenScrollLayout;
     LinearLayout songListBottomSheetLay;
     GifView passScreenButton;
+    Indicator songListSongIndicator;
 
     boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
     int musicIndex = 0, repeatedClickTime = 0;
@@ -148,6 +149,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     public void pauseSong() {
         playButton.setImageResource(R.drawable.play_music_button);
+        songListPlayMusicButton.setImageResource(R.drawable.play_music_button);
 
         musicMedia.pause();
 
@@ -164,6 +166,8 @@ public class PlayMusicScreen extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     public void resumeSong() {
         playButton.setImageResource(R.drawable.pause_music_button);
+        songListPlayMusicButton.setImageResource(R.drawable.pause_music_button);
+
         musicHandler.removeCallbacks(musicRunnable);
         songLengthSB.setMax(musicMedia.getDuration());
 
@@ -190,7 +194,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         songLengthSB.setProgress(songLengthSB.getMax());
     }
 
-    // method tp update time for SeekBar
+    // method to update time for SeekBar
     public void updateSeekBarTime(int progressTime) {
         musicMedia = new MediaPlayer();
 
@@ -232,9 +236,12 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         castControl();
         onPlayMusicButtonClickListener();
+        onSongListPlayMusicButtonClickListener();
         onMusicSeekBarLengthChangeListener();
         onSkipNextButtonClickListener();
+        onSongListSkipNextButtonClickListener();
         onSkipPreviousButtonClickListener();
+        onSongListSkipPreviousButtonClickListener();
         readRawResourcesFileNameAndId();
         cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
@@ -245,7 +252,9 @@ public class PlayMusicScreen extends AppCompatActivity {
         onCreateSongListScreenBottomSheetBehavior();
         onPassButtonGifViewClickListener();
         onRepeatListButtonClickListener();
+        onSongListRepeatButtonClickListener();
         onShuffleListButtonClickListener();
+        onSongListShuffleButtonClickListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -265,6 +274,10 @@ public class PlayMusicScreen extends AppCompatActivity {
         diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
         diskImgAni.setRepeatCount(musicMedia.getDuration());
         diskImgAni.setInterpolator(new LinearInterpolator());
+
+        songListDiskImgAni = ObjectAnimator.ofFloat(songListDiskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
+        songListDiskImgAni.setRepeatCount(musicMedia.getDuration());
+        songListDiskImgAni.setInterpolator(new LinearInterpolator());
 
         // set speech recognizer handler
         SpeechRecognizerDbmHandler speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(PlayMusicScreen.this);
@@ -287,6 +300,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         // set up for pass screen button
         passScreenButton.setVisibility(View.VISIBLE);
         passScreenButton.pause();
+
+        songListSongIndicator.setAlpha(0);
 
         //get the AudioSessionId your MediaPlayer and pass it to the visualizer
 //        int audioSessionId = musicMedia.getAudioSessionId();
@@ -414,6 +429,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
         musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
+        songListDiskImageCIV = (CircularImageView) findViewById(R.id.songListDiskImageCIV);
 
         blastVisualizer = (BlastVisualizer) findViewById(R.id.blastVisualizer);
 
@@ -427,8 +443,11 @@ public class PlayMusicScreen extends AppCompatActivity {
         songListBottomSheetLay = (LinearLayout) findViewById(R.id.songListBottomSheetLay);
 
         passScreenButton = (GifView) findViewById(R.id.passScreenButton);
+
+        songListSongIndicator = (Indicator) findViewById(R.id.songListSongIndicator);
     }
 
+    //------------------------------------ Play music button -------------------------------------//
     // event method for play music button
     public void onPlayMusicButtonClickListener() {
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -457,18 +476,72 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
+                        songListDiskImgAni.resume();
+                        songListSongIndicator.setAlpha(1);
                     } else {
                         diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
                     }
                 } else {
                     diskImgAni.pause();
+                    songListDiskImgAni.pause();
                     musicWaveVisualization.onPause();
+                    songListSongIndicator.setAlpha(0);
                 }
 
                 startSong(isPlay);
             }
         });
     }
+
+    // event for play music button in song list screen click
+    public void onSongListPlayMusicButtonClickListener() {
+        songListPlayMusicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPlay == false) {
+                    isPlay = true;
+                } else {
+                    isPlay = false;
+                }
+
+                if (isPlay) {
+                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
+                        musicWaveVisualization.onResume();
+                        blastVisualizer.setEnabled(false);
+                        blastVisualizer.release();
+                    } else {
+                        musicWaveVisualization.onPause();
+
+                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                        int audioSessionId = musicMedia.getAudioSessionId();
+                        if (audioSessionId != -1)
+                            blastVisualizer.setAudioSessionId(audioSessionId);
+                        blastVisualizer.setEnabled(true);
+                    }
+
+                    if (diskImgAni.isRunning()) {
+                        diskImgAni.resume();
+                        songListDiskImgAni.resume();
+                        songListSongIndicator.setAlpha(1);
+                    } else {
+                        diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
+                    }
+                } else {
+                    diskImgAni.pause();
+                    songListDiskImgAni.pause();
+                    musicWaveVisualization.onPause();
+                    songListSongIndicator.setAlpha(0);
+                }
+
+                startSong(isPlay);
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------------------//
 
     // event for seek bar change
     public void onMusicSeekBarLengthChangeListener() {
@@ -496,6 +569,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                                 if (musicIndex == songIdList.length - 1) { // check if current index is the last song of the list
                                     if (diskImgAni.isRunning()) {
                                         diskImgAni.end();
+                                        songListDiskImgAni.end();
+                                        songListSongIndicator.setAlpha(0);
                                     }
                                     if (musicMedia.isPlaying()) {
                                         musicWaveVisualization.release();
@@ -532,6 +607,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                         if (diskImgAni.isRunning() == false) {
                                             diskImgAni.start();
+                                            songListDiskImgAni.start();
+                                            songListSongIndicator.setAlpha(1);
                                         }
                                         if (musicMedia.isPlaying() == false) {
                                             musicWaveVisualization.onResume();
@@ -589,6 +666,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                         if (diskImgAni.isRunning() == false) {
                                             diskImgAni.start();
+                                            songListDiskImgAni.start();
+                                            songListSongIndicator.setAlpha(1);
                                         }
                                         if (musicMedia.isPlaying() == false) {
                                             musicWaveVisualization.onResume();
@@ -639,6 +718,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                         if (diskImgAni.isRunning() == false) {
                                             diskImgAni.start();
+                                            songListDiskImgAni.start();
+                                            songListSongIndicator.setAlpha(1);
                                         }
                                         if (musicMedia.isPlaying() == false) {
                                             musicWaveVisualization.onResume();
@@ -700,6 +781,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     }
 
+    //------------------------------------- Skip next button -------------------------------------//
     // event for skip next button
     public void onSkipNextButtonClickListener() {
         skipNextButton.setOnClickListener(new View.OnClickListener() {
@@ -739,6 +821,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     if (diskImgAni.isRunning() == false) {
                         diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
                     }
                     if (musicMedia.isPlaying() == false) {
                         musicWaveVisualization.onResume();
@@ -759,6 +843,69 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for skip next button in song list screen click
+    public void onSongListSkipNextButtonClickListener() {
+        songListSkipNextButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onClick(View view) {
+                if (musicIndex < R.raw.class.getFields().length - 2) {
+                    musicIndex++;
+                } else {
+                    musicIndex = 0;
+                }
+
+                // check if music media is null or not to create and call music file
+                if (musicMedia == null) {
+                    musicMedia = new MediaPlayer();
+                } else {
+                    musicMedia.release();
+                    musicMedia = new MediaPlayer();
+                }
+
+                musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                songLengthSB.setProgress(0);
+
+                updateSongNameAndSingerNameTV(musicIndex);
+
+                if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
+                    //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                    int audioSessionId = musicMedia.getAudioSessionId();
+                    if (audioSessionId != -1)
+                        blastVisualizer.setAudioSessionId(audioSessionId);
+                }
+
+                if (isPlay == true) {
+                    musicMedia.start();
+
+                    if (diskImgAni.isRunning() == false) {
+                        diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.onResume();
+                    }
+                    playButton.setImageResource(R.drawable.pause_music_button);
+                }
+
+                // update time text
+                int currentTime = musicMedia.getCurrentPosition();
+                long songDuration = musicMedia.getDuration();
+
+                long leftTime = songDuration - currentTime;
+                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------------------//
+
+    //------------------------------------ Skip previous button ----------------------------------//
     // event for skip previous button
     public void onSkipPreviousButtonClickListener() {
         skipPreviousButton.setOnClickListener(new View.OnClickListener() {
@@ -798,6 +945,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     if (diskImgAni.isRunning() == false) {
                         diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
                     }
                     if (musicMedia.isPlaying() == false) {
                         musicWaveVisualization.onResume();
@@ -819,6 +968,70 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for skip previous button in song list screen click
+    public void onSongListSkipPreviousButtonClickListener() {
+        songListSkipPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onClick(View view) {
+                if (musicIndex > 0) {
+                    musicIndex--;
+                } else {
+                    musicIndex = R.raw.class.getFields().length - 2;
+                }
+
+                // check if music media is null or not to create and call music file
+                if (musicMedia == null) {
+                    musicMedia = new MediaPlayer();
+                } else {
+                    musicMedia.release();
+                    musicMedia = new MediaPlayer();
+                }
+
+                musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                songLengthSB.setProgress(0);
+
+                updateSongNameAndSingerNameTV(musicIndex);
+
+                if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
+                    //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                    int audioSessionId = musicMedia.getAudioSessionId();
+                    if (audioSessionId != -1)
+                        blastVisualizer.setAudioSessionId(audioSessionId);
+                }
+
+                if (isPlay == true) {
+                    musicMedia.start();
+
+                    if (diskImgAni.isRunning() == false) {
+                        diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.onResume();
+                    }
+                    playButton.setImageResource(R.drawable.pause_music_button);
+                }
+
+                // update time text
+                int currentTime = musicMedia.getCurrentPosition();
+                long songDuration = musicMedia.getDuration();
+
+                long leftTime = songDuration - currentTime;
+                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------------------//
+
+    // event for changing screen style by switch
     public void onScreenStyleSwitchChangeListener() {
         screenStyleSwitch.setOnSelectedChangeListener(new StickySwitch.OnSelectedChangeListener() {
             @Override
@@ -858,6 +1071,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // method to create indicators and remove button for song list item
     public void onCreateRemoveButtonAndIndicatorsForSongListScreen() {
         for (int i = 0; i < removeSongButtons.length; i++) {
             removeSongButtons[i] = new ImageButton(this);
@@ -944,6 +1158,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for pass screen button click
     public void onPassButtonGifViewClickListener() {
         passScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1028,6 +1243,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    //----------------------------------- Repeat music button ------------------------------------//
     // event for repeat music button click
     public void onRepeatListButtonClickListener() {
         repeatButton.setOnClickListener(new View.OnClickListener() {
@@ -1040,10 +1256,13 @@ public class PlayMusicScreen extends AppCompatActivity {
                 // check the choice of the user
                 if (repeatedClickTime == 1) {
                     repeatButton.setImageResource(R.drawable.repeat_one_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_one_button);
                 } else if (repeatedClickTime == 2) {
                     repeatButton.setImageResource(R.drawable.repeated_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeated_button);
                 } else {
                     repeatButton.setImageResource(R.drawable.repeat_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_button);
 
                     repeatedClickTime = 0;
                 }
@@ -1051,20 +1270,72 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    // event for repeat button in song list screen click
+    public void onSongListRepeatButtonClickListener() {
+        songListReplayListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (repeatedClickTime < 3) {
+                    repeatedClickTime++; // increase choice time
+                }
+
+                // check the choice of the user
+                if (repeatedClickTime == 1) {
+                    repeatButton.setImageResource(R.drawable.repeat_one_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_one_button);
+                } else if (repeatedClickTime == 2) {
+                    repeatButton.setImageResource(R.drawable.repeated_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeated_button);
+                } else {
+                    repeatButton.setImageResource(R.drawable.repeat_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_button);
+
+                    repeatedClickTime = 0;
+                }
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------------------//
+
+    //------------------------------------- Shuffle music button ---------------------------------//
+    // event for shuffle song list button click
     public void onShuffleListButtonClickListener() {
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isShuffled) {
                     shuffleButton.setImageResource(R.drawable.shuffle_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffle_button);
 
                     isShuffled = false;
                 } else {
                     shuffleButton.setImageResource(R.drawable.shuffled_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffled_button);
 
                     isShuffled = true;
                 }
             }
         });
     }
+
+    // event for shuffle song list button in song list screen click
+    public void onSongListShuffleButtonClickListener() {
+        songListMixListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isShuffled) {
+                    shuffleButton.setImageResource(R.drawable.shuffle_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffle_button);
+
+                    isShuffled = false;
+                } else {
+                    shuffleButton.setImageResource(R.drawable.shuffled_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffled_button);
+
+                    isShuffled = true;
+                }
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------------------//
 }

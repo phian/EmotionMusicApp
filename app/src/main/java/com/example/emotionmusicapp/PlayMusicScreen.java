@@ -69,7 +69,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     LinearLayout songListBottomSheetLay;
     GifView passScreenButton;
 
-    boolean isPlay = false, isOnSongListScreen = false, isShuffled = false, isLastSongFinished = false;
+    boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
     int musicIndex = 0, repeatedClickTime = 0;
 
     Random randMusicIndex = new Random(); // use for shuffle button click

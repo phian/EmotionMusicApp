@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
@@ -681,22 +680,19 @@ public class PlayMusicScreen extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (musicMedia != null) {
-                    if (seekBar.getProgress() == seekBar.getMax()) {
-                    } else {
-                        musicHandler.removeCallbacks(musicRunnable); // remove thread playing song
-                        musicMedia.seekTo(seekBar.getProgress());
+                    musicHandler.removeCallbacks(musicRunnable); // remove thread playing song
+                    musicMedia.seekTo(seekBar.getProgress());
 
-                        int currentTime = musicMedia.getCurrentPosition();
-                        long songDuration = musicMedia.getDuration();
+                    int currentTime = musicMedia.getCurrentPosition();
+                    long songDuration = musicMedia.getDuration();
 
-                        long leftTime = songDuration - currentTime;
-                        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+                    long leftTime = songDuration - currentTime;
+                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
-                        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
-                        update();
-                    }
+                    update();
                 }
             }
         });

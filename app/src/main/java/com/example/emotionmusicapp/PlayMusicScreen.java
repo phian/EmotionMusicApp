@@ -582,7 +582,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                         @Override
                         public void onCompletion(MediaPlayer mediaPlayer) {
                             if (repeatedClickTime == 0 || repeatedClickTime == 3) { // if user don't repeat the list
-                                if (musicIndex == songIdList.length - 1) { // check if current index is the last song of the list
+                                if (musicIndex == R.raw.class.getFields().length - 2) { // check if current index is the last song of the list
                                     if (diskImgAni.isRunning()) {
                                         diskImgAni.end();
                                         songListDiskImgAni.end();
@@ -594,15 +594,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     playButton.setImageResource(R.drawable.play_music_button);
                                     isPlay = false;
 
-                                    // check if music media is null or not to create and call music file
-                                    if (musicMedia == null) {
-                                        musicMedia = new MediaPlayer();
-                                    } else {
-                                        musicMedia.release();
-                                        musicMedia = new MediaPlayer();
-                                    }
                                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
-                                } else if (musicIndex < songIdList.length - 1) { // check if current index is not the last song of the list
+                                } else if (musicIndex < R.raw.class.getFields().length - 2) { // check if current index is not the last song of the list
                                     musicIndex++;
 
                                     // check if music media is null or not to create and call music file
@@ -663,7 +656,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                 update();
                             } else if (repeatedClickTime == 2) { // if user repeat the list
-                                if (musicIndex == songIdList.length - 1) {
+                                if (musicIndex == R.raw.class.getFields().length - 2) {
                                     musicIndex = 0;
 
                                     // check if music media is null or not to create and call music file
@@ -715,7 +708,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     update();
 
                                     return;
-                                } else if (musicIndex < songIdList.length - 1) {
+                                } else if (musicIndex < R.raw.class.getFields().length - 2) {
                                     musicIndex++;
 
                                     // check if music media is null or not to create and call music file
@@ -990,7 +983,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
                 songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
-
             }
         });
     }
@@ -1052,7 +1044,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
                 songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
-
             }
         });
     }

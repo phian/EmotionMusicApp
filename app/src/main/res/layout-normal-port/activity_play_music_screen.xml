@@ -44,7 +44,7 @@
             android:id="@+id/blastVisualizerLay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_y="-50dp">
+            android:layout_y="-60dp">
 
             <com.gauravk.audiovisualizer.visualizer.BlastVisualizer
                 xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -145,7 +145,7 @@
                 android:id="@+id/skipPlayRepeatAndShuffleButtonLay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                     <ImageButton
@@ -200,16 +200,6 @@
                         android:src="@drawable/shuffle_button" />
 
                 </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/mixAndReplayListButtonLay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
 
         </LinearLayout>
 

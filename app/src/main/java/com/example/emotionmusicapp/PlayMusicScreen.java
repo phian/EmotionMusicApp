@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -259,6 +260,21 @@ public class PlayMusicScreen extends AppCompatActivity {
         // call music file
         musicMedia = new MediaPlayer();
         musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[0]);
+
+        MediaPlayer media = new MediaPlayer();
+        try {
+            media.setDataSource("https://firebasestorage.googleapis.com/v0/b/emotionmusicapp.appspot.com/o/Can%20You%20See%20My%20Heart%20-%20Heize.flac?alt=media&token=3d25ef10-4e7e-4648-8969-b22779f9fadf");
+            media.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.start();
+                }
+            });
+
+            media.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // set text for TextView song length
         int currentTime = musicMedia.getCurrentPosition();
@@ -577,6 +593,15 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     }
                                     playButton.setImageResource(R.drawable.play_music_button);
                                     isPlay = false;
+
+                                    // check if music media is null or not to create and call music file
+                                    if (musicMedia == null) {
+                                        musicMedia = new MediaPlayer();
+                                    } else {
+                                        musicMedia.release();
+                                        musicMedia = new MediaPlayer();
+                                    }
+                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
                                 } else if (musicIndex < songIdList.length - 1) { // check if current index is not the last song of the list
                                     musicIndex++;
 
@@ -627,6 +652,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
                                     update();
+
+                                    return;
                                 }
                             } else if (repeatedClickTime == 1) { // if user repeat only the current song
                                 musicMedia.start();

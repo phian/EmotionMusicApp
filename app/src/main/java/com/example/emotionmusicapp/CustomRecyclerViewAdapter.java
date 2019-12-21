@@ -15,19 +15,41 @@ import java.util.ArrayList;
 
 public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecyclerViewAdapter.CustomRecyclerViewHolder> {
     private ArrayList<CustomRecyclerViewItem> customLists;
+    private OnItemClickListener itemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClicked(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     public static class CustomRecyclerViewHolder extends RecyclerView.ViewHolder {
         public TextView songNameTV, singerNameTV;
         public Indicator songIndicator;
         public ImageButton removeSongButton;
 
-        public CustomRecyclerViewHolder(@NonNull View itemView) {
+        public CustomRecyclerViewHolder(@NonNull View itemView, final OnItemClickListener itemClickListener) {
             super(itemView);
 
             songNameTV = itemView.findViewById(R.id.songNameLVTV);
             singerNameTV = itemView.findViewById(R.id.singerNameLVTV);
             removeSongButton = itemView.findViewById(R.id.removeSongButton);
             songIndicator = itemView.findViewById(R.id.songIndicator);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (itemClickListener != null) {
+                        int itemPosition = getAdapterPosition();
+
+                        if (itemPosition != RecyclerView.NO_POSITION) {
+                            itemClickListener.onItemClicked(itemPosition);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -40,7 +62,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
     public CustomRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_row, parent, false);
 
-        return new CustomRecyclerViewHolder(view);
+        return new CustomRecyclerViewHolder(view, this.itemClickListener);
     }
 
     @Override

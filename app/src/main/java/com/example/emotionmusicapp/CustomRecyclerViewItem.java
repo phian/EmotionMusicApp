@@ -1,5 +1,6 @@
 package com.example.emotionmusicapp;
 
+import android.graphics.Color;
 import android.widget.ImageButton;
 
 import com.taishi.library.Indicator;
@@ -9,6 +10,11 @@ public class CustomRecyclerViewItem {
     private String songName;
     private String singerName;
     private Indicator songIndicator;
+    private ImageButton removeSongButton;
+
+    public void changedSongIndicatorBarColor(int color) {
+        songIndicator.setBarColor(color);
+    }
 
     public ImageButton getRemoveSongButton() {
         return removeSongButton;
@@ -17,8 +23,6 @@ public class CustomRecyclerViewItem {
     public void setRemoveSongButton(ImageButton removeSongButton) {
         this.removeSongButton = removeSongButton;
     }
-
-    private ImageButton removeSongButton;
 
     public String getSongName() {
         return songName;

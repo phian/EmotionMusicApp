@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -62,7 +62,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     AudioVisualization musicWaveVisualization;
     ObjectAnimator diskImgAni, passScreenButtonAni, songListDiskImgAni;
     RecyclerView songRV;
-    RecyclerView.Adapter songListAdapter;
+    CustomRecyclerViewAdapter songListAdapter;
     RecyclerView.LayoutManager songLisLayoutManager;
     BottomSheetBehavior songListBottomSheetBe;
     View songListBottomSheet;
@@ -256,6 +256,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         onSongListRepeatButtonClickListener();
         onShuffleListButtonClickListener();
         onSongListShuffleButtonClickListener();
+        onSongListItemClickListener();
 
         // call music file
         musicMedia = new MediaPlayer();
@@ -599,12 +600,12 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     musicIndex++;
 
                                     // check if music media is null or not to create and call music file
-                                    if (musicMedia == null) {
-                                        musicMedia = new MediaPlayer();
-                                    } else {
-                                        musicMedia.release();
-                                        musicMedia = new MediaPlayer();
-                                    }
+//                                    if (musicMedia == null) {
+//                                        musicMedia = new MediaPlayer();
+//                                    } else {
+//                                        musicMedia.release();
+//                                        musicMedia = new MediaPlayer();
+//                                    }
 
                                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
 
@@ -1089,6 +1090,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
 
+    //------------------------------- custom recycler view setting -------------------------------//
     // method to create indicators and remove button for song list item
     public void onCreateRemoveButtonAndIndicatorsForSongListScreen() {
         for (int i = 0; i < removeSongButtons.length; i++) {
@@ -1147,6 +1149,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         itemTouchHelper.attachToRecyclerView(songRV);
     }
+    //--------------------------------------------------------------------------------------------//
 
     // method to create behavior for song list screen bottom sheet
     public void onCreateSongListScreenBottomSheetBehavior() {
@@ -1356,4 +1359,67 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
     //--------------------------------------------------------------------------------------------//
+
+    // event for song list item click
+    public void onSongListItemClickListener() {
+        songListAdapter.setOnItemClickListener(new CustomRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                musicIndex = position;
+
+                updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
+                changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
+
+                // check if music media is null or not to create and call music file
+                if (musicMedia == null) {
+                    musicMedia = new MediaPlayer();
+                } else {
+                    musicMedia.release();
+                    musicMedia = new MediaPlayer();
+                }
+                musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList[musicIndex]);
+
+                isPlay = true;
+
+                if (isPlay) {
+                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
+                        musicWaveVisualization.onResume();
+                        blastVisualizer.setEnabled(false);
+                        blastVisualizer.release();
+                    } else {
+                        musicWaveVisualization.onPause();
+
+                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+                        int audioSessionId = musicMedia.getAudioSessionId();
+                        if (audioSessionId != -1)
+                            blastVisualizer.setAudioSessionId(audioSessionId);
+                        blastVisualizer.setEnabled(true);
+                    }
+
+                    if (diskImgAni.isRunning()) {
+                        diskImgAni.resume();
+                        songListDiskImgAni.resume();
+                        songListSongIndicator.setAlpha(1);
+                    } else {
+                        diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
+                    }
+                } else {
+                    diskImgAni.pause();
+                    songListDiskImgAni.pause();
+                    musicWaveVisualization.onPause();
+                    songListSongIndicator.setAlpha(0);
+                }
+
+                startSong(isPlay);
+            }
+        });
+    }
+
+    // method to change the alpha of the current song indicator
+    public void changedSongListSelectedItemIndicatorAlpha(int itemPosition, int indicatorColor) {
+        customItems.get(itemPosition).changedSongIndicatorBarColor(indicatorColor);
+        songListAdapter.notifyItemChanged(itemPosition);
+    }
 }

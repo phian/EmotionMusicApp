@@ -1,6 +1,5 @@
 package com.example.emotionmusicapp;
 
-import android.graphics.Color;
 import android.widget.ImageButton;
 
 import com.taishi.library.Indicator;

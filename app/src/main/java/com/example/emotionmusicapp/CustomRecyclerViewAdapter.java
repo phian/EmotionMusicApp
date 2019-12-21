@@ -19,6 +19,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
 
     public interface OnItemClickListener {
         void onItemClicked(int position);
+        void onDeleteItemButtonClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
@@ -46,6 +47,19 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
 
                         if (itemPosition != RecyclerView.NO_POSITION) {
                             itemClickListener.onItemClicked(itemPosition);
+                        }
+                    }
+                }
+            });
+
+            removeSongButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (itemClickListener != null) {
+                        int itemPosition = getAdapterPosition();
+
+                        if (itemPosition != RecyclerView.NO_POSITION) {
+                            itemClickListener.onDeleteItemButtonClick(itemPosition);
                         }
                     }
                 }

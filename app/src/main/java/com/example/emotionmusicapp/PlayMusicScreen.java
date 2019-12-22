@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
@@ -1628,7 +1629,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia.release();
                         musicMedia = new MediaPlayer();
                     }
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex + 1));
+                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(position + 1));
 
                     if (isPlay) {
                         if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
@@ -1689,8 +1690,13 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     if (isPlay) {
                         startSong(true);
-                        updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
-                        changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
+                        if (customItems.size() == 1) {
+                            updateSongNameAndSingerNameTV(position); // update the current song name and singer name for all text view
+                            changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
+                        } else if (position + 1 <= customItems.size() - 1) {
+                            updateSongNameAndSingerNameTV(position + 1); // update the current song name and singer name for all text view
+                            changedSongListSelectedItemIndicatorAlpha(position + 1, Color.BLUE);
+                        }
                     }
                 } else if (position == customItems.size() - 1) {
                     musicIndex = 0;
@@ -1764,7 +1770,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     if (isPlay) {
                         startSong(true);
                         updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
-                        changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
+                        changedSongListSelectedItemIndicatorAlpha(musicIndex, Color.BLUE);
 
                         return;
                     }

@@ -64,7 +64,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="220dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/remove_song_ic"
         android:scaleType="fitXY"
         android:background="@android:color/transparent"/>

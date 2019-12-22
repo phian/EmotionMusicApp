@@ -1619,7 +1619,31 @@ public class PlayMusicScreen extends AppCompatActivity {
 
             @Override
             public void onDeleteItemButtonClick(int position) {
-                if (position < customItems.size() - 1) {
+                if (musicIndex != position) {
+                    removeSongListItem(position);
+                    songIdList.remove(position);
+                    songNameArr.remove(position);
+                    singerNameArr.remove(position);
+
+                    if (customItems.size() == 0) {
+                        if (diskImgAni.isRunning()) {
+                            diskImgAni.end();
+                            songListDiskImgAni.end();
+                            songListSongIndicator.setAlpha(0);
+                        }
+                        if (musicMedia.isPlaying()) {
+                            musicWaveVisualization.release();
+                        }
+                        playButton.setImageResource(R.drawable.play_music_button);
+                        songListPlayMusicButton.setImageResource(R.drawable.play_music_button);
+                        isPlay = false;
+
+                        musicMedia.release();
+                        musicMedia = new MediaPlayer();
+
+                        songLengthSB.setProgress(0);
+                    }
+                } else if (position < customItems.size() - 1 && position == musicIndex) {
                     musicIndex = position;
 
                     // check if music media is null or not to create and call music file
@@ -1698,7 +1722,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                             changedSongListSelectedItemIndicatorAlpha(position + 1, Color.BLUE);
                         }
                     }
-                } else if (position == customItems.size() - 1) {
+                } else if (position == customItems.size() - 1 && position == musicIndex) {
                     musicIndex = 0;
 
                     // check if music media is null or not to create and call music file
@@ -1773,30 +1797,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                         changedSongListSelectedItemIndicatorAlpha(musicIndex, Color.BLUE);
 
                         return;
-                    }
-                } else if (musicIndex != position) {
-                    removeSongListItem(position);
-                    songIdList.remove(position);
-                    songNameArr.remove(position);
-                    singerNameArr.remove(position);
-
-                    if (customItems.size() == 0) {
-                        if (diskImgAni.isRunning()) {
-                            diskImgAni.end();
-                            songListDiskImgAni.end();
-                            songListSongIndicator.setAlpha(0);
-                        }
-                        if (musicMedia.isPlaying()) {
-                            musicWaveVisualization.release();
-                        }
-                        playButton.setImageResource(R.drawable.play_music_button);
-                        songListPlayMusicButton.setImageResource(R.drawable.play_music_button);
-                        isPlay = false;
-
-                        musicMedia.release();
-                        musicMedia = new MediaPlayer();
-
-                        songLengthSB.setProgress(0);
                     }
                 }
             }

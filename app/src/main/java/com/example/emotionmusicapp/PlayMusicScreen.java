@@ -1346,6 +1346,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 Collections.swap(songNameArr, draggedPosition, targetPosition);
                 Collections.swap(singerNameArr, draggedPosition, targetPosition);
+                Collections.swap(songIdList, draggedPosition, targetPosition);
 
                 return false;
             }

@@ -45,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -320,6 +321,9 @@ public class PlayMusicScreen extends AppCompatActivity {
         passScreenButton.pause();
 
         songListSongIndicator.setAlpha(0);
+
+//        Bundle getEmotionInfo = getIntent().getExtras();
+//        String emotionKey = getEmotionInfo.getString("emotionKey");
 
         //get the AudioSessionId your MediaPlayer and pass it to the visualizer
 //        int audioSessionId = musicMedia.getAudioSessionId();
@@ -1339,6 +1343,9 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 Collections.swap(customItems, draggedPosition, targetPosition);
                 songListAdapter.notifyItemMoved(draggedPosition, targetPosition);
+
+                Collections.swap(songNameArr, draggedPosition, targetPosition);
+                Collections.swap(singerNameArr, draggedPosition, targetPosition);
 
                 return false;
             }

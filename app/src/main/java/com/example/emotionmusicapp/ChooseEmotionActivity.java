@@ -39,7 +39,7 @@ public class ChooseEmotionActivity extends AppCompatActivity {
 
     MultiWaveHeader waveHeader, waveFooter;
 
-    String emotionKey = "";
+    String id_chude = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,8 +242,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                emotionKey = "1";
-                startMusicPlayScreen.putExtra("emotionKey", emotionKey);
+                id_chude = "1";
+                startMusicPlayScreen.putExtra("id_chude", id_chude);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -253,8 +253,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                emotionKey = "2";
-                startMusicPlayScreen.putExtra("emotionKey", emotionKey);
+                id_chude = "2";
+                startMusicPlayScreen.putExtra("id_chude", id_chude);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -264,8 +264,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                emotionKey = "3";
-                startMusicPlayScreen.putExtra("emotionKey", emotionKey);
+                id_chude = "3";
+                startMusicPlayScreen.putExtra("id_chude", id_chude);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -276,8 +276,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
                @Override
                public void onClick(View view) {
                    Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                   emotionKey = "4";
-                   startMusicPlayScreen.putExtra("emotionKey", emotionKey);
+                   id_chude = "4";
+                   startMusicPlayScreen.putExtra("id_chude", id_chude);
                    startActivity(startMusicPlayScreen);
                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                }
@@ -287,8 +287,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                emotionKey = "5";
-                startMusicPlayScreen.putExtra("emotionKey", emotionKey);
+                id_chude = "5";
+                startMusicPlayScreen.putExtra("id_chude", id_chude);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -298,8 +298,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                emotionKey = "6";
-                startMusicPlayScreen.putExtra("emotionKey", emotionKey);
+                id_chude = "6";
+                startMusicPlayScreen.putExtra("id_chude", id_chude);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -309,8 +309,8 @@ public class ChooseEmotionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startMusicPlayScreen = new Intent(ChooseEmotionActivity.this, PlayMusicScreen.class);
-                emotionKey = "7";
-                startMusicPlayScreen.putExtra("emotionKey", emotionKey);
+                id_chude = "7";
+                startMusicPlayScreen.putExtra("id_chude", id_chude);
                 startActivity(startMusicPlayScreen);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }

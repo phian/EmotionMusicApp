@@ -31,6 +31,9 @@ import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler;
 import com.cleveroad.audiovisualization.VisualizerDbmHandler;
 import com.cunoraz.gifview.library.GifView;
+import com.example.emotionmusicapp.Model.baihat;
+import com.example.emotionmusicapp.Service.APIService;
+import com.example.emotionmusicapp.Service.Dataservice;
 import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -47,10 +50,15 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.ghyeok.stickyswitch.widget.StickySwitch;
+import retrofit2.Call;
+import retrofit2.CallAdapter;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PlayMusicScreen extends AppCompatActivity {
     ImageButton playButton, skipNextButton, skipPreviousButton, repeatButton, shuffleButton, songListSkipPreviousButton, songListPlayMusicButton, songListSkipNextButton, songListReplayListButton, songListMixListButton;
@@ -75,16 +83,18 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
     int musicIndex = 0, repeatedClickTime = 0;
+    String id_chude = "";
 
     Random randMusicIndex = new Random(); // use for shuffle button click
 
     Field[] songNameList;
+    ArrayList<baihat> songList = new ArrayList<>();
     ArrayList<Integer> songIdList = new ArrayList<>();
     int indexCount = -1; // count index to insert song id
     ArrayList<String> songNameArr = new ArrayList<>();
     ArrayList<String> singerNameArr = new ArrayList<>();
-    ImageButton[] removeSongButtons = new ImageButton[R.raw.class.getFields().length - 1];
-    Indicator[] indicators = new Indicator[R.raw.class.getFields().length - 1];
+    ImageButton[] removeSongButtons = new ImageButton[2];
+    Indicator[] indicators = new Indicator[2];
 
     ArrayList<CustomRecyclerViewItem> customItems = new ArrayList<>();
 
@@ -259,25 +269,28 @@ public class PlayMusicScreen extends AppCompatActivity {
         onShuffleListButtonClickListener();
         onSongListShuffleButtonClickListener();
         onSongListItemClickListener();
+        DataIntent();
+        getDataBaiHat();
+
 
         // call music file
         musicMedia = new MediaPlayer();
         musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
 
-        MediaPlayer media = new MediaPlayer();
-        try {
-            media.setDataSource("https://firebasestorage.googleapis.com/v0/b/emotionmusicapp.appspot.com/o/Can%20You%20See%20My%20Heart%20-%20Heize.flac?alt=media&token=3d25ef10-4e7e-4648-8969-b22779f9fadf");
-            media.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayer.start();
-                }
-            });
-
-            media.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        MediaPlayer media = new MediaPlayer();
+//        try {
+//            media.setDataSource("https://firebasestorage.googleapis.com/v0/b/emotionmusicapp.appspot.com/o/Can%20You%20See%20My%20Heart%20-%20Heize.flac?alt=media&token=3d25ef10-4e7e-4648-8969-b22779f9fadf");
+//            media.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mediaPlayer) {
+//                    mediaPlayer.start();
+//                }
+//            });
+//
+//            media.prepare();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         // set text for TextView song length
         int currentTime = musicMedia.getCurrentPosition();
@@ -322,13 +335,28 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         songListSongIndicator.setAlpha(0);
 
-//        Bundle getEmotionInfo = getIntent().getExtras();
-//        String emotionKey = getEmotionInfo.getString("emotionKey");
-
         //get the AudioSessionId your MediaPlayer and pass it to the visualizer
 //        int audioSessionId = musicMedia.getAudioSessionId();
 //        if (audioSessionId != -1)
 //            blastVisualizer.setAudioSessionId(audioSessionId);
+    }
+
+    private void getDataBaiHat() {
+        Dataservice dataservice = APIService.getService();
+        Call<List<baihat>> callback = dataservice.getDataBaiHatTheoChude(id_chude);
+        callback.enqueue(new Callback<List<baihat>>() {
+            @Override
+            public void onResponse(Call<List<baihat>> call, Response<List<baihat>> response) {
+                songList = (ArrayList<baihat>) response.body();
+//                songListAdapter = new CustomRecyclerViewAdapter(customItems);
+//                songRV.setAdapter(songListAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<baihat>> call, Throwable t) {
+
+            }
+        });
     }
 
     // method to read all raw resources name and id
@@ -1314,8 +1342,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     // method to create song list for recycler view
     public void onCreateSongRecyclerView() {
-        for (int i = 0; i < songNameArr.size(); i++) {
-            customItems.add(new CustomRecyclerViewItem(songNameArr.get(i), singerNameArr.get(i), indicators[i], removeSongButtons[i]));
+        for (int i = 0; i < songList.size(); i++) {
+            customItems.add(new CustomRecyclerViewItem(songList.get(i).getTenbaihat(), songList.get(i).getCasi(), indicators[i], removeSongButtons[i]));
         }
 
         songRV.setHasFixedSize(true);
@@ -1821,5 +1849,10 @@ public class PlayMusicScreen extends AppCompatActivity {
     public void removeSongListItem(int position) {
         customItems.remove(position);
         songListAdapter.notifyItemRemoved(position);
+    }
+
+    public void DataIntent() {
+        Bundle getEmotionInfo = getIntent().getExtras();
+        id_chude = getEmotionInfo.getString("id_chude");
     }
 }

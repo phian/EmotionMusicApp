@@ -273,6 +273,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         getDataBaiHat();
 
 
+
         // call music file
         musicMedia = new MediaPlayer();
         musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
@@ -348,8 +349,9 @@ public class PlayMusicScreen extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<baihat>> call, Response<List<baihat>> response) {
                 songList = (ArrayList<baihat>) response.body();
-//                songListAdapter = new CustomRecyclerViewAdapter(customItems);
-//                songRV.setAdapter(songListAdapter);
+                songListAdapter = new CustomRecyclerViewAdapter(customItems);
+                songRV.setAdapter(songListAdapter);
+                onCreateSongRecyclerView();
             }
 
             @Override
@@ -357,6 +359,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
             }
         });
+//        Toast.makeText(PlayMusicScreen.this,songList.get(0).getTenbaihat(),Toast.LENGTH_LONG).show();
     }
 
     // method to read all raw resources name and id
@@ -1342,6 +1345,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     // method to create song list for recycler view
     public void onCreateSongRecyclerView() {
+
         for (int i = 0; i < songList.size(); i++) {
             customItems.add(new CustomRecyclerViewItem(songList.get(i).getTenbaihat(), songList.get(i).getCasi(), indicators[i], removeSongButtons[i]));
         }

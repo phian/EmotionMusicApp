@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "95314586800",
+    "firebase_url": "https://emotionmusicapp.firebaseio.com",
+    "project_id": "emotionmusicapp",
+    "storage_bucket": "emotionmusicapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95314586800:android:fab9f1d3fcabb33939df75",
+        "android_client_info": {
+          "package_name": "com.example.emotionmusicapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "95314586800-7hll41vn08q3icecus50enmg1aa0lq96.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.emotionmusicapp",
+            "certificate_hash": "9821d97ea7c82e59c6d1ac72ee4e36be43dd2ec2"
+          }
+        },
+        {
+          "client_id": "95314586800-avgqnec6v8hqfmaqk2ilbq6mh58f04su.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyYecouhYUC6KdDfGocrIktuKMWC43wvc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "95314586800-avgqnec6v8hqfmaqk2ilbq6mh58f04su.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -271,9 +271,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         onSongListItemClickListener();
         DataIntent();
         getDataBaiHat();
-
-
-
         // call music file
         musicMedia = new MediaPlayer();
         musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
@@ -341,27 +338,47 @@ public class PlayMusicScreen extends AppCompatActivity {
 //        if (audioSessionId != -1)
 //            blastVisualizer.setAudioSessionId(audioSessionId);
     }
-
-    private void getDataBaiHat() {
+//private void getMangbaihat()
+//{
+//    mangbaihat = new ArrayList<>();
+//    mangbaihat = songList;
+//}
+    public void getDataBaiHat() {
         Dataservice dataservice = APIService.getService();
         Call<List<baihat>> callback = dataservice.getDataBaiHatTheoChude(id_chude);
         callback.enqueue(new Callback<List<baihat>>() {
             @Override
             public void onResponse(Call<List<baihat>> call, Response<List<baihat>> response) {
-                songList = (ArrayList<baihat>) response.body();
-                songListAdapter = new CustomRecyclerViewAdapter(customItems);
-                songRV.setAdapter(songListAdapter);
-                onCreateSongRecyclerView();
+                if(songList.size()>0) {
+                    songList.clear();
+                }
+                else
+                {
+                    songList = (ArrayList<baihat>) response.body();
+                    songListAdapter = new CustomRecyclerViewAdapter(customItems);
+                    songRV.setAdapter(songListAdapter);
+                    onCreateSongRecyclerView();
+                }
             }
-
             @Override
             public void onFailure(Call<List<baihat>> call, Throwable t) {
-
             }
         });
+
 //        Toast.makeText(PlayMusicScreen.this,songList.get(0).getTenbaihat(),Toast.LENGTH_LONG).show();
     }
-
+         void  showsongList(){
+        if(songList.size()>0)
+        {
+            for (int i = 0; i < songList.size(); i++) {
+                Toast.makeText(PlayMusicScreen.this, songList.get(i).getTenbaihat(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(PlayMusicScreen.this,"this is no song",Toast.LENGTH_SHORT).show();
+        }
+ }
     // method to read all raw resources name and id
     public void readRawResourcesFileNameAndId() {
         songNameList = R.raw.class.getFields();
@@ -544,6 +561,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 startSong(isPlay);
+                showsongList();
+               
             }
         });
     }
@@ -1343,28 +1362,26 @@ public class PlayMusicScreen extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     // method to create song list for recycler view
-    public void onCreateSongRecyclerView() {
+     void onCreateSongRecyclerView() {
+             for (int i = 0; i < songList.size(); i++) {
+                 customItems.add(new CustomRecyclerViewItem(songList.get(i).getTenbaihat(), songList.get(i).getCasi(), indicators[i], removeSongButtons[i]));
+             }
+             songRV.setHasFixedSize(true);
+             songLisLayoutManager = new LinearLayoutManager(this);
+             songListAdapter = new CustomRecyclerViewAdapter(customItems);
+             songRV.setLayoutManager(songLisLayoutManager);
+             songRV.setAdapter(songListAdapter);
+             songRV.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
+                 @Override
+                 public void OnItemClick(View view, int position) {
 
-        for (int i = 0; i < songList.size(); i++) {
-            customItems.add(new CustomRecyclerViewItem(songList.get(i).getTenbaihat(), songList.get(i).getCasi(), indicators[i], removeSongButtons[i]));
-        }
-
-        songRV.setHasFixedSize(true);
-
-        songLisLayoutManager = new LinearLayoutManager(this);
-        songListAdapter = new CustomRecyclerViewAdapter(customItems);
-
-        songRV.setLayoutManager(songLisLayoutManager);
-        songRV.setAdapter(songListAdapter);
-        songRV.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
-            @Override
-            public void OnItemClick(View view, int position) {
-
-            }
-        }));
-    }
-
+                 }
+             }));
+         }
     // event for song list item change position listener
     public void onSongListItemDragListener() {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {

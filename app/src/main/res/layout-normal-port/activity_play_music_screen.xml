@@ -40,25 +40,25 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/blastVisualizerLay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_y="-60dp">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/blastVisualizerLay"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_y="-60dp">-->
 
-            <com.gauravk.audiovisualizer.visualizer.BlastVisualizer
-                xmlns:custom="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/blastVisualizer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                custom:avColor="@color/blastVisualizerWaveColor"
-                custom:avDensity="0.8"
-                custom:avGravity="center"
-                custom:avSpeed="normal"
-                custom:avType="fill"
-                custom:avWidth="150dp" />
+<!--            <com.gauravk.audiovisualizer.visualizer.BlastVisualizer-->
+<!--                xmlns:custom="http://schemas.android.com/apk/res-auto"-->
+<!--                android:id="@+id/blastVisualizer"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                custom:avColor="@color/blastVisualizerWaveColor"-->
+<!--                custom:avDensity="0.8"-->
+<!--                custom:avGravity="center"-->
+<!--                custom:avSpeed="normal"-->
+<!--                custom:avType="fill"-->
+<!--                custom:avWidth="150dp" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/diskDisplayLay"
@@ -203,45 +203,45 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="horizontal">-->
 
-            <io.ghyeok.stickyswitch.widget.StickySwitch
-                android:id="@+id/themeSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="120dp"
-                android:layout_marginTop="15dp"
-                android:visibility="invisible"
-                app:ss_animationDuration="300"
-                app:ss_animationType="curved"
-                app:ss_iconPadding="12dp"
-                app:ss_iconSize="20dp"
-                app:ss_leftIcon="@drawable/light_mode_icon"
-                app:ss_rightIcon="@drawable/night_mode_icon"
-                app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-                app:ss_switchColor="@color/switchStateColor" />
+<!--            <io.ghyeok.stickyswitch.widget.StickySwitch-->
+<!--                android:id="@+id/themeSwitch"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="45dp"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_marginLeft="120dp"-->
+<!--                android:layout_marginTop="15dp"-->
+<!--                android:visibility="invisible"-->
+<!--                app:ss_animationDuration="300"-->
+<!--                app:ss_animationType="curved"-->
+<!--                app:ss_iconPadding="12dp"-->
+<!--                app:ss_iconSize="20dp"-->
+<!--                app:ss_leftIcon="@drawable/light_mode_icon"-->
+<!--                app:ss_rightIcon="@drawable/night_mode_icon"-->
+<!--                app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"-->
+<!--                app:ss_switchColor="@color/switchStateColor" />-->
 
-            <io.ghyeok.stickyswitch.widget.StickySwitch
-                android:id="@+id/screenStyleSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
-                app:ss_animationDuration="300"
-                app:ss_animationType="curved"
-                app:ss_iconPadding="12dp"
-                app:ss_iconSize="20dp"
-                app:ss_leftIcon="@drawable/lovely_style_icon"
-                app:ss_rightIcon="@drawable/flash_style_icon"
-                app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"
-                app:ss_switchColor="@color/switchStateColor" />
+<!--            <io.ghyeok.stickyswitch.widget.StickySwitch-->
+<!--                android:id="@+id/screenStyleSwitch"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="45dp"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginTop="15dp"-->
+<!--                app:ss_animationDuration="300"-->
+<!--                app:ss_animationType="curved"-->
+<!--                app:ss_iconPadding="12dp"-->
+<!--                app:ss_iconSize="20dp"-->
+<!--                app:ss_leftIcon="@drawable/lovely_style_icon"-->
+<!--                app:ss_rightIcon="@drawable/flash_style_icon"-->
+<!--                app:ss_sliderBackgroundColor="@color/switchStateBackgroundColor"-->
+<!--                app:ss_switchColor="@color/switchStateColor" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
     </AbsoluteLayout>
 

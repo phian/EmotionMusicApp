@@ -12,7 +12,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -67,8 +69,6 @@ public class PlayMusicScreen extends AppCompatActivity {
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV, songListDiskImageCIV;
     LinearLayout blastVisualizerLay, musicVisualizationViewLay;
-    StickySwitch screenStyleSwitch, themeSwitch;
-    BlastVisualizer blastVisualizer;
     AudioVisualization musicWaveVisualization;
     ObjectAnimator diskImgAni, passScreenButtonAni, songListDiskImgAni;
     RecyclerView songRV;
@@ -80,7 +80,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     LinearLayout songListBottomSheetLay;
     GifView passScreenButton;
     Indicator songListSongIndicator;
-
+    MediaPlayer mediaPlayer;
     boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
     int musicIndex = 0, repeatedClickTime = 0;
     String id_chude = "";
@@ -247,6 +247,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_play_music_screen);
 
+        DataIntent();
+        getDataBaiHat();
         castControl();
         onPlayMusicButtonClickListener();
         onSongListPlayMusicButtonClickListener();
@@ -258,7 +260,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         readRawResourcesFileNameAndId();
         cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
-        onScreenStyleSwitchChangeListener();
         onCreateRemoveButtonAndIndicatorsForSongListScreen();
         onCreateSongRecyclerView();
         onSongListItemDragListener();
@@ -269,26 +270,10 @@ public class PlayMusicScreen extends AppCompatActivity {
         onShuffleListButtonClickListener();
         onSongListShuffleButtonClickListener();
         onSongListItemClickListener();
-        DataIntent();
-        getDataBaiHat();
+
         // call music file
         musicMedia = new MediaPlayer();
         musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
-
-//        MediaPlayer media = new MediaPlayer();
-//        try {
-//            media.setDataSource("https://firebasestorage.googleapis.com/v0/b/emotionmusicapp.appspot.com/o/Can%20You%20See%20My%20Heart%20-%20Heize.flac?alt=media&token=3d25ef10-4e7e-4648-8969-b22779f9fadf");
-//            media.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mediaPlayer) {
-//                    mediaPlayer.start();
-//                }
-//            });
-//
-//            media.prepare();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         // set text for TextView song length
         int currentTime = musicMedia.getCurrentPosition();
@@ -332,34 +317,53 @@ public class PlayMusicScreen extends AppCompatActivity {
         passScreenButton.pause();
 
         songListSongIndicator.setAlpha(0);
-
-        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-//        int audioSessionId = musicMedia.getAudioSessionId();
-//        if (audioSessionId != -1)
-//            blastVisualizer.setAudioSessionId(audioSessionId);
     }
-//private void getMangbaihat()
-//{
-//    mangbaihat = new ArrayList<>();
-//    mangbaihat = songList;
-//}
+
     public void getDataBaiHat() {
         Dataservice dataservice = APIService.getService();
-        Call<List<baihat>> callback = dataservice.getDataBaiHatTheoChude(id_chude);
+        final Call<List<baihat>> callback = dataservice.getDataBaiHatTheoChude(id_chude);
         callback.enqueue(new Callback<List<baihat>>() {
             @Override
             public void onResponse(Call<List<baihat>> call, Response<List<baihat>> response) {
-                if(songList.size()>0) {
+                if (songList.size() > 0) {
                     songList.clear();
-                }
-                else
-                {
+                } else {
                     songList = (ArrayList<baihat>) response.body();
                     songListAdapter = new CustomRecyclerViewAdapter(customItems);
                     songRV.setAdapter(songListAdapter);
                     onCreateSongRecyclerView();
+                    musicMedia = new MediaPlayer();
+                    try {
+                        musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    songNameTV.setText(songList.get(0).getTenbaihat());
+                    singerNameTV.setText(songList.get(0).getCasi());
+
+                    songListSongNameTV.setText(songList.get(0).getTenbaihat());
+                    songListSingerNameTV.setText(songList.get(0).getCasi());
+
+                    // update time text
+                    int currentTime = musicMedia.getCurrentPosition();
+                    long songDuration = musicMedia.getDuration();
+
+                    long leftTime = songDuration - currentTime;
+                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 }
             }
+
             @Override
             public void onFailure(Call<List<baihat>> call, Throwable t) {
             }
@@ -367,18 +371,17 @@ public class PlayMusicScreen extends AppCompatActivity {
 
 //        Toast.makeText(PlayMusicScreen.this,songList.get(0).getTenbaihat(),Toast.LENGTH_LONG).show();
     }
-         void  showsongList(){
-        if(songList.size()>0)
-        {
-            for (int i = 0; i < songList.size(); i++) {
-                Toast.makeText(PlayMusicScreen.this, songList.get(i).getTenbaihat(), Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
-        {
-            Toast.makeText(PlayMusicScreen.this,"this is no song",Toast.LENGTH_SHORT).show();
-        }
- }
+
+//    void showsongList() {
+//        if (songList.size() > 0) {
+//            for (int i = 0; i < songList.size(); i++) {
+//                Toast.makeText(PlayMusicScreen.this, songList.get(i).getTenbaihat() + songList.get(i).getLinkbaihat(), Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            Toast.makeText(PlayMusicScreen.this, "this is no song", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
     // method to read all raw resources name and id
     public void readRawResourcesFileNameAndId() {
         songNameList = R.raw.class.getFields();
@@ -414,11 +417,19 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     // method to update
     public void updateSongNameAndSingerNameTV(int songIndex) {
-        songNameTV.setText(songNameArr.get(songIndex));
-        singerNameTV.setText(singerNameArr.get(songIndex));
+        if (songList.size() == 0) {
+            songNameTV.setText("Song Name");
+            singerNameTV.setText("Singer Name");
 
-        songListSongNameTV.setText(songNameArr.get(songIndex));
-        songListSingerNameTV.setText(singerNameArr.get(songIndex));
+            songListSongNameTV.setText("Song Name");
+            songListSingerNameTV.setText("Singer Name");
+        } else {
+            songNameTV.setText(songList.get(songIndex).getTenbaihat());
+            singerNameTV.setText(songList.get(songIndex).getCasi());
+
+            songListSongNameTV.setText(songList.get(songIndex).getTenbaihat());
+            songListSingerNameTV.setText(songList.get(songIndex).getCasi());
+        }
     }
 
     @Override
@@ -444,7 +455,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                     @Override
                     public void onClick(SmartDialog smartDialog) {
                         musicWaveVisualization.release();
-                        blastVisualizer.release();
 
                         // add animation when user back to previous screen
                         Intent startMainActivity = new Intent(PlayMusicScreen.this, ChooseEmotionActivity.class);
@@ -456,7 +466,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                         }
                         musicMedia = null;
                         musicWaveVisualization.release();
-                        blastVisualizer.release();
 
                         smartDialog.dismiss();
 
@@ -493,18 +502,12 @@ public class PlayMusicScreen extends AppCompatActivity {
         songListSongNameTV = (TextView) findViewById(R.id.songListSongNameTV);
         songListSingerNameTV = (TextView) findViewById(R.id.songListSingerNameTV);
 
-        blastVisualizerLay = (LinearLayout) findViewById(R.id.blastVisualizerLay);
         musicVisualizationViewLay = (LinearLayout) findViewById(R.id.musicVisualizationViewLay);
 
         songLengthSB = (SeekBar) findViewById(R.id.songLengthSeekBar);
         diskImageCIV = (CircularImageView) findViewById(R.id.diskImageCIV);
         musicWaveVisualization = (AudioVisualization) findViewById(R.id.musicWaveVisualization);
         songListDiskImageCIV = (CircularImageView) findViewById(R.id.songListDiskImageCIV);
-
-        blastVisualizer = (BlastVisualizer) findViewById(R.id.blastVisualizer);
-
-        screenStyleSwitch = (StickySwitch) findViewById(R.id.screenStyleSwitch);
-        themeSwitch = (StickySwitch) findViewById(R.id.themeSwitch);
 
         songRV = (RecyclerView) findViewById(R.id.songRV);
         songListBottomSheet = findViewById(R.id.songListScreenBottomSheet);
@@ -530,27 +533,13 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 if (isPlay) {
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
-                        musicWaveVisualization.onResume();
-                        blastVisualizer.setEnabled(false);
-                        blastVisualizer.release();
-                    } else {
-                        musicWaveVisualization.onPause();
-
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                        blastVisualizer.setEnabled(true);
-                    }
-
+                    musicWaveVisualization.onResume();
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
                         songListDiskImgAni.resume();
                         songListSongIndicator.setAlpha(1);
                     } else {
                         diskImgAni.start();
-                        songListDiskImgAni.start();
                         songListSongIndicator.setAlpha(1);
                     }
                 } else {
@@ -561,8 +550,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 startSong(isPlay);
-                showsongList();
-               
+//                showsongList();
             }
         });
     }
@@ -579,19 +567,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 if (isPlay) {
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
-                        musicWaveVisualization.onResume();
-                        blastVisualizer.setEnabled(false);
-                        blastVisualizer.release();
-                    } else {
-                        musicWaveVisualization.onPause();
-
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                        blastVisualizer.setEnabled(true);
-                    }
+                    musicWaveVisualization.onResume();
 
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
@@ -670,13 +646,6 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                     updateSongNameAndSingerNameTV(musicIndex);
 
-                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                                        int audioSessionId = musicMedia.getAudioSessionId();
-                                        if (audioSessionId != -1)
-                                            blastVisualizer.setAudioSessionId(audioSessionId);
-                                    }
-
                                     if (isPlay == true) {
                                         musicMedia.start();
 
@@ -731,12 +700,12 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                     updateSongNameAndSingerNameTV(musicIndex);
 
-                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                                        int audioSessionId = musicMedia.getAudioSessionId();
-                                        if (audioSessionId != -1)
-                                            blastVisualizer.setAudioSessionId(audioSessionId);
-                                    }
+//                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
+//                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
+//                                        int audioSessionId = musicMedia.getAudioSessionId();
+//                                        if (audioSessionId != -1)
+//                                            blastVisualizer.setAudioSessionId(audioSessionId);
+//                                    }
 
                                     if (isPlay == true) {
                                         musicMedia.start();
@@ -782,13 +751,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songLengthSB.setProgress(0);
 
                                     updateSongNameAndSingerNameTV(musicIndex);
-
-                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                                        int audioSessionId = musicMedia.getAudioSessionId();
-                                        if (audioSessionId != -1)
-                                            blastVisualizer.setAudioSessionId(audioSessionId);
-                                    }
 
                                     if (isPlay == true) {
                                         musicMedia.start();
@@ -865,9 +827,9 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
-                if (songIdList.size() == 0) {
+                if (songList.size() == 0) {
                     skipNextButton.setOnClickListener(null);
-                } else if (songIdList.size() == 1) {
+                } else if (songList.size() == 1) {
                     // check if music media is null or not to create and call music file
                     if (musicMedia == null) {
                         musicMedia = new MediaPlayer();
@@ -876,19 +838,22 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
 
                     if (isPlay == true) {
                         musicMedia.start();
@@ -914,7 +879,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 } else {
-                    if (musicIndex < songIdList.size() - 1) {
+                    if (musicIndex < songList.size() - 1) {
                         musicIndex++;
                     } else {
                         musicIndex = 0;
@@ -928,19 +893,22 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
 
                     if (isPlay == true) {
                         musicMedia.start();
@@ -976,9 +944,9 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
-                if (songIdList.size() == 0) {
-                    songListSkipNextButton.setOnClickListener(null);
-                } else if (songIdList.size() == 1) {
+                if (songList.size() == 0) {
+                    skipPreviousButton.setOnClickListener(null);
+                } else if (songList.size() == 1) {
                     // check if music media is null or not to create and call music file
                     if (musicMedia == null) {
                         musicMedia = new MediaPlayer();
@@ -987,48 +955,27 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
-
-                    if (isPlay == true) {
-                        musicMedia.start();
-
-                        if (diskImgAni.isRunning() == false) {
-                            diskImgAni.start();
-                            songListDiskImgAni.start();
-                            songListSongIndicator.setAlpha(1);
-                        }
-                        if (musicMedia.isPlaying() == false) {
-                            musicWaveVisualization.onResume();
-                        }
-                        playButton.setImageResource(R.drawable.pause_music_button);
-                    }
-
-                    // update time text
-                    int currentTime = musicMedia.getCurrentPosition();
-                    long songDuration = musicMedia.getDuration();
-
-                    long leftTime = songDuration - currentTime;
-                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
-
-                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 } else {
-                    if (musicIndex < songIdList.size() - 1) {
-                        musicIndex++;
+                    if (musicIndex > 0) {
+                        musicIndex--;
                     } else {
-                        musicIndex = 0;
+                        musicIndex = songList.size() - 1;
                     }
 
                     // check if music media is null or not to create and call music file
@@ -1039,19 +986,22 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
 
                     if (isPlay == true) {
                         musicMedia.start();
@@ -1077,6 +1027,30 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 }
+
+                if (isPlay == true) {
+                    musicMedia.start();
+
+                    if (diskImgAni.isRunning() == false) {
+                        diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.onResume();
+                    }
+                    playButton.setImageResource(R.drawable.pause_music_button);
+                }
+
+                // update time text
+                int currentTime = musicMedia.getCurrentPosition();
+                long songDuration = musicMedia.getDuration();
+
+                long leftTime = songDuration - currentTime;
+                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
             }
         });
     }
@@ -1089,9 +1063,9 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
-                if (songIdList.size() == 0) {
+                if (songList.size() == 0) {
                     skipPreviousButton.setOnClickListener(null);
-                } else if (songIdList.size() == 1) {
+                } else if (songList.size() == 1) {
                     // check if music media is null or not to create and call music file
                     if (musicMedia == null) {
                         musicMedia = new MediaPlayer();
@@ -1100,48 +1074,27 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
-
-                    if (isPlay == true) {
-                        musicMedia.start();
-
-                        if (diskImgAni.isRunning() == false) {
-                            diskImgAni.start();
-                            songListDiskImgAni.start();
-                            songListSongIndicator.setAlpha(1);
-                        }
-                        if (musicMedia.isPlaying() == false) {
-                            musicWaveVisualization.onResume();
-                        }
-                        playButton.setImageResource(R.drawable.pause_music_button);
-                    }
-
-                    // update time text
-                    int currentTime = musicMedia.getCurrentPosition();
-                    long songDuration = musicMedia.getDuration();
-
-                    long leftTime = songDuration - currentTime;
-                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
-
-                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 } else {
                     if (musicIndex > 0) {
                         musicIndex--;
                     } else {
-                        musicIndex = R.raw.class.getFields().length - 2;
+                        musicIndex = songList.size() - 1;
                     }
 
                     // check if music media is null or not to create and call music file
@@ -1152,19 +1105,22 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
 
                     if (isPlay == true) {
                         musicMedia.start();
@@ -1190,6 +1146,30 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 }
+
+                if (isPlay == true) {
+                    musicMedia.start();
+
+                    if (diskImgAni.isRunning() == false) {
+                        diskImgAni.start();
+                        songListDiskImgAni.start();
+                        songListSongIndicator.setAlpha(1);
+                    }
+                    if (musicMedia.isPlaying() == false) {
+                        musicWaveVisualization.onResume();
+                    }
+                    playButton.setImageResource(R.drawable.pause_music_button);
+                }
+
+                // update time text
+                int currentTime = musicMedia.getCurrentPosition();
+                long songDuration = musicMedia.getDuration();
+
+                long leftTime = songDuration - currentTime;
+                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
             }
         });
     }
@@ -1200,9 +1180,9 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
-                if (songIdList.size() == 0) {
+                if (songList.size() == 0) {
                     songListSkipPreviousButton.setOnClickListener(null);
-                } else if (songIdList.size() == 1) {
+                } else if (songList.size() == 1) {
                     // check if music media is null or not to create and call music file
                     if (musicMedia == null) {
                         musicMedia = new MediaPlayer();
@@ -1211,19 +1191,22 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
 
                     if (isPlay == true) {
                         musicMedia.start();
@@ -1252,7 +1235,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     if (musicIndex > 0) {
                         musicIndex--;
                     } else {
-                        musicIndex = R.raw.class.getFields().length - 2;
+                        musicIndex = songList.size() - 1;
                     }
 
                     // check if music media is null or not to create and call music file
@@ -1263,19 +1246,22 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia = new MediaPlayer();
                     }
 
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
-
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
 
                     if (isPlay == true) {
                         musicMedia.start();
@@ -1305,46 +1291,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         });
     }
     //--------------------------------------------------------------------------------------------//
-
-    // event for changing screen style by switch
-    public void onScreenStyleSwitchChangeListener() {
-        screenStyleSwitch.setOnSelectedChangeListener(new StickySwitch.OnSelectedChangeListener() {
-            @Override
-            public void onSelectedChange(@NotNull StickySwitch.Direction direction, @NotNull String s) {
-                if (direction == StickySwitch.Direction.LEFT) {
-                    if (isPlay && musicMedia != null) {
-                        musicWaveVisualization.onResume();
-                        blastVisualizer.setEnabled(false);
-                    } else if (isPlay == false && musicMedia != null) {
-                        musicWaveVisualization.onPause();
-                        blastVisualizer.setEnabled(false);
-                    }
-                    musicVisualizationViewLay.setAlpha(1);
-                    themeSwitch.setVisibility(View.INVISIBLE);
-                    blastVisualizerLay.setAlpha(0);
-                } else {
-                    if (isPlay && musicMedia != null) {
-                        musicWaveVisualization.onPause();
-
-                        //get the AudioSessionId from MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    } else if (isPlay == false && musicMedia != null) {
-                        musicWaveVisualization.onPause();
-
-                        //get the AudioSessionId from MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                    }
-                    musicVisualizationViewLay.setAlpha(0);
-                    themeSwitch.setVisibility(View.VISIBLE);
-                    blastVisualizerLay.setAlpha(1);
-                }
-            }
-        });
-    }
 
     //------------------------------- custom recycler view setting -------------------------------//
     // method to create indicators and remove button for song list item
@@ -1366,22 +1312,23 @@ public class PlayMusicScreen extends AppCompatActivity {
      *
      */
     // method to create song list for recycler view
-     void onCreateSongRecyclerView() {
-             for (int i = 0; i < songList.size(); i++) {
-                 customItems.add(new CustomRecyclerViewItem(songList.get(i).getTenbaihat(), songList.get(i).getCasi(), indicators[i], removeSongButtons[i]));
-             }
-             songRV.setHasFixedSize(true);
-             songLisLayoutManager = new LinearLayoutManager(this);
-             songListAdapter = new CustomRecyclerViewAdapter(customItems);
-             songRV.setLayoutManager(songLisLayoutManager);
-             songRV.setAdapter(songListAdapter);
-             songRV.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
-                 @Override
-                 public void OnItemClick(View view, int position) {
+    void onCreateSongRecyclerView() {
+        for (int i = 0; i < songList.size(); i++) {
+            customItems.add(new CustomRecyclerViewItem(songList.get(i).getTenbaihat(), songList.get(i).getCasi(), indicators[i], removeSongButtons[i]));
+        }
+        songRV.setHasFixedSize(true);
+        songLisLayoutManager = new LinearLayoutManager(this);
+        songListAdapter = new CustomRecyclerViewAdapter(customItems);
+        songRV.setLayoutManager(songLisLayoutManager);
+        songRV.setAdapter(songListAdapter);
+        songRV.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
+            @Override
+            public void OnItemClick(View view, int position) {
 
-                 }
-             }));
-         }
+            }
+        }));
+    }
+
     // event for song list item change position listener
     public void onSongListItemDragListener() {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
@@ -1641,19 +1588,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 isPlay = true;
 
                 if (isPlay) {
-                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
-                        musicWaveVisualization.onResume();
-                        blastVisualizer.setEnabled(false);
-                        blastVisualizer.release();
-                    } else {
-                        musicWaveVisualization.onPause();
-
-                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                        int audioSessionId = musicMedia.getAudioSessionId();
-                        if (audioSessionId != -1)
-                            blastVisualizer.setAudioSessionId(audioSessionId);
-                        blastVisualizer.setEnabled(true);
-                    }
+                    musicWaveVisualization.onResume();
 
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
@@ -1713,19 +1648,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(position + 1));
 
                     if (isPlay) {
-                        if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
-                            musicWaveVisualization.onResume();
-                            blastVisualizer.setEnabled(false);
-                            blastVisualizer.release();
-                        } else {
-                            musicWaveVisualization.onPause();
-
-                            //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                            int audioSessionId = musicMedia.getAudioSessionId();
-                            if (audioSessionId != -1)
-                                blastVisualizer.setAudioSessionId(audioSessionId);
-                            blastVisualizer.setEnabled(true);
-                        }
+                        musicWaveVisualization.onResume();
 
                         if (diskImgAni.isRunning()) {
                             diskImgAni.resume();
@@ -1792,19 +1715,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
 
                     if (isPlay) {
-                        if (screenStyleSwitch.getDirection() == StickySwitch.Direction.LEFT) {
-                            musicWaveVisualization.onResume();
-                            blastVisualizer.setEnabled(false);
-                            blastVisualizer.release();
-                        } else {
-                            musicWaveVisualization.onPause();
-
-                            //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-                            int audioSessionId = musicMedia.getAudioSessionId();
-                            if (audioSessionId != -1)
-                                blastVisualizer.setAudioSessionId(audioSessionId);
-                            blastVisualizer.setEnabled(true);
-                        }
+                        musicWaveVisualization.onResume();
 
                         if (diskImgAni.isRunning()) {
                             diskImgAni.resume();
@@ -1875,5 +1786,34 @@ public class PlayMusicScreen extends AppCompatActivity {
     public void DataIntent() {
         Bundle getEmotionInfo = getIntent().getExtras();
         id_chude = getEmotionInfo.getString("id_chude");
+    }
+
+    class PlayMP3 extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return strings[0];
+        }
+
+        @Override
+        protected void onPostExecute(String baihat) {
+            super.onPostExecute(baihat);
+            try {
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                    }
+                });
+                mediaPlayer.setDataSource(baihat);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mediaPlayer.start();
+        }
     }
 }

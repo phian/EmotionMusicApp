@@ -140,7 +140,18 @@ public class PlayMusicScreen extends AppCompatActivity {
     public void playSong() {
         musicMedia = new MediaPlayer();
         try {
-            musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
+            try {
+                musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                    }
+                });
+                musicMedia.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             musicMedia.prepare();
 
             songLengthSB.setMax(musicMedia.getDuration());
@@ -272,26 +283,26 @@ public class PlayMusicScreen extends AppCompatActivity {
         onSongListItemClickListener();
 
         // call music file
-        musicMedia = new MediaPlayer();
-        musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
+//        musicMedia = new MediaPlayer();
+//        musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
 
         // set text for TextView song length
-        int currentTime = musicMedia.getCurrentPosition();
-        long songDuration = musicMedia.getDuration();
-
-        long leftTime = songDuration - currentTime;
-        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
-        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+//        int currentTime = musicMedia.getCurrentPosition();
+//        long songDuration = musicMedia.getDuration();
+//
+//        long leftTime = songDuration - currentTime;
+//        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+//        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+//        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
         //----------------------------------------------------------------------------------------//
 
         // animation for disk
         diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
-        diskImgAni.setRepeatCount(musicMedia.getDuration());
+//        diskImgAni.setRepeatCount(musicMedia.getDuration());
         diskImgAni.setInterpolator(new LinearInterpolator());
 
         songListDiskImgAni = ObjectAnimator.ofFloat(songListDiskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
-        songListDiskImgAni.setRepeatCount(musicMedia.getDuration());
+//        songListDiskImgAni.setRepeatCount(musicMedia.getDuration());
         songListDiskImgAni.setInterpolator(new LinearInterpolator());
 
         // set speech recognizer handler
@@ -323,6 +334,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         Dataservice dataservice = APIService.getService();
         final Call<List<baihat>> callback = dataservice.getDataBaiHatTheoChude(id_chude);
         callback.enqueue(new Callback<List<baihat>>() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onResponse(Call<List<baihat>> call, Response<List<baihat>> response) {
                 if (songList.size() > 0) {
@@ -368,19 +380,7 @@ public class PlayMusicScreen extends AppCompatActivity {
             public void onFailure(Call<List<baihat>> call, Throwable t) {
             }
         });
-
-//        Toast.makeText(PlayMusicScreen.this,songList.get(0).getTenbaihat(),Toast.LENGTH_LONG).show();
     }
-
-//    void showsongList() {
-//        if (songList.size() > 0) {
-//            for (int i = 0; i < songList.size(); i++) {
-//                Toast.makeText(PlayMusicScreen.this, songList.get(i).getTenbaihat() + songList.get(i).getLinkbaihat(), Toast.LENGTH_SHORT).show();
-//            }
-//        } else {
-//            Toast.makeText(PlayMusicScreen.this, "this is no song", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     // method to read all raw resources name and id
     public void readRawResourcesFileNameAndId() {
@@ -534,6 +534,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                 if (isPlay) {
                     musicWaveVisualization.onResume();
+
                     if (diskImgAni.isRunning()) {
                         diskImgAni.resume();
                         songListDiskImgAni.resume();
@@ -550,7 +551,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
 
                 startSong(isPlay);
-//                showsongList();
             }
         });
     }
@@ -614,7 +614,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                         @Override
                         public void onCompletion(MediaPlayer mediaPlayer) {
                             if (repeatedClickTime == 0 || repeatedClickTime == 3) { // if user don't repeat the list
-                                if (musicIndex == R.raw.class.getFields().length - 2) { // check if current index is the last song of the list
+                                if (musicIndex == songList.size() - 1) { // check if current index is the last song of the list
                                     if (diskImgAni.isRunning()) {
                                         diskImgAni.end();
                                         songListDiskImgAni.end();
@@ -627,8 +627,19 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songListPlayMusicButton.setImageResource(R.drawable.play_music_button);
                                     isPlay = false;
 
-                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
-                                } else if (musicIndex < R.raw.class.getFields().length - 2) { // check if current index is not the last song of the list
+                                    try {
+                                        musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                            @Override
+                                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                            }
+                                        });
+                                        musicMedia.prepare();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else if (musicIndex < songList.size() - 1) { // check if current index is not the last song of the list
                                     musicIndex++;
 
                                     // check if music media is null or not to create and call music file
@@ -639,7 +650,18 @@ public class PlayMusicScreen extends AppCompatActivity {
 //                                        musicMedia = new MediaPlayer();
 //                                    }
 
-                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                                    try {
+                                        musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                            @Override
+                                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                            }
+                                        });
+                                        musicMedia.prepare();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                                     songLengthSB.setProgress(0);
@@ -682,7 +704,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                 update();
                             } else if (repeatedClickTime == 2) { // if user repeat the list
-                                if (musicIndex == R.raw.class.getFields().length - 2) {
+                                if (musicIndex == songList.size() - 1) {
                                     musicIndex = 0;
 
                                     // check if music media is null or not to create and call music file
@@ -693,7 +715,18 @@ public class PlayMusicScreen extends AppCompatActivity {
                                         musicMedia = new MediaPlayer();
                                     }
 
-                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                                    try {
+                                        musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                            @Override
+                                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                            }
+                                        });
+                                        musicMedia.prepare();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                                     songLengthSB.setProgress(0);
@@ -734,7 +767,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     update();
 
                                     return;
-                                } else if (musicIndex < R.raw.class.getFields().length - 2) {
+                                } else if (musicIndex < songList.size() - 1) {
                                     musicIndex++;
 
                                     // check if music media is null or not to create and call music file
@@ -745,7 +778,18 @@ public class PlayMusicScreen extends AppCompatActivity {
                                         musicMedia = new MediaPlayer();
                                     }
 
-                                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                                    try {
+                                        musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                            @Override
+                                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                            }
+                                        });
+                                        musicMedia.prepare();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
                                     songLengthSB.setProgress(0);
@@ -1295,7 +1339,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     //------------------------------- custom recycler view setting -------------------------------//
     // method to create indicators and remove button for song list item
     public void onCreateRemoveButtonAndIndicatorsForSongListScreen() {
-        for (int i = 0; i < removeSongButtons.length; i++) {
+        for (int i = 0; i < songList.size(); i++) {
             removeSongButtons[i] = new ImageButton(this);
             indicators[i] = new Indicator(this);
 
@@ -1583,7 +1627,18 @@ public class PlayMusicScreen extends AppCompatActivity {
                     musicMedia.release();
                     musicMedia = new MediaPlayer();
                 }
-                musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                try {
+                    musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                    musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                        }
+                    });
+                    musicMedia.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 isPlay = true;
 
@@ -1645,7 +1700,18 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia.release();
                         musicMedia = new MediaPlayer();
                     }
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(position + 1));
+                    try {
+                        musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     if (isPlay) {
                         musicWaveVisualization.onResume();
@@ -1712,7 +1778,18 @@ public class PlayMusicScreen extends AppCompatActivity {
                         musicMedia.release();
                         musicMedia = new MediaPlayer();
                     }
-                    musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(musicIndex));
+                    try {
+                        musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                            }
+                        });
+                        musicMedia.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     if (isPlay) {
                         musicWaveVisualization.onResume();

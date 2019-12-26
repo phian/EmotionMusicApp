@@ -3,7 +3,11 @@ package com.example.emotionmusicapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.labters.lottiealertdialoglibrary.ClickListener;
+import com.labters.lottiealertdialoglibrary.DialogTypes;
+import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.util.Calendar;
@@ -43,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
-    boolean isAboutUsIconClick, isHowToUseIconClick, isMainScreenPrevious;
+    boolean isAboutUsIconClick = false, isHowToUseIconClick = false, isMainScreenPrevious = false;
 
     @SuppressLint({"ClickableViewAccessibility", "WrongConstant"})
     @Override
@@ -55,6 +62,29 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
+
+        // check if user was connected to the internet to start app or not
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
+            LottieAlertDialog errorDialog =  new LottieAlertDialog.Builder(MainActivity.this, DialogTypes.TYPE_ERROR)
+                    .setTitle("Error!")
+                    .setDescription("Please check your internet connection before starting app")
+                    .setNegativeText("OK")
+                    .setNegativeButtonColor(Color.parseColor("#ffbb00"))
+                    .setNegativeTextColor(Color.parseColor("#0a0906"))
+                    .setNegativeListener(new ClickListener() {
+                        @Override
+                        public void onClick(LottieAlertDialog lottieAlertDialog) {
+                            lottieAlertDialog.dismiss();
+
+                            finish();
+                        }
+                    }).build();
+
+            errorDialog.setCancelable(false);
+            errorDialog.show();
+        }
 
         castControl();
 
@@ -73,6 +103,10 @@ public class MainActivity extends AppCompatActivity {
 
         setMainGreetingText(); // set the main greeting (Good morning,...)
         onMainScreenTouchListener();
+
+        isAboutUsIconClick = false;
+        isHowToUseIconClick = false;
+        isMainScreenPrevious = false;
     }
 
     // check if application is resumed then update the greeting text
@@ -81,6 +115,19 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         setMainGreetingText(); // set the main greeting (Good morning,...)
+
+        isAboutUsIconClick = false;
+        isHowToUseIconClick = false;
+        isMainScreenPrevious = false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        isAboutUsIconClick = false;
+        isHowToUseIconClick = false;
+        isMainScreenPrevious = false;
     }
 
     // Check if user click back button to go back previous activity
@@ -171,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
-        } else if (false == false && false == false && false == false) {
+        } else if (isAboutUsIconClick == false && isHowToUseIconClick == false && isMainScreenPrevious == false) {
             finish();
         }
     }

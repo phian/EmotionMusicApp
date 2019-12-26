@@ -62,7 +62,7 @@
 
             <LinearLayout
                 android:id="@+id/singerAndSongNameLay"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -74,7 +74,10 @@
                     android:gravity="center"
                     android:text="A Song"
                     android:textColor="@android:color/white"
-                    android:textSize="25sp" />
+                    android:textSize="25sp"
+                    android:maxWidth="400dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
 
                 <TextView
                     android:id="@+id/singerNameTV"
@@ -84,7 +87,10 @@
                     android:gravity="center"
                     android:text="NPA"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:maxWidth="200dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
 
             </LinearLayout>
 

@@ -265,14 +265,12 @@ public class PlayMusicScreen extends AppCompatActivity {
         updateSongNameAndSingerNameTV(musicIndex);
         onCreateRemoveButtonAndIndicatorsForSongListScreen();
         onCreateSongRecyclerView();
-        onSongListItemDragListener();
         onCreateSongListScreenBottomSheetBehavior();
         onPassButtonGifViewClickListener();
         onRepeatListButtonClickListener();
         onSongListRepeatButtonClickListener();
         onShuffleListButtonClickListener();
         onSongListShuffleButtonClickListener();
-        onSongListItemClickListener();
 
         // set speech recognizer handler
         SpeechRecognizerDbmHandler speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(PlayMusicScreen.this);
@@ -306,9 +304,7 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onResponse(Call<List<baihat>> call, Response<List<baihat>> response) {
-                if (songList.size() > 0) {
-                    songList.clear();
-                } else {
+                if (songList.size() == 0) {
                     songList = (ArrayList<baihat>) response.body();
                     songListAdapter = new CustomRecyclerViewAdapter(customItems);
                     songRV.setAdapter(songListAdapter);
@@ -359,6 +355,9 @@ public class PlayMusicScreen extends AppCompatActivity {
                     //----------------------------------------------------------------------------//
 
                     loadingDialog.dismiss(); // close the loading dialog
+
+                    onSongListItemClickListener();
+                    onSongListItemDragListener();
                 }
             }
 
@@ -622,11 +621,11 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     if (diskImgAni.isRunning()) {
                                         diskImgAni.end();
                                         songListDiskImgAni.end();
-                                        songListSongIndicator.setAlpha(0);
                                     }
                                     if (musicMedia.isPlaying()) {
                                         musicWaveVisualization.release();
                                     }
+                                    songListSongIndicator.setAlpha(0);
                                     playButton.setImageResource(R.drawable.play_music_button);
                                     songListPlayMusicButton.setImageResource(R.drawable.play_music_button);
                                     isPlay = false;
@@ -1120,6 +1119,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                 if (songList.size() == 0) {
                     skipPreviousButton.setOnClickListener(null);
                 } else if (songList.size() == 1) {
+                    musicIndex = 0;
+
                     // check if music media is null or not to create and call music file
                     if (musicMedia == null) {
                         musicMedia = new MediaPlayer();
@@ -1129,7 +1130,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
 
                     try {
-                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
                         musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -1404,216 +1405,6 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         itemTouchHelper.attachToRecyclerView(songRV);
     }
-    //--------------------------------------------------------------------------------------------//
-
-    // method to create behavior for song list screen bottom sheet
-    public void onCreateSongListScreenBottomSheetBehavior() {
-        songListBottomSheetBe = BottomSheetBehavior.from(songListBottomSheet);
-
-        songListBottomSheetBe.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int i) {
-                switch (i) {
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        if (songListBottomSheetBe.getPeekHeight() < 65) {
-                            songListBottomSheetBe.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        }
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        songListBottomSheetBe.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        break;
-
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View view, float v) {
-
-            }
-        });
-    }
-
-    // event for pass screen button click
-    public void onPassButtonGifViewClickListener() {
-        passScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                passScreenButton.play();
-
-                // check of user is on music list screen or not
-                if (isOnSongListScreen == false) {
-                    mainScreenScrollLayout.animate().translationX(480).setDuration(300).setStartDelay(0);
-                    songListBottomSheetLay.animate().translationX(0).setDuration(300).setStartDelay(0);
-
-                    // animation for pass screen button
-                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.ROTATION, 0f, 180f).setDuration(300);
-                    passScreenButtonAni.setInterpolator(new LinearInterpolator());
-                    passScreenButtonAni.setStartDelay(300);
-                    passScreenButtonAni.start();
-                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.TRANSLATION_X, 350).setDuration(600);
-                    passScreenButtonAni.setStartDelay(600);
-                    passScreenButtonAni.start();
-
-                    passScreenButtonAni.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            passScreenButton.pause();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    });
-
-                    isOnSongListScreen = true;
-                } else {
-                    mainScreenScrollLayout.animate().translationX(0).setDuration(300).setStartDelay(0);
-                    songListBottomSheetLay.animate().translationX(-480).setDuration(300).setStartDelay(0);
-
-                    // animation for pass screen button
-                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.ROTATION, 180f, 0f).setDuration(300);
-                    passScreenButtonAni.setInterpolator(new LinearInterpolator());
-                    passScreenButtonAni.setStartDelay(300);
-                    passScreenButtonAni.start();
-                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.TRANSLATION_X, 0).setDuration(600);
-                    passScreenButtonAni.setStartDelay(600);
-                    passScreenButtonAni.start();
-
-                    passScreenButtonAni.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            passScreenButton.pause();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    });
-
-                    isOnSongListScreen = false;
-                }
-            }
-        });
-    }
-
-    //----------------------------------- Repeat music button ------------------------------------//
-    // event for repeat music button click
-    public void onRepeatListButtonClickListener() {
-        repeatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (repeatedClickTime < 3) {
-                    repeatedClickTime++; // increase choice time
-                }
-
-                // check the choice of the user
-                if (repeatedClickTime == 1) {
-                    repeatButton.setImageResource(R.drawable.repeat_one_button);
-                    songListReplayListButton.setImageResource(R.drawable.repeat_one_button);
-                } else if (repeatedClickTime == 2) {
-                    repeatButton.setImageResource(R.drawable.repeated_button);
-                    songListReplayListButton.setImageResource(R.drawable.repeated_button);
-                } else {
-                    repeatButton.setImageResource(R.drawable.repeat_button);
-                    songListReplayListButton.setImageResource(R.drawable.repeat_button);
-
-                    repeatedClickTime = 0;
-                }
-            }
-        });
-    }
-
-    // event for repeat button in song list screen click
-    public void onSongListRepeatButtonClickListener() {
-        songListReplayListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (repeatedClickTime < 3) {
-                    repeatedClickTime++; // increase choice time
-                }
-
-                // check the choice of the user
-                if (repeatedClickTime == 1) {
-                    repeatButton.setImageResource(R.drawable.repeat_one_button);
-                    songListReplayListButton.setImageResource(R.drawable.repeat_one_button);
-                } else if (repeatedClickTime == 2) {
-                    repeatButton.setImageResource(R.drawable.repeated_button);
-                    songListReplayListButton.setImageResource(R.drawable.repeated_button);
-                } else {
-                    repeatButton.setImageResource(R.drawable.repeat_button);
-                    songListReplayListButton.setImageResource(R.drawable.repeat_button);
-
-                    repeatedClickTime = 0;
-                }
-            }
-        });
-    }
-    //--------------------------------------------------------------------------------------------//
-
-    //------------------------------------- Shuffle music button ---------------------------------//
-    // event for shuffle song list button click
-    public void onShuffleListButtonClickListener() {
-        shuffleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isShuffled) {
-                    shuffleButton.setImageResource(R.drawable.shuffle_button);
-                    songListMixListButton.setImageResource(R.drawable.shuffle_button);
-
-                    isShuffled = false;
-                } else {
-                    shuffleButton.setImageResource(R.drawable.shuffled_button);
-                    songListMixListButton.setImageResource(R.drawable.shuffled_button);
-
-                    isShuffled = true;
-                }
-            }
-        });
-    }
-
-    // event for shuffle song list button in song list screen click
-    public void onSongListShuffleButtonClickListener() {
-        songListMixListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isShuffled) {
-                    shuffleButton.setImageResource(R.drawable.shuffle_button);
-                    songListMixListButton.setImageResource(R.drawable.shuffle_button);
-
-                    isShuffled = false;
-                } else {
-                    shuffleButton.setImageResource(R.drawable.shuffled_button);
-                    songListMixListButton.setImageResource(R.drawable.shuffled_button);
-
-                    isShuffled = true;
-                }
-            }
-        });
-    }
-    //--------------------------------------------------------------------------------------------//
 
     // event for song list item click
     public void onSongListItemClickListener() {
@@ -1846,6 +1637,216 @@ public class PlayMusicScreen extends AppCompatActivity {
             }
         });
     }
+    //--------------------------------------------------------------------------------------------//
+
+    // method to create behavior for song list screen bottom sheet
+    public void onCreateSongListScreenBottomSheetBehavior() {
+        songListBottomSheetBe = BottomSheetBehavior.from(songListBottomSheet);
+
+        songListBottomSheetBe.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                switch (i) {
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        if (songListBottomSheetBe.getPeekHeight() < 65) {
+                            songListBottomSheetBe.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        songListBottomSheetBe.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
+    }
+
+    // event for pass screen button click
+    public void onPassButtonGifViewClickListener() {
+        passScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passScreenButton.play();
+
+                // check of user is on music list screen or not
+                if (isOnSongListScreen == false) {
+                    mainScreenScrollLayout.animate().translationX(480).setDuration(300).setStartDelay(0);
+                    songListBottomSheetLay.animate().translationX(0).setDuration(300).setStartDelay(0);
+
+                    // animation for pass screen button
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.ROTATION, 0f, 180f).setDuration(300);
+                    passScreenButtonAni.setInterpolator(new LinearInterpolator());
+                    passScreenButtonAni.setStartDelay(300);
+                    passScreenButtonAni.start();
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.TRANSLATION_X, 350).setDuration(600);
+                    passScreenButtonAni.setStartDelay(600);
+                    passScreenButtonAni.start();
+
+                    passScreenButtonAni.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            passScreenButton.pause();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+
+                    isOnSongListScreen = true;
+                } else {
+                    mainScreenScrollLayout.animate().translationX(0).setDuration(300).setStartDelay(0);
+                    songListBottomSheetLay.animate().translationX(-480).setDuration(300).setStartDelay(0);
+
+                    // animation for pass screen button
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.ROTATION, 180f, 0f).setDuration(300);
+                    passScreenButtonAni.setInterpolator(new LinearInterpolator());
+                    passScreenButtonAni.setStartDelay(300);
+                    passScreenButtonAni.start();
+                    passScreenButtonAni = ObjectAnimator.ofFloat(passScreenButton, View.TRANSLATION_X, 0).setDuration(600);
+                    passScreenButtonAni.setStartDelay(600);
+                    passScreenButtonAni.start();
+
+                    passScreenButtonAni.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            passScreenButton.pause();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+
+                    isOnSongListScreen = false;
+                }
+            }
+        });
+    }
+
+    //----------------------------------- Repeat music button ------------------------------------//
+    // event for repeat music button click
+    public void onRepeatListButtonClickListener() {
+        repeatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (repeatedClickTime < 3) {
+                    repeatedClickTime++; // increase choice time
+                }
+
+                // check the choice of the user
+                if (repeatedClickTime == 1) {
+                    repeatButton.setImageResource(R.drawable.repeat_one_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_one_button);
+                } else if (repeatedClickTime == 2) {
+                    repeatButton.setImageResource(R.drawable.repeated_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeated_button);
+                } else {
+                    repeatButton.setImageResource(R.drawable.repeat_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_button);
+
+                    repeatedClickTime = 0;
+                }
+            }
+        });
+    }
+
+    // event for repeat button in song list screen click
+    public void onSongListRepeatButtonClickListener() {
+        songListReplayListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (repeatedClickTime < 3) {
+                    repeatedClickTime++; // increase choice time
+                }
+
+                // check the choice of the user
+                if (repeatedClickTime == 1) {
+                    repeatButton.setImageResource(R.drawable.repeat_one_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_one_button);
+                } else if (repeatedClickTime == 2) {
+                    repeatButton.setImageResource(R.drawable.repeated_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeated_button);
+                } else {
+                    repeatButton.setImageResource(R.drawable.repeat_button);
+                    songListReplayListButton.setImageResource(R.drawable.repeat_button);
+
+                    repeatedClickTime = 0;
+                }
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------------------//
+
+    //------------------------------------- Shuffle music button ---------------------------------//
+    // event for shuffle song list button click
+    public void onShuffleListButtonClickListener() {
+        shuffleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isShuffled) {
+                    shuffleButton.setImageResource(R.drawable.shuffle_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffle_button);
+
+                    isShuffled = false;
+                } else {
+                    shuffleButton.setImageResource(R.drawable.shuffled_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffled_button);
+
+                    isShuffled = true;
+                }
+            }
+        });
+    }
+
+    // event for shuffle song list button in song list screen click
+    public void onSongListShuffleButtonClickListener() {
+        songListMixListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isShuffled) {
+                    shuffleButton.setImageResource(R.drawable.shuffle_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffle_button);
+
+                    isShuffled = false;
+                } else {
+                    shuffleButton.setImageResource(R.drawable.shuffled_button);
+                    songListMixListButton.setImageResource(R.drawable.shuffled_button);
+
+                    isShuffled = true;
+                }
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------------------//
 
     // method to change the alpha of the current song indicator
     public void changedSongListSelectedItemIndicatorAlpha(int itemPosition, int indicatorColor) {

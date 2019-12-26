@@ -80,7 +80,6 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     Random randMusicIndex = new Random(); // use for shuffle button click
 
-    Field[] songNameList;
     ArrayList<baihat> songList = new ArrayList<>();
     ImageButton[] removeSongButtons = new ImageButton[100];
     Indicator[] indicators = new Indicator[100];

@@ -257,7 +257,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         castControl();
         onPlayMusicButtonClickListener();
         onSongListPlayMusicButtonClickListener();
-        onMusicSeekBarLengthChangeListener();
         onSkipNextButtonClickListener();
         onSongListSkipNextButtonClickListener();
         onSkipPreviousButtonClickListener();
@@ -358,6 +357,7 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     onSongListItemClickListener();
                     onSongListItemDragListener();
+                    onMusicSeekBarLengthChangeListener();
                 }
             }
 
@@ -394,15 +394,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         super.onStart();
 
         musicIndex = 0;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (loadingDialog.isShowing()) {
-            getDataBaiHat();
-        }
     }
 
     @Override
@@ -544,6 +535,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                         songListSongIndicator.setAlpha(1);
                     } else {
                         diskImgAni.start();
+                        songListDiskImgAni.start();
                         songListSongIndicator.setAlpha(1);
                     }
                 } else {
@@ -630,6 +622,13 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songListPlayMusicButton.setImageResource(R.drawable.play_music_button);
                                     isPlay = false;
 
+                                    // check if music media is null or not to create and call music file
+                                    if (musicMedia == null) {
+                                        musicMedia = new MediaPlayer();
+                                    } else {
+                                        musicMedia.release();
+                                        musicMedia = new MediaPlayer();
+                                    }
                                     try {
                                         musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                         musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
@@ -646,12 +645,12 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     musicIndex++;
 
                                     // check if music media is null or not to create and call music file
-//                                    if (musicMedia == null) {
-//                                        musicMedia = new MediaPlayer();
-//                                    } else {
-//                                        musicMedia.release();
-//                                        musicMedia = new MediaPlayer();
-//                                    }
+                                    if (musicMedia == null) {
+                                        musicMedia = new MediaPlayer();
+                                    } else {
+                                        musicMedia.release();
+                                        musicMedia = new MediaPlayer();
+                                    }
 
                                     try {
                                         musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -737,13 +736,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songLengthSB.setProgress(0);
 
                                     updateSongNameAndSingerNameTV(musicIndex);
-
-//                                    if (screenStyleSwitch.getDirection() == StickySwitch.Direction.RIGHT) {
-//                                        //get the AudioSessionId your MediaPlayer and pass it to the visualizer
-//                                        int audioSessionId = musicMedia.getAudioSessionId();
-//                                        if (audioSessionId != -1)
-//                                            blastVisualizer.setAudioSessionId(audioSessionId);
-//                                    }
 
                                     if (isPlay == true) {
                                         musicMedia.start();
@@ -880,6 +872,8 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
+                onSongListItemDragListener();
+
                 if (songList.size() == 0) {
                     skipNextButton.setOnClickListener(null);
                 } else if (songList.size() == 1) {
@@ -997,6 +991,8 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
+                onSongListItemDragListener();
+
                 if (songList.size() == 0) {
                     skipPreviousButton.setOnClickListener(null);
                 } else if (songList.size() == 1) {
@@ -1116,6 +1112,8 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
+                onSongListItemDragListener();
+
                 if (songList.size() == 0) {
                     skipPreviousButton.setOnClickListener(null);
                 } else if (songList.size() == 1) {
@@ -1235,6 +1233,8 @@ public class PlayMusicScreen extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View view) {
+                onSongListItemDragListener();
+
                 if (songList.size() == 0) {
                     songListSkipPreviousButton.setOnClickListener(null);
                 } else if (songList.size() == 1) {
@@ -1390,9 +1390,12 @@ public class PlayMusicScreen extends AppCompatActivity {
                 int targetPosition = target.getAdapterPosition();
 
                 Collections.swap(customItems, draggedPosition, targetPosition);
+                Collections.swap(songList, draggedPosition, targetPosition);
                 songListAdapter.notifyItemMoved(draggedPosition, targetPosition);
 
-                Collections.swap(songList, draggedPosition, targetPosition);
+                if (draggedPosition == musicIndex) {
+                    musicIndex = targetPosition;
+                }
 
                 return false;
             }
@@ -1411,10 +1414,12 @@ public class PlayMusicScreen extends AppCompatActivity {
         songListAdapter.setOnItemClickListener(new CustomRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
+                onSongListItemDragListener();
+
                 musicIndex = position;
 
-                updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
-                changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
+                updateSongNameAndSingerNameTV(position); // update the current song name and singer name for all text view
+//                changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
 
                 // check if music media is null or not to create and call music file
                 if (musicMedia == null) {
@@ -1496,7 +1501,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
                     try {
                         musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setDataSource(songList.get(position + 1).getLinkbaihat());
                         musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -1554,11 +1559,14 @@ public class PlayMusicScreen extends AppCompatActivity {
                         startSong(true);
                         if (customItems.size() == 1) {
                             updateSongNameAndSingerNameTV(position); // update the current song name and singer name for all text view
-                            changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
+//                            changedSongListSelectedItemIndicatorAlpha(position, Color.BLUE);
                         } else if (position + 1 <= customItems.size() - 1) {
-                            updateSongNameAndSingerNameTV(position + 1); // update the current song name and singer name for all text view
-                            changedSongListSelectedItemIndicatorAlpha(position + 1, Color.BLUE);
+                            updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
+//                            changedSongListSelectedItemIndicatorAlpha(musicIndex + 1, Color.BLUE);
                         }
+                    } else {
+                        updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
+//                        changedSongListSelectedItemIndicatorAlpha(musicIndex + 1, Color.BLUE);
                     }
                 } else if (position == customItems.size() - 1 && position == musicIndex) {
                     musicIndex = 0;
@@ -1572,7 +1580,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
                     try {
                         musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                        musicMedia.setDataSource(songList.get(0).getLinkbaihat());
                         musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -1629,9 +1637,11 @@ public class PlayMusicScreen extends AppCompatActivity {
                     if (isPlay) {
                         startSong(true);
                         updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
-                        changedSongListSelectedItemIndicatorAlpha(musicIndex, Color.BLUE);
+//                        changedSongListSelectedItemIndicatorAlpha(musicIndex, Color.BLUE);
 
                         return;
+                    } else {
+                        updateSongNameAndSingerNameTV(musicIndex); // update the current song name and singer name for all text view
                     }
                 }
             }

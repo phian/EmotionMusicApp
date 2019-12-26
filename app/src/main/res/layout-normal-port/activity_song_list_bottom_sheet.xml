@@ -35,8 +35,7 @@
                     android:layout_marginTop="5dp"
                     android:id="@+id/songAndSingerNameRL"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_marginLeft="15dp"
@@ -44,7 +43,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Song Name"
-                        android:textSize="22sp"/>
+                        android:textSize="22sp"
+                        android:maxWidth="120dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"/>
 
                     <TextView
                         android:id="@+id/songListSingerNameTV"
@@ -53,18 +55,20 @@
                         android:layout_height="wrap_content"
                         android:text="Singer Name"
                         android:layout_below="@id/songListSongNameTV"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp"
+                        android:maxWidth="100dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"/>
 
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_marginTop="8dp"
-                    android:layout_marginLeft="-105dp"
+                    android:layout_marginLeft="-125dp"
                     android:orientation="horizontal"
                     android:id="@+id/songListMusicButtonLay"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2">
+                    android:layout_height="wrap_content">
 
                     <ImageButton
                         android:id="@+id/songListSkipPreviousButton"
@@ -111,7 +115,7 @@
                     android:id="@+id/songListDiskImageCIV"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
-                    android:src="@drawable/nath"
+                    android:src="@drawable/galaxy_disk"
                     app:civ_border="true"
                     app:civ_border_color="@android:color/white"
                     app:civ_border_width="0dp"

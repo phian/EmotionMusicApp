@@ -638,6 +638,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                                             musicWaveVisualization.onResume();
                                         }
                                         playButton.setImageResource(R.drawable.pause_music_button);
+
+                                        startSong(isPlay);
                                     }
 
                                     // update time text
@@ -710,6 +712,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                                             musicWaveVisualization.onResume();
                                         }
                                         playButton.setImageResource(R.drawable.pause_music_button);
+
+                                        startSong(isPlay);
                                     }
 
                                     // update time text
@@ -766,6 +770,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                                             musicWaveVisualization.onResume();
                                         }
                                         playButton.setImageResource(R.drawable.pause_music_button);
+
+                                        startSong(isPlay);
                                     }
 
                                     // update time text
@@ -1310,9 +1316,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         }
     }
 
-    /**
-     *
-     */
     // method to create song list for recycler view
     void onCreateSongRecyclerView() {
         for (int i = 0; i < songList.size(); i++) {
@@ -1813,34 +1816,5 @@ public class PlayMusicScreen extends AppCompatActivity {
     public void DataIntent() {
         Bundle getEmotionInfo = getIntent().getExtras();
         id_chude = getEmotionInfo.getString("id_chude");
-    }
-
-    class PlayMP3 extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            return strings[0];
-        }
-
-        @Override
-        protected void onPostExecute(String baihat) {
-            super.onPostExecute(baihat);
-            try {
-                mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        mediaPlayer.stop();
-                        mediaPlayer.reset();
-                    }
-                });
-                mediaPlayer.setDataSource(baihat);
-                mediaPlayer.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mediaPlayer.start();
-        }
     }
 }

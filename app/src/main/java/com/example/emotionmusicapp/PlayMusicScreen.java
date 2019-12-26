@@ -11,10 +11,8 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -36,12 +34,10 @@ import com.example.emotionmusicapp.Model.baihat;
 import com.example.emotionmusicapp.Service.APIService;
 import com.example.emotionmusicapp.Service.Dataservice;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.labters.lottiealertdialoglibrary.ClickListener;
 import com.labters.lottiealertdialoglibrary.DialogTypes;
 import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.rahman.dialog.Activity.SmartDialog;
-import com.rahman.dialog.ListenerCallBack.SmartDialogClickListener;
-import com.rahman.dialog.Utilities.SmartDialogBuilder;
 import com.taishi.library.Indicator;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
@@ -74,7 +70,6 @@ public class PlayMusicScreen extends AppCompatActivity {
     LinearLayout songListBottomSheetLay;
     GifView passScreenButton;
     Indicator songListSongIndicator;
-    MediaPlayer mediaPlayer;
     LottieAlertDialog loadingDialog;
 
     boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
@@ -403,42 +398,93 @@ public class PlayMusicScreen extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (loadingDialog.isShowing()) {
+            getDataBaiHat();
+        }
+    }
+
+    @Override
     public void onBackPressed() {
-        new SmartDialogBuilder(this)
-                .setTitle("Alert")
-                .setSubTitle("Are you sure you want to stop the music?")
-                .setSubTitleFont(Typeface.SANS_SERIF)
-                .setNegativeButtonHide(false)
-                .setPositiveButton("Yes, stop it", new SmartDialogClickListener() {
-                    @Override
-                    public void onClick(SmartDialog smartDialog) {
-                        musicWaveVisualization.release();
+        if (loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
 
-                        // add animation when user back to previous screen
-                        Intent startMainActivity = new Intent(PlayMusicScreen.this, ChooseEmotionActivity.class);
-                        startActivity(startMainActivity);
-                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            new LottieAlertDialog.Builder(PlayMusicScreen.this, DialogTypes.TYPE_QUESTION)
+                    .setTitle("Question")
+                    .setDescription("Are you sure you want to stop the music")
+                    .setPositiveText("Yes")
+                    .setNegativeText("No")
+                    .setPositiveButtonColor(Color.parseColor("#f44242"))
+                    .setPositiveTextColor(Color.parseColor("#0a0906"))
+                    .setNegativeButtonColor(Color.parseColor("#ffbb00"))
+                    .setNegativeTextColor(Color.parseColor("#0a0906"))
+                    .setPositiveListener(new ClickListener() {
+                        @Override
+                        public void onClick(LottieAlertDialog lottieAlertDialog) {
+                            musicWaveVisualization.release();
 
-                        if (musicMedia.isPlaying()) {
-                            musicMedia.stop();
+                            // add animation when user back to previous screen
+                            Intent startMainActivity = new Intent(PlayMusicScreen.this, ChooseEmotionActivity.class);
+                            startActivity(startMainActivity);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                            if (musicMedia.isPlaying()) {
+                                musicMedia.stop();
+                            }
+                            musicMedia = null;
+                            musicWaveVisualization.release();
+
+                            lottieAlertDialog.dismiss();
+
+                            finish();
                         }
-                        musicMedia = null;
-                        musicWaveVisualization.release();
+                    })
+                    .setNegativeListener(new ClickListener() {
+                        @Override
+                        public void onClick(LottieAlertDialog lottieAlertDialog) {
+                            lottieAlertDialog.dismiss();
+                        }
+                    }).build().show();
+        } else {
+            new LottieAlertDialog.Builder(PlayMusicScreen.this, DialogTypes.TYPE_QUESTION)
+                    .setTitle("Question")
+                    .setDescription("Are you sure you want to stop the music")
+                    .setPositiveText("Yes")
+                    .setNegativeText("No")
+                    .setPositiveButtonColor(Color.parseColor("#f44242"))
+                    .setPositiveTextColor(Color.parseColor("#0a0906"))
+                    .setNegativeButtonColor(Color.parseColor("#ffbb00"))
+                    .setNegativeTextColor(Color.parseColor("#0a0906"))
+                    .setPositiveListener(new ClickListener() {
+                        @Override
+                        public void onClick(LottieAlertDialog lottieAlertDialog) {
+                            musicWaveVisualization.release();
 
-                        smartDialog.dismiss();
+                            // add animation when user back to previous screen
+                            Intent startMainActivity = new Intent(PlayMusicScreen.this, ChooseEmotionActivity.class);
+                            startActivity(startMainActivity);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
-                        finish();
-                    }
-                })
-                .setNegativeButton("No, continue the music", new SmartDialogClickListener() {
-                    @Override
-                    public void onClick(SmartDialog smartDialog) {
-                        smartDialog.dismiss();
-                        onResume();
+                            if (musicMedia.isPlaying()) {
+                                musicMedia.stop();
+                            }
+                            musicMedia = null;
+                            musicWaveVisualization.release();
 
-                        return;
-                    }
-                }).build().show();
+                            lottieAlertDialog.dismiss();
+
+                            finish();
+                        }
+                    })
+                    .setNegativeListener(new ClickListener() {
+                        @Override
+                        public void onClick(LottieAlertDialog lottieAlertDialog) {
+                            lottieAlertDialog.dismiss();
+                        }
+                    }).build().show();
+        }
     }
 
     // method use to cast all control need to interact in activity

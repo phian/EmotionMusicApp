@@ -26,7 +26,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cleveroad.audiovisualization.AudioVisualization;
 import com.cleveroad.audiovisualization.DbmHandler;
@@ -36,7 +35,6 @@ import com.cunoraz.gifview.library.GifView;
 import com.example.emotionmusicapp.Model.baihat;
 import com.example.emotionmusicapp.Service.APIService;
 import com.example.emotionmusicapp.Service.Dataservice;
-import com.gauravk.audiovisualizer.visualizer.BlastVisualizer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.rahman.dialog.Activity.SmartDialog;
@@ -45,20 +43,15 @@ import com.rahman.dialog.Utilities.SmartDialogBuilder;
 import com.taishi.library.Indicator;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import io.ghyeok.stickyswitch.widget.StickySwitch;
 import retrofit2.Call;
-import retrofit2.CallAdapter;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -68,7 +61,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     SeekBar songLengthSB;
     MediaPlayer musicMedia = null;
     CircularImageView diskImageCIV, songListDiskImageCIV;
-    LinearLayout blastVisualizerLay, musicVisualizationViewLay;
+    LinearLayout musicVisualizationViewLay;
     AudioVisualization musicWaveVisualization;
     ObjectAnimator diskImgAni, passScreenButtonAni, songListDiskImgAni;
     RecyclerView songRV;
@@ -89,12 +82,8 @@ public class PlayMusicScreen extends AppCompatActivity {
 
     Field[] songNameList;
     ArrayList<baihat> songList = new ArrayList<>();
-    ArrayList<Integer> songIdList = new ArrayList<>();
-    int indexCount = -1; // count index to insert song id
-    ArrayList<String> songNameArr = new ArrayList<>();
-    ArrayList<String> singerNameArr = new ArrayList<>();
-    ImageButton[] removeSongButtons = new ImageButton[2];
-    Indicator[] indicators = new Indicator[2];
+    ImageButton[] removeSongButtons = new ImageButton[100];
+    Indicator[] indicators = new Indicator[100];
 
     ArrayList<CustomRecyclerViewItem> customItems = new ArrayList<>();
 
@@ -223,7 +212,8 @@ public class PlayMusicScreen extends AppCompatActivity {
         musicMedia = new MediaPlayer();
 
         try {
-            musicMedia = MediaPlayer.create(PlayMusicScreen.this, R.raw.spectre_alanwalker);
+            musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
             musicMedia.prepare();
             musicMedia.seekTo(progressTime);
 
@@ -268,8 +258,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         onSongListSkipNextButtonClickListener();
         onSkipPreviousButtonClickListener();
         onSongListSkipPreviousButtonClickListener();
-        readRawResourcesFileNameAndId();
-        cutSongNameAndSingerNameFromRawResource();
         updateSongNameAndSingerNameTV(musicIndex);
         onCreateRemoveButtonAndIndicatorsForSongListScreen();
         onCreateSongRecyclerView();
@@ -297,13 +285,13 @@ public class PlayMusicScreen extends AppCompatActivity {
         //----------------------------------------------------------------------------------------//
 
         // animation for disk
-        diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
+//        diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
 //        diskImgAni.setRepeatCount(musicMedia.getDuration());
-        diskImgAni.setInterpolator(new LinearInterpolator());
+//        diskImgAni.setInterpolator(new LinearInterpolator());
 
-        songListDiskImgAni = ObjectAnimator.ofFloat(songListDiskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
+//        songListDiskImgAni = ObjectAnimator.ofFloat(songListDiskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
 //        songListDiskImgAni.setRepeatCount(musicMedia.getDuration());
-        songListDiskImgAni.setInterpolator(new LinearInterpolator());
+//        songListDiskImgAni.setInterpolator(new LinearInterpolator());
 
         // set speech recognizer handler
         SpeechRecognizerDbmHandler speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(PlayMusicScreen.this);
@@ -358,12 +346,15 @@ public class PlayMusicScreen extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    //----------------------------------------------------------------------------//
                     songNameTV.setText(songList.get(0).getTenbaihat());
                     singerNameTV.setText(songList.get(0).getCasi());
 
                     songListSongNameTV.setText(songList.get(0).getTenbaihat());
                     songListSingerNameTV.setText(songList.get(0).getCasi());
+                    //----------------------------------------------------------------------------//
 
+                    //----------------------------------------------------------------------------//
                     // update time text
                     int currentTime = musicMedia.getCurrentPosition();
                     long songDuration = musicMedia.getDuration();
@@ -373,6 +364,18 @@ public class PlayMusicScreen extends AppCompatActivity {
                     long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
 
                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+                    //----------------------------------------------------------------------------//
+
+                    //----------------------------------------------------------------------------//
+                    // animation for disk
+                    diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
+                    diskImgAni.setRepeatCount(musicMedia.getDuration());
+                    diskImgAni.setInterpolator(new LinearInterpolator());
+
+                    songListDiskImgAni = ObjectAnimator.ofFloat(songListDiskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
+                    songListDiskImgAni.setRepeatCount(musicMedia.getDuration());
+                    songListDiskImgAni.setInterpolator(new LinearInterpolator());
+                    //----------------------------------------------------------------------------//
                 }
             }
 
@@ -380,39 +383,6 @@ public class PlayMusicScreen extends AppCompatActivity {
             public void onFailure(Call<List<baihat>> call, Throwable t) {
             }
         });
-    }
-
-    // method to read all raw resources name and id
-    public void readRawResourcesFileNameAndId() {
-        songNameList = R.raw.class.getFields();
-
-        String unusedFile = "av_workaround_1min";
-
-        for (int i = 0; i < songNameList.length; i++) {
-            if (unusedFile.equals(songNameList[i].getName()) == false) {
-                indexCount++;
-                songIdList.add(this.getResources().getIdentifier(songNameList[i].getName(), "raw", this.getPackageName()));
-            }
-        }
-
-        indexCount = -1;
-    }
-
-    // method to cut all song and singer name and add to arr to update textview
-    public void cutSongNameAndSingerNameFromRawResource() {
-        songNameList = R.raw.class.getFields();
-
-        String unusedFile = "av_workaround_1min";
-
-        for (int i = 0; i < songNameList.length; i++) {
-            if (unusedFile.equals(songNameList[i].getName()) == false) {
-                indexCount++;
-                String[] temp = songNameList[i].getName().split("_");
-
-                songNameArr.add(temp[0]);
-                singerNameArr.add(temp[1]);
-            }
-        }
     }
 
     // method to update
@@ -1384,9 +1354,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 Collections.swap(customItems, draggedPosition, targetPosition);
                 songListAdapter.notifyItemMoved(draggedPosition, targetPosition);
 
-                Collections.swap(songNameArr, draggedPosition, targetPosition);
-                Collections.swap(singerNameArr, draggedPosition, targetPosition);
-                Collections.swap(songIdList, draggedPosition, targetPosition);
+                Collections.swap(songList, draggedPosition, targetPosition);
 
                 return false;
             }
@@ -1668,9 +1636,7 @@ public class PlayMusicScreen extends AppCompatActivity {
             public void onDeleteItemButtonClick(int position) {
                 if (musicIndex != position) {
                     removeSongListItem(position);
-                    songIdList.remove(position);
-                    songNameArr.remove(position);
-                    singerNameArr.remove(position);
+                    songList.remove(position);
 
                     if (customItems.size() == 0) {
                         if (diskImgAni.isRunning()) {
@@ -1733,9 +1699,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
 
                     removeSongListItem(position);
-                    songIdList.remove(position);
-                    songNameArr.remove(position);
-                    singerNameArr.remove(position);
+                    songList.remove(position);
 
                     if (customItems.size() == 0) {
                         if (diskImgAni.isRunning()) {
@@ -1811,9 +1775,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                     }
 
                     removeSongListItem(position);
-                    songIdList.remove(position);
-                    songNameArr.remove(position);
-                    singerNameArr.remove(position);
+                    songList.remove(position);
 
                     if (customItems.size() == 0) {
                         if (diskImgAni.isRunning()) {

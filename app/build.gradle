@@ -53,8 +53,6 @@ dependencies {
         exclude group: 'com.android.support'
     }
     implementation 'com.github.sabujak-sabujak:RoundedButton:v0.1.1'
-    implementation 'com.gauravk.audiovisualizer:audiovisualizer:0.9.2'
-    implementation 'com.github.GwonHyeok:StickySwitch:0.0.15'
     implementation 'com.nightonke:boommenu:2.1.1'
     implementation 'com.github.TecOrb-Developers:SmartAlertDialog:v1.0'
     implementation 'com.taishi-y:musicindicator:0.1.0'

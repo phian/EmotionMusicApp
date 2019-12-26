@@ -64,6 +64,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.airbnb.android:lottie:2.7.0'
+    implementation 'com.github.mayuce:LottieAlertDialog:1.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -36,6 +36,8 @@ import com.example.emotionmusicapp.Model.baihat;
 import com.example.emotionmusicapp.Service.APIService;
 import com.example.emotionmusicapp.Service.Dataservice;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.labters.lottiealertdialoglibrary.DialogTypes;
+import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.rahman.dialog.Activity.SmartDialog;
 import com.rahman.dialog.ListenerCallBack.SmartDialogClickListener;
@@ -74,16 +76,16 @@ public class PlayMusicScreen extends AppCompatActivity {
     GifView passScreenButton;
     Indicator songListSongIndicator;
     MediaPlayer mediaPlayer;
+    LottieAlertDialog loadingDialog;
+
     boolean isPlay = false, isOnSongListScreen = false, isShuffled = false;
     int musicIndex = 0, repeatedClickTime = 0;
     String id_chude = "";
-
     Random randMusicIndex = new Random(); // use for shuffle button click
 
     ArrayList<baihat> songList = new ArrayList<>();
     ImageButton[] removeSongButtons = new ImageButton[100];
     Indicator[] indicators = new Indicator[100];
-
     ArrayList<CustomRecyclerViewItem> customItems = new ArrayList<>();
 
     //--------------------------------------------------------------------------------------------//
@@ -130,7 +132,7 @@ public class PlayMusicScreen extends AppCompatActivity {
         try {
             try {
                 musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
                 musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {
@@ -247,6 +249,15 @@ public class PlayMusicScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_play_music_screen);
 
+        // create loading dialog to alert user to wait until the music data is done
+        loadingDialog = new LottieAlertDialog.Builder(PlayMusicScreen.this, DialogTypes.TYPE_LOADING)
+                .setTitle("Loading")
+                .setDescription("Please wait...")
+                .build();
+
+        loadingDialog.setCancelable(false);
+        loadingDialog.show();
+
         DataIntent();
         getDataBaiHat();
         castControl();
@@ -268,29 +279,6 @@ public class PlayMusicScreen extends AppCompatActivity {
         onShuffleListButtonClickListener();
         onSongListShuffleButtonClickListener();
         onSongListItemClickListener();
-
-        // call music file
-//        musicMedia = new MediaPlayer();
-//        musicMedia = MediaPlayer.create(PlayMusicScreen.this, songIdList.get(0));
-
-        // set text for TextView song length
-//        int currentTime = musicMedia.getCurrentPosition();
-//        long songDuration = musicMedia.getDuration();
-//
-//        long leftTime = songDuration - currentTime;
-//        long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-//        long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
-//        songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
-        //----------------------------------------------------------------------------------------//
-
-        // animation for disk
-//        diskImgAni = ObjectAnimator.ofFloat(diskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
-//        diskImgAni.setRepeatCount(musicMedia.getDuration());
-//        diskImgAni.setInterpolator(new LinearInterpolator());
-
-//        songListDiskImgAni = ObjectAnimator.ofFloat(songListDiskImageCIV, View.ROTATION, 0f, 360f).setDuration(2500);
-//        songListDiskImgAni.setRepeatCount(musicMedia.getDuration());
-//        songListDiskImgAni.setInterpolator(new LinearInterpolator());
 
         // set speech recognizer handler
         SpeechRecognizerDbmHandler speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(PlayMusicScreen.this);
@@ -375,6 +363,8 @@ public class PlayMusicScreen extends AppCompatActivity {
                     songListDiskImgAni.setRepeatCount(musicMedia.getDuration());
                     songListDiskImgAni.setInterpolator(new LinearInterpolator());
                     //----------------------------------------------------------------------------//
+
+                    loadingDialog.dismiss(); // close the loading dialog
                 }
             }
 

@@ -15,4 +15,12 @@
     <string name="sad_icon_text">Sad</string>
     <string name="song_length_text">-00:00</string>
     <string name="remove_song_from_list">Remove from list</string>
+    <string name="how_to_use_first_img_text">Just open your connection</string>
+    <string name="permission_title">How to use app</string>
+    <string name="permission_detail">Just connect your phone with the internet</string>
+    <string name="permission_detail1">If you want to know more about us just click about us button,
+        if you want to know how to use the app just click how to use button, and if you want to join our emotion music
+        just click the enjoy button</string>
+    <string name="permission_detail2">Just tell us how do you feel that day</string>
+    <string name="permission_detail3">And just enjoy and relaxing with our emotion music after a hard worked day</string>
 </resources>

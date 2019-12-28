@@ -17,4 +17,5 @@
     <color name="lightModeThemeColor">#8BC34A</color>
     <color name="nightModeThemeColor">#FF66FF</color>
     <color name="boomMenuColor">#673AB7</color>
+    <color name="howToUseScreenBackground">#171743</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.emotionmusicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
     boolean isAboutUsIconClick = false, isHowToUseIconClick = false, isMainScreenPrevious = false;
+    String messageCatcher = null;
 
     @SuppressLint({"ClickableViewAccessibility", "WrongConstant"})
     @Override
@@ -94,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
                 .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                 .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                 .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
+
+        if (onDataIntentCatcher()) {
+            onStartAnimationWhenBackFromHowToUseAc();
+        }
     }
 
     // check if application is running then update the greeting text
@@ -411,6 +417,10 @@ public class MainActivity extends AppCompatActivity {
 
                 isAboutUsIconClick = true;
                 isMainScreenPrevious = false;
+
+                Intent startHowToUseActivity = new Intent(MainActivity.this, HowToUseSlideActivity.class);
+                startActivity(startHowToUseActivity);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }
@@ -467,5 +477,39 @@ public class MainActivity extends AppCompatActivity {
                         .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
             }
         });
+    }
+
+    // method to catch if user back from how to use activity
+    public boolean onDataIntentCatcher() {
+        Bundle getHowToUseMessageInfo = getIntent().getExtras();
+        messageCatcher = getHowToUseMessageInfo.getString("stopActivity");
+
+        return messageCatcher != null;
+    }
+
+    // method to start animation when user back from how to use activity
+    public void onStartAnimationWhenBackFromHowToUseAc() {
+        isMainScreenPrevious = true;
+        isAboutUsIconClick = false;
+        isHowToUseIconClick = false;
+
+        mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
+        //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
+        cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);
+        appMainGreeting.animate().translationY(140).alpha(0).setDuration(500).setStartDelay(300);
+
+        appNameAndIcon.setVisibility(View.VISIBLE);
+        iconMenu.setVisibility(View.VISIBLE);
+        startAppButLay.setVisibility(View.VISIBLE);
+
+        setControlAnimation();
+
+        mainScreen.setOnClickListener(null); // disable touch event after finish the animation
+
+        isMainScreenPrevious = true;
+
+        onAboutUsIconTouchListener();
+        onHowToUseIconTouchListener();
+        onStartButtonClickListener();
     }
 }

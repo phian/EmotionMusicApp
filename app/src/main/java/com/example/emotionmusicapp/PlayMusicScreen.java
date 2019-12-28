@@ -217,7 +217,11 @@ public class PlayMusicScreen extends AppCompatActivity {
             musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    stopSong();
+                    if (repeatedClickTime == 0 || repeatedClickTime == 3) {
+                        if (musicIndex == songList.size() - 1) {
+                            stopSong();
+                        }
+                    }
                 }
             });
         } catch (IOException e) {
@@ -641,7 +645,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                } else if (musicIndex < songList.size() - 1) { // check if current index is not the last song of the list
+                                } else { // check if current index is not the last song of the list
                                     musicIndex++;
 
                                     // check if music media is null or not to create and call music file

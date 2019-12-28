@@ -1,7 +1,6 @@
 package com.example.emotionmusicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,11 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.labters.lottiealertdialoglibrary.ClickListener;
 import com.labters.lottiealertdialoglibrary.DialogTypes;
 import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.util.Calendar;
@@ -37,22 +36,44 @@ public class MainActivity extends AppCompatActivity {
 
     // appNameAndInstructionIcon, instructionIconLayout, startAppButtonLay
 
-    ImageView mainScreenBackground, cloverImg;
+    ImageView mainScreenBackground, cloverImg, howToUseSlideIV;
 
-    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, aboutUsContentLay, aboutUsInfoLay;
-    AbsoluteLayout mainScreen;
+    LinearLayout appMainGreeting, appNameAndIcon, iconMenu, startAppButLay, instructionIconLayout, aboutUsContentLay, aboutUsInfoLay, howToUseContentLay;
+    AbsoluteLayout mainScreen, slideMainScreenLay;
     RelativeLayout aboutUsHeaderTextLay;
 
     //    Button startButton;
     ImageButton dropDownScreenButton, aboutUsIcon, howToUseIcon;
-    RoundedButton startButton;
+    RoundedButton startButton, getStartedButton;
 
-    TextView mainGreetingTV, aboutUsTV, howToUseTV, appName;
+    TextView mainGreetingTV, aboutUsTV, howToUseTV, appName, howToUseSlideTV;
+
+    CircularImageView howToUseFirstDetail, howToUseSecondDetail, howToUseThirdDetail, howToUseFourthDetail, howToUseFifthDetail;
 
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
     boolean isAboutUsIconClick = false, isHowToUseIconClick = false, isMainScreenPrevious = false;
-    String messageCatcher = null;
+    private int currentPagePosition = 0;
+    ImageView leftButton;
+    ImageView rightButton;
+
+    int[] slideImgId = {
+            R.drawable.internet_connect_img,
+            R.drawable.main_screen_img,
+            R.drawable.choose_emotion_img,
+            R.drawable.music_wave_img,
+            R.drawable.song_list_img
+    };
+
+    String[] slideTextId = {
+            "Just connect your device with the internet",
+            "If you want to know more about us just click about us button, " +
+                    "if you want to know how to use the app just click how to use button, and if you want to join our emotion music " +
+                    "just click the enjoy button",
+            "Just tell us how do you feel that day",
+            "And just enjoy and relaxing with our emotion music after a hard worked day",
+            "And just enjoy and relaxing with our emotion music after a hard worked day"
+    };
 
     @SuppressLint({"ClickableViewAccessibility", "WrongConstant"})
     @Override
@@ -66,10 +87,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // check if user was connected to the internet to start app or not
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
-            LottieAlertDialog errorDialog =  new LottieAlertDialog.Builder(MainActivity.this, DialogTypes.TYPE_ERROR)
+            LottieAlertDialog errorDialog = new LottieAlertDialog.Builder(MainActivity.this, DialogTypes.TYPE_ERROR)
                     .setTitle("Error!")
                     .setDescription("Please check your internet connection before starting app")
                     .setNegativeText("OK")
@@ -90,16 +111,28 @@ public class MainActivity extends AppCompatActivity {
 
         castControl();
 
+        howToUseFirstDetail.setBackgroundColor(Color.DKGRAY);
+        howToUseSecondDetail.setBackgroundColor(Color.WHITE);
+        howToUseThirdDetail.setBackgroundColor(Color.WHITE);
+        howToUseFourthDetail.setBackgroundColor(Color.WHITE);
+        howToUseFifthDetail.setBackgroundColor(Color.WHITE);
+        leftButton.setVisibility(View.GONE);
+        getStartedButton.setVisibility(View.GONE);
+
+        onLeftSlideButtonClick();
+        onRightSlideButtonClick();
+        onGetStartedButtonClickListener();
+
         // Add click ani for button
-        PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+        PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon, leftButton, rightButton)
                 .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
                 .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                 .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                 .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
 
-        if (onDataIntentCatcher()) {
-            onStartAnimationWhenBackFromHowToUseAc();
-        }
+//        if (onDataIntentCatcher()) {
+//            onStartAnimationWhenBackFromHowToUseAc();
+//        }
     }
 
     // check if application is running then update the greeting text
@@ -233,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     public void castControl() {
         mainScreenBackground = (ImageView) findViewById(R.id.mainBackGround);
         cloverImg = (ImageView) findViewById(R.id.clover);
-
+        howToUseSlideIV = (ImageView) findViewById(R.id.howToUseSlideIV);
 
         appMainGreeting = (LinearLayout) findViewById(R.id.splashScreen);
         appNameAndIcon = (LinearLayout) findViewById(R.id.appNameAndInstructionIcon);
@@ -242,15 +275,18 @@ public class MainActivity extends AppCompatActivity {
         instructionIconLayout = (LinearLayout) findViewById(R.id.instructionIconLayout);
         aboutUsContentLay = (LinearLayout) findViewById(R.id.aboutUsContentLay);
         aboutUsInfoLay = (LinearLayout) findViewById(R.id.aboutUsInfoLay);
+        howToUseContentLay = (LinearLayout) findViewById(R.id.howToUseContentLay);
 
         appNameAndIcon.setVisibility(View.INVISIBLE);
         iconMenu.setVisibility(View.INVISIBLE);
         startAppButLay.setVisibility(View.INVISIBLE);
         mainScreen = (AbsoluteLayout) findViewById(R.id.mainScreen);
+        slideMainScreenLay = (AbsoluteLayout) findViewById(R.id.slideMainScreenLay);
 
         aboutUsHeaderTextLay = (RelativeLayout) findViewById(R.id.aboutUsHeaderTextLay);
 
         startButton = (RoundedButton) findViewById(R.id.startAppButton);
+        getStartedButton = (RoundedButton) findViewById(R.id.getStartedButton);
         dropDownScreenButton = (ImageButton) findViewById(R.id.dropDownScreenButton);
         aboutUsIcon = (ImageButton) findViewById(R.id.aboutUsIcon);
         howToUseIcon = (ImageButton) findViewById(R.id.howToUseAppIcon);
@@ -259,6 +295,10 @@ public class MainActivity extends AppCompatActivity {
         aboutUsTV = (TextView) findViewById(R.id.aboutUsTV);
         howToUseTV = (TextView) findViewById(R.id.howToUseTV);
         appName = (TextView) findViewById(R.id.appNameText);
+        howToUseSlideTV = (TextView) findViewById(R.id.howToUseSlideTV);
+
+        leftButton = (ImageView) findViewById(R.id.slideScreenLeftArrow);
+        rightButton = (ImageView) findViewById(R.id.slideScreenRightArrow);
 
         setMainGreetingText();
     }
@@ -418,9 +458,8 @@ public class MainActivity extends AppCompatActivity {
                 isAboutUsIconClick = true;
                 isMainScreenPrevious = false;
 
-                Intent startHowToUseActivity = new Intent(MainActivity.this, HowToUseSlideActivity.class);
-                startActivity(startHowToUseActivity);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                slideMainScreenLay.animate().translationX(480).setDuration(300).setStartDelay(200);
+                howToUseContentLay.animate().translationX(0).setDuration(300).setStartDelay(0);
             }
         });
     }
@@ -479,37 +518,153 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // event for go left button click
+    public void onLeftSlideButtonClick() {
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View view) {
+                if (currentPagePosition > 0) {
+                    currentPagePosition--;
+
+                    howToUseSlideIV.setImageResource(slideImgId[currentPagePosition]);
+                    howToUseSlideTV.setText(slideTextId[currentPagePosition]);
+
+                    switch (currentPagePosition) {
+                        case 3:
+                            howToUseFourthDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
+                            howToUseFifthDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
+                            leftButton.setVisibility(View.VISIBLE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.GONE);
+                            break;
+                        case 2:
+                            howToUseThirdDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
+                            howToUseFourthDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
+                            leftButton.setVisibility(View.VISIBLE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.GONE);
+                            break;
+                        case 1:
+                            howToUseSecondDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
+                            howToUseThirdDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
+                            leftButton.setVisibility(View.VISIBLE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.GONE);
+                            break;
+                        case 0:
+                            howToUseFirstDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
+                            howToUseSecondDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
+                            leftButton.setVisibility(View.GONE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.GONE);
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    // event for go right button click
+    public void onRightSlideButtonClick() {
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View view) {
+                if (currentPagePosition < 4) {
+                    currentPagePosition++;
+
+                    howToUseSlideIV.setImageResource(slideImgId[currentPagePosition]);
+                    howToUseSlideTV.setText(slideTextId[currentPagePosition]);
+
+                    switch (currentPagePosition) {
+                        case 1:
+                            howToUseSecondDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
+                            howToUseFirstDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
+                            rightButton.setVisibility(View.VISIBLE);
+                            leftButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.GONE);
+                            break;
+                        case 2:
+                            howToUseThirdDetail.setBackgroundColor(Color.DKGRAY);
+                            howToUseSecondDetail.setBackgroundColor(Color.WHITE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            leftButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.GONE);
+                            break;
+                        case 3:
+                            howToUseFourthDetail.setBackgroundColor(Color.DKGRAY);
+                            howToUseThirdDetail.setBackgroundColor(Color.WHITE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            leftButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.GONE);
+                            break;
+                        case 4:
+                            howToUseFifthDetail.setBackgroundColor(Color.DKGRAY);
+                            howToUseFourthDetail.setBackgroundColor(Color.WHITE);
+                            rightButton.setVisibility(View.GONE);
+                            leftButton.setVisibility(View.VISIBLE);
+                            getStartedButton.setVisibility(View.VISIBLE);
+                            break;
+                    }
+
+                }
+            }
+        });
+    }
+
+    public void onGetStartedButtonClickListener() {
+        getStartedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slideMainScreenLay.animate().translationX(0).setDuration(300).setStartDelay(200);
+                howToUseContentLay.animate().translationX(480).setDuration(300).setStartDelay(0);
+
+                appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_in_layout_ani);
+                instructionIconLayout.startAnimation(appNameAndIconAni);
+
+                appName.animate().alpha(1).setDuration(100).setStartDelay(0);
+                startButton.animate().translationY(0).alpha(1).setDuration(200).setStartDelay(0);
+                mainScreenBackground.animate().translationY(mainScreenBackground.getY() + 150).alpha(1).setDuration(200).setStartDelay(0);
+
+                onStartButtonClickListener();
+                onHowToUseIconTouchListener();
+                onAboutUsIconTouchListener();
+            }
+        });
+    }
+
     // method to catch if user back from how to use activity
-    public boolean onDataIntentCatcher() {
-        Bundle getHowToUseMessageInfo = getIntent().getExtras();
-        messageCatcher = getHowToUseMessageInfo.getString("stopActivity");
-
-        return messageCatcher != null;
-    }
-
-    // method to start animation when user back from how to use activity
-    public void onStartAnimationWhenBackFromHowToUseAc() {
-        isMainScreenPrevious = true;
-        isAboutUsIconClick = false;
-        isHowToUseIconClick = false;
-
-        mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
-        //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
-        cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);
-        appMainGreeting.animate().translationY(140).alpha(0).setDuration(500).setStartDelay(300);
-
-        appNameAndIcon.setVisibility(View.VISIBLE);
-        iconMenu.setVisibility(View.VISIBLE);
-        startAppButLay.setVisibility(View.VISIBLE);
-
-        setControlAnimation();
-
-        mainScreen.setOnClickListener(null); // disable touch event after finish the animation
-
-        isMainScreenPrevious = true;
-
-        onAboutUsIconTouchListener();
-        onHowToUseIconTouchListener();
-        onStartButtonClickListener();
-    }
+//    public boolean onDataIntentCatcher() {
+//        Bundle getHowToUseMessageInfo = getIntent().getExtras();
+//        messageCatcher = getHowToUseMessageInfo.getString("stopActivity");
+//
+//        return messageCatcher != null;
+//    }
+//
+//    // method to start animation when user back from how to use activity
+//    public void onStartAnimationWhenBackFromHowToUseAc() {
+//        isMainScreenPrevious = true;
+//        isAboutUsIconClick = false;
+//        isHowToUseIconClick = false;
+//
+//        mainScreenBackground.animate().translationY(-670).setDuration(500).setStartDelay(300);
+//        //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
+//        cloverImg.animate().translationX(-1000).setDuration(500).setStartDelay(600);
+//        appMainGreeting.animate().translationY(140).alpha(0).setDuration(500).setStartDelay(300);
+//
+//        appNameAndIcon.setVisibility(View.VISIBLE);
+//        iconMenu.setVisibility(View.VISIBLE);
+//        startAppButLay.setVisibility(View.VISIBLE);
+//
+//        setControlAnimation();
+//
+//        mainScreen.setOnClickListener(null); // disable touch event after finish the animation
+//
+//        isMainScreenPrevious = true;
+//
+//        onAboutUsIconTouchListener();
+//        onHowToUseIconTouchListener();
+//        onStartButtonClickListener();
+//    }
 }

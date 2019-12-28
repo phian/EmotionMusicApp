@@ -26,8 +26,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
-        <activity android:name=".HowToUseSlideActivity"></activity>
-        <activity android:name=".SongListBottomSheet"></activity> <!-- android:hardwareAccelerated="false" -->
+        <activity android:name=".SongListBottomSheet" /> <!-- android:hardwareAccelerated="false" -->
         <activity android:name=".PlayMusicScreen" />
         <activity android:name=".ShowingAboutUsActivity" />
         <activity android:name=".MainActivity">

@@ -35,40 +35,14 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_marginTop="245dp"
-            android:id="@+id/howToUseFirstDetail"
-            android:layout_width="10dp"
-            android:layout_height="10dp" />
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_marginTop="245dp"
-            android:id="@+id/howToUseSecondDetail"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginStart="5dp"/>
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_marginTop="245dp"
-            android:id="@+id/howToUseThirdDetail"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginStart="5dp"/>
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_marginTop="245dp"
-            android:id="@+id/howToUseFourthDetail"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginStart="5dp"/>
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_marginTop="245dp"
-            android:id="@+id/howToUseFifthDetail"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginStart="5dp"/>
-
+        <TextView
+            android:id="@+id/pageNumberTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="245dp"/>
 
     </LinearLayout>
 

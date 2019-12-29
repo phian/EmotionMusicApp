@@ -701,8 +701,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
                                     update();
-
-                                    return;
                                 }
                             } else if (repeatedClickTime == 1) { // if user repeat only the current song
                                 musicMedia.start();
@@ -768,8 +766,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
                                     update();
-
-                                    return;
                                 } else if (musicIndex < songList.size() - 1) {
                                     musicIndex++;
 
@@ -826,8 +822,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
                                     update();
-
-                                    return;
                                 }
                             }
                         }

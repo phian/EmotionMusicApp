@@ -46,9 +46,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton dropDownScreenButton, aboutUsIcon, howToUseIcon;
     RoundedButton startButton, getStartedButton;
 
-    TextView mainGreetingTV, aboutUsTV, howToUseTV, appName, howToUseSlideTV;
-
-    CircularImageView howToUseFirstDetail, howToUseSecondDetail, howToUseThirdDetail, howToUseFourthDetail, howToUseFifthDetail;
+    TextView mainGreetingTV, aboutUsTV, howToUseTV, appName, howToUseSlideTV, pageNumberTV;
 
     Animation appNameAndIconAni, startButtonAni, aboutUsHeaderTextAni;
 
@@ -111,11 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
         castControl();
 
-        howToUseFirstDetail.setBackgroundColor(Color.DKGRAY);
-        howToUseSecondDetail.setBackgroundColor(Color.WHITE);
-        howToUseThirdDetail.setBackgroundColor(Color.WHITE);
-        howToUseFourthDetail.setBackgroundColor(Color.WHITE);
-        howToUseFifthDetail.setBackgroundColor(Color.WHITE);
         leftButton.setVisibility(View.GONE);
         getStartedButton.setVisibility(View.GONE);
 
@@ -124,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         onGetStartedButtonClickListener();
 
         // Add click ani for button
-        PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon, leftButton, rightButton)
+        PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon, leftButton, rightButton, getStartedButton)
                 .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
                 .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                 .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
@@ -216,7 +209,20 @@ public class MainActivity extends AppCompatActivity {
                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
-        } else if (isHowToUseIconClick == true && isMainScreenPrevious == false) {
+        } else if (isHowToUseIconClick && isMainScreenPrevious == false) {
+            // slide back to main screen
+            slideMainScreenLay.animate().translationX(0).setDuration(300).setStartDelay(0);
+            howToUseContentLay.animate().translationX(480).setDuration(300).setStartDelay(0);
+
+            // reset how to use screen control
+            leftButton.setVisibility(View.GONE);
+            rightButton.setVisibility(View.VISIBLE);
+            howToUseSlideIV.setImageResource(slideImgId[0]);
+            getStartedButton.setVisibility(View.GONE);
+            pageNumberTV.setText("1");
+            currentPagePosition = 0;
+
+            // run animation to reset main screen control back to old place
             aboutUsContentLay.animate().translationY(800).setDuration(300).setStartDelay(0);
 
             appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_in_layout_ani);
@@ -232,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
             isHowToUseIconClick = false;
             isMainScreenPrevious = true;
-        } else if (isMainScreenPrevious == true && isAboutUsIconClick == false && isHowToUseIconClick == false) {
+        } else if (isMainScreenPrevious && isAboutUsIconClick == false && isHowToUseIconClick == false) {
             mainScreenBackground.animate().translationY(0).setDuration(500).setStartDelay(300);
             //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
             cloverImg.animate().translationX(0).setDuration(500).setStartDelay(600);
@@ -257,8 +263,9 @@ public class MainActivity extends AppCompatActivity {
                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
-        } else if (isAboutUsIconClick == false && isHowToUseIconClick == false && isMainScreenPrevious == false) {
+        } else if (isAboutUsIconClick == false && isHowToUseIconClick == false && false == false) {
             finish();
+            onDestroy();
         }
     }
 
@@ -296,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
         howToUseTV = (TextView) findViewById(R.id.howToUseTV);
         appName = (TextView) findViewById(R.id.appNameText);
         howToUseSlideTV = (TextView) findViewById(R.id.howToUseSlideTV);
+        pageNumberTV = (TextView) findViewById(R.id.pageNumberTV);
 
         leftButton = (ImageView) findViewById(R.id.slideScreenLeftArrow);
         rightButton = (ImageView) findViewById(R.id.slideScreenRightArrow);
@@ -455,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
                 startButton.setOnClickListener(null);
                 aboutUsIcon.setOnTouchListener(null);
 
-                isAboutUsIconClick = true;
+                isHowToUseIconClick = true;
                 isMainScreenPrevious = false;
 
                 slideMainScreenLay.animate().translationX(480).setDuration(300).setStartDelay(200);
@@ -532,32 +540,18 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (currentPagePosition) {
                         case 3:
-                            howToUseFourthDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
-                            howToUseFifthDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
-                            leftButton.setVisibility(View.VISIBLE);
-                            rightButton.setVisibility(View.VISIBLE);
-                            getStartedButton.setVisibility(View.GONE);
-                            break;
                         case 2:
-                            howToUseThirdDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
-                            howToUseFourthDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
-                            leftButton.setVisibility(View.VISIBLE);
-                            rightButton.setVisibility(View.VISIBLE);
-                            getStartedButton.setVisibility(View.GONE);
-                            break;
                         case 1:
-                            howToUseSecondDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
-                            howToUseThirdDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
                             leftButton.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
                             getStartedButton.setVisibility(View.GONE);
+                            pageNumberTV.setText(String.valueOf(currentPagePosition + 1));
                             break;
                         case 0:
-                            howToUseFirstDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
-                            howToUseSecondDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
                             leftButton.setVisibility(View.GONE);
                             rightButton.setVisibility(View.VISIBLE);
                             getStartedButton.setVisibility(View.GONE);
+                            pageNumberTV.setText(String.valueOf(currentPagePosition + 1));
                             break;
                     }
                 }
@@ -579,32 +573,18 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (currentPagePosition) {
                         case 1:
-                            howToUseSecondDetail.setBackgroundColor(R.color.enjoyButtonTextSecondColor);
-                            howToUseFirstDetail.setBackgroundColor(R.color.enjoyButtonSecondColor);
-                            rightButton.setVisibility(View.VISIBLE);
-                            leftButton.setVisibility(View.VISIBLE);
-                            getStartedButton.setVisibility(View.GONE);
-                            break;
                         case 2:
-                            howToUseThirdDetail.setBackgroundColor(Color.DKGRAY);
-                            howToUseSecondDetail.setBackgroundColor(Color.WHITE);
-                            rightButton.setVisibility(View.VISIBLE);
-                            leftButton.setVisibility(View.VISIBLE);
-                            getStartedButton.setVisibility(View.GONE);
-                            break;
                         case 3:
-                            howToUseFourthDetail.setBackgroundColor(Color.DKGRAY);
-                            howToUseThirdDetail.setBackgroundColor(Color.WHITE);
                             rightButton.setVisibility(View.VISIBLE);
                             leftButton.setVisibility(View.VISIBLE);
                             getStartedButton.setVisibility(View.GONE);
+                            pageNumberTV.setText(String.valueOf(currentPagePosition + 1));
                             break;
                         case 4:
-                            howToUseFifthDetail.setBackgroundColor(Color.DKGRAY);
-                            howToUseFourthDetail.setBackgroundColor(Color.WHITE);
                             rightButton.setVisibility(View.GONE);
                             leftButton.setVisibility(View.VISIBLE);
                             getStartedButton.setVisibility(View.VISIBLE);
+                            pageNumberTV.setText(String.valueOf(currentPagePosition + 1));
                             break;
                     }
 
@@ -617,15 +597,28 @@ public class MainActivity extends AppCompatActivity {
         getStartedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // slide back to main screen
                 slideMainScreenLay.animate().translationX(0).setDuration(300).setStartDelay(200);
                 howToUseContentLay.animate().translationX(480).setDuration(300).setStartDelay(0);
 
+                // reset how to use screen control
+                leftButton.setVisibility(View.GONE);
+                rightButton.setVisibility(View.VISIBLE);
+                howToUseSlideIV.setImageResource(slideImgId[0]);
+                getStartedButton.setVisibility(View.GONE);
+                pageNumberTV.setText("1");
+                currentPagePosition = 0;
+
+                // run animation to show control in main screen again
                 appNameAndIconAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.icon_zoom_in_layout_ani);
                 instructionIconLayout.startAnimation(appNameAndIconAni);
 
                 appName.animate().alpha(1).setDuration(100).setStartDelay(0);
                 startButton.animate().translationY(0).alpha(1).setDuration(200).setStartDelay(0);
                 mainScreenBackground.animate().translationY(mainScreenBackground.getY() + 150).alpha(1).setDuration(200).setStartDelay(0);
+
+                isHowToUseIconClick = false;
+                isMainScreenPrevious = true;
 
                 onStartButtonClickListener();
                 onHowToUseIconTouchListener();

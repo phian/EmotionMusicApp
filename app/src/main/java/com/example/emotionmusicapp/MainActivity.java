@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBackPressed() {
-        if (isAboutUsIconClick == true && isMainScreenPrevious == false) {
+        if (isAboutUsIconClick && !isMainScreenPrevious) {
             aboutUsHeaderTextAni = AnimationUtils.loadAnimation(MainActivity.this, R.anim.stretch_up_control_ani);
             aboutUsHeaderTextLay.startAnimation(aboutUsHeaderTextAni);
 
@@ -203,12 +203,12 @@ public class MainActivity extends AppCompatActivity {
             });
 
             // reset add click ani for button
-            PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
+            PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon, leftButton, rightButton, getStartedButton)
                     .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
-        } else if (isHowToUseIconClick && isMainScreenPrevious == false) {
+        } else if (isHowToUseIconClick && !isMainScreenPrevious) {
             // slide back to main screen
             slideMainScreenLay.animate().translationX(0).setDuration(300).setStartDelay(0);
             howToUseContentLay.animate().translationX(480).setDuration(300).setStartDelay(0);
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
             isHowToUseIconClick = false;
             isMainScreenPrevious = true;
-        } else if (isMainScreenPrevious && isAboutUsIconClick == false && isHowToUseIconClick == false) {
+        } else if (isMainScreenPrevious && !isAboutUsIconClick && !isHowToUseIconClick) {
             mainScreenBackground.animate().translationY(0).setDuration(500).setStartDelay(300);
             //cloverImg.animate().alpha(0).setDuration(800).setStartDelay(600);
             cloverImg.animate().translationX(0).setDuration(500).setStartDelay(600);
@@ -256,15 +256,18 @@ public class MainActivity extends AppCompatActivity {
 
             onMainScreenTouchListener();
 
+            aboutUsIcon.setVisibility(View.GONE);
+            howToUseIcon.setVisibility(View.GONE);
+            startButton.setVisibility(View.GONE);
+
             // reset add click ani for button
             PushDownAnim.setPushDownAnimTo(startButton, dropDownScreenButton, aboutUsIcon, howToUseIcon)
                     .setDurationPush(PushDownAnim.DEFAULT_PUSH_DURATION)
                     .setDurationRelease(PushDownAnim.DEFAULT_RELEASE_DURATION)
                     .setInterpolatorPush(PushDownAnim.DEFAULT_INTERPOLATOR)
                     .setInterpolatorRelease(PushDownAnim.DEFAULT_INTERPOLATOR);
-        } else if (isAboutUsIconClick == false && isHowToUseIconClick == false && false == false) {
+        } else if (!isAboutUsIconClick && !isHowToUseIconClick && !isMainScreenPrevious) {
             finish();
-            onDestroy();
         }
     }
 
@@ -354,6 +357,10 @@ public class MainActivity extends AppCompatActivity {
                 appNameAndIcon.setVisibility(View.VISIBLE);
                 iconMenu.setVisibility(View.VISIBLE);
                 startAppButLay.setVisibility(View.VISIBLE);
+
+                aboutUsIcon.setVisibility(View.VISIBLE);
+                howToUseIcon.setVisibility(View.VISIBLE);
+                startButton.setVisibility(View.VISIBLE);
 
                 setControlAnimation();
 

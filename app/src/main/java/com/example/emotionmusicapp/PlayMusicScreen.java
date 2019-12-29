@@ -859,8 +859,6 @@ public class PlayMusicScreen extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     //------------------------------------- Skip next button -------------------------------------//

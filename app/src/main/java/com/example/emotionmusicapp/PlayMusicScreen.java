@@ -142,7 +142,11 @@ public class PlayMusicScreen extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             } else { // check if current index is not the last song of the list
-                                musicIndex++;
+                                if (!isShuffled) {
+                                    musicIndex++;
+                                } else {
+                                    musicIndex = randMusicIndex.nextInt((songList.size() - 1) - 0) + 0;
+                                }
 
                                 // check if music media is null or not to create and call music file
                                 if (musicMedia == null) {
@@ -263,7 +267,11 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                 update();
                             } else if (musicIndex < songList.size() - 1) {
-                                musicIndex++;
+                                if (!isShuffled) {
+                                    musicIndex++;
+                                } else {
+                                    musicIndex = randMusicIndex.nextInt((songList.size() - 1) - 0) + 0;
+                                }
 
                                 // check if music media is null or not to create and call music file
                                 if (musicMedia == null) {
@@ -865,7 +873,11 @@ public class PlayMusicScreen extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                 } else { // check if current index is not the last song of the list
-                                    musicIndex++;
+                                    if (!isShuffled) {
+                                        musicIndex++;
+                                    } else {
+                                        musicIndex = randMusicIndex.nextInt((songList.size() - 1) - 0) + 0;
+                                    }
 
                                     // check if music media is null or not to create and call music file
                                     if (musicMedia == null) {
@@ -986,7 +998,11 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                                     update();
                                 } else if (musicIndex < songList.size() - 1) {
-                                    musicIndex++;
+                                    if (!isShuffled) {
+                                        musicIndex++;
+                                    } else {
+                                        musicIndex = randMusicIndex.nextInt((songList.size() - 1) - 0) + 0;
+                                    }
 
                                     // check if music media is null or not to create and call music file
                                     if (musicMedia == null) {
@@ -1209,7 +1225,7 @@ public class PlayMusicScreen extends AppCompatActivity {
                 onSongListItemDragListener();
 
                 if (songList.size() == 0) {
-                    skipPreviousButton.setOnClickListener(null);
+                    skipNextButton.setOnClickListener(null);
                 } else if (songList.size() == 1) {
                     // check if music media is null or not to create and call music file
                     if (musicMedia == null) {
@@ -1235,11 +1251,35 @@ public class PlayMusicScreen extends AppCompatActivity {
                     songLengthSB.setProgress(0);
 
                     updateSongNameAndSingerNameTV(musicIndex);
+
+                    if (isPlay == true) {
+                        musicMedia.start();
+
+                        if (diskImgAni.isRunning() == false) {
+                            diskImgAni.start();
+                            songListDiskImgAni.start();
+                            songListSongIndicator.setAlpha(1);
+                        }
+                        if (musicMedia.isPlaying() == false) {
+                            musicWaveVisualization.onResume();
+                        }
+                        playButton.setImageResource(R.drawable.pause_music_button);
+                    }
+
+                    // update time text
+                    int currentTime = musicMedia.getCurrentPosition();
+                    long songDuration = musicMedia.getDuration();
+
+                    long leftTime = songDuration - currentTime;
+                    long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                    long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                    songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 } else {
-                    if (musicIndex > 0) {
-                        musicIndex--;
+                    if (musicIndex < songList.size() - 1) {
+                        musicIndex++;
                     } else {
-                        musicIndex = songList.size() - 1;
+                        musicIndex = 0;
                     }
 
                     // check if music media is null or not to create and call music file
@@ -1291,30 +1331,6 @@ public class PlayMusicScreen extends AppCompatActivity {
 
                     songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
                 }
-
-                if (isPlay == true) {
-                    musicMedia.start();
-
-                    if (diskImgAni.isRunning() == false) {
-                        diskImgAni.start();
-                        songListDiskImgAni.start();
-                        songListSongIndicator.setAlpha(1);
-                    }
-                    if (musicMedia.isPlaying() == false) {
-                        musicWaveVisualization.onResume();
-                    }
-                    playButton.setImageResource(R.drawable.pause_music_button);
-                }
-
-                // update time text
-                int currentTime = musicMedia.getCurrentPosition();
-                long songDuration = musicMedia.getDuration();
-
-                long leftTime = songDuration - currentTime;
-                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
-
-                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
             }
         });
     }

@@ -103,6 +103,225 @@ public class PlayMusicScreen extends AppCompatActivity {
                 songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
 
                 update(); // method use to update time for SeekBar and song length TV
+
+                // check if media finished remove all animation, or skip to the next song according to the repeat type
+                musicMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        if (repeatedClickTime == 0 || repeatedClickTime == 3) { // if user don't repeat the list
+                            if (musicIndex == songList.size() - 1) { // check if current index is the last song of the list
+                                if (diskImgAni.isRunning()) {
+                                    diskImgAni.end();
+                                    songListDiskImgAni.end();
+                                }
+                                if (musicMedia.isPlaying()) {
+                                    musicWaveVisualization.release();
+                                }
+                                songListSongIndicator.setAlpha(0);
+                                playButton.setImageResource(R.drawable.play_music_button);
+                                songListPlayMusicButton.setImageResource(R.drawable.play_music_button);
+                                isPlay = false;
+
+                                // check if music media is null or not to create and call music file
+                                if (musicMedia == null) {
+                                    musicMedia = new MediaPlayer();
+                                } else {
+                                    musicMedia.release();
+                                    musicMedia = new MediaPlayer();
+                                }
+                                try {
+                                    musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                    musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                                    musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                        @Override
+                                        public void onPrepared(MediaPlayer mediaPlayer) {
+                                        }
+                                    });
+                                    musicMedia.prepare();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else { // check if current index is not the last song of the list
+                                musicIndex++;
+
+                                // check if music media is null or not to create and call music file
+                                if (musicMedia == null) {
+                                    musicMedia = new MediaPlayer();
+                                } else {
+                                    musicMedia.release();
+                                    musicMedia = new MediaPlayer();
+                                }
+
+                                try {
+                                    musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                    musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                                    musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                        @Override
+                                        public void onPrepared(MediaPlayer mediaPlayer) {
+                                        }
+                                    });
+                                    musicMedia.prepare();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                songLengthSB.setProgress(0);
+
+                                updateSongNameAndSingerNameTV(musicIndex);
+
+                                if (isPlay == true) {
+                                    musicMedia.start();
+
+                                    if (diskImgAni.isRunning() == false) {
+                                        diskImgAni.start();
+                                        songListDiskImgAni.start();
+                                        songListSongIndicator.setAlpha(1);
+                                    }
+                                    if (musicMedia.isPlaying() == false) {
+                                        musicWaveVisualization.onResume();
+                                    }
+                                    playButton.setImageResource(R.drawable.pause_music_button);
+
+                                    startSong(isPlay);
+                                }
+
+                                // update time text
+                                int currentTime = musicMedia.getCurrentPosition();
+                                long songDuration = musicMedia.getDuration();
+
+                                long leftTime = songDuration - currentTime;
+                                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+
+                                update();
+                            }
+                        } else if (repeatedClickTime == 1) { // if user repeat only the current song
+                            musicMedia.start();
+
+                            songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                            songLengthSB.setProgress(0);
+
+                            update();
+                        } else if (repeatedClickTime == 2) { // if user repeat the list
+                            if (musicIndex == songList.size() - 1) {
+                                musicIndex = 0;
+
+                                // check if music media is null or not to create and call music file
+                                if (musicMedia == null) {
+                                    musicMedia = new MediaPlayer();
+                                } else {
+                                    musicMedia.release();
+                                    musicMedia = new MediaPlayer();
+                                }
+
+                                try {
+                                    musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                    musicMedia.setDataSource(songList.get(0).getLinkbaihat());
+                                    musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                        @Override
+                                        public void onPrepared(MediaPlayer mediaPlayer) {
+                                        }
+                                    });
+                                    musicMedia.prepare();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                songLengthSB.setProgress(0);
+
+                                updateSongNameAndSingerNameTV(musicIndex);
+
+                                if (isPlay == true) {
+                                    musicMedia.start();
+
+                                    if (diskImgAni.isRunning() == false) {
+                                        diskImgAni.start();
+                                        songListDiskImgAni.start();
+                                        songListSongIndicator.setAlpha(1);
+                                    }
+                                    if (musicMedia.isPlaying() == false) {
+                                        musicWaveVisualization.onResume();
+                                    }
+                                    playButton.setImageResource(R.drawable.pause_music_button);
+
+                                    startSong(isPlay);
+                                }
+
+                                // update time text
+                                int currentTime = musicMedia.getCurrentPosition();
+                                long songDuration = musicMedia.getDuration();
+
+                                long leftTime = songDuration - currentTime;
+                                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+
+                                update();
+                            } else if (musicIndex < songList.size() - 1) {
+                                musicIndex++;
+
+                                // check if music media is null or not to create and call music file
+                                if (musicMedia == null) {
+                                    musicMedia = new MediaPlayer();
+                                } else {
+                                    musicMedia.release();
+                                    musicMedia = new MediaPlayer();
+                                }
+
+                                try {
+                                    musicMedia.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                    musicMedia.setDataSource(songList.get(musicIndex).getLinkbaihat());
+                                    musicMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                        @Override
+                                        public void onPrepared(MediaPlayer mediaPlayer) {
+                                        }
+                                    });
+                                    musicMedia.prepare();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                songLengthSB.setMax(musicMedia.getDuration()); // update song length on seek bar (use for repeat song case)
+                                songLengthSB.setProgress(0);
+
+                                updateSongNameAndSingerNameTV(musicIndex);
+
+                                if (isPlay == true) {
+                                    musicMedia.start();
+
+                                    if (diskImgAni.isRunning() == false) {
+                                        diskImgAni.start();
+                                        songListDiskImgAni.start();
+                                        songListSongIndicator.setAlpha(1);
+                                    }
+                                    if (musicMedia.isPlaying() == false) {
+                                        musicWaveVisualization.onResume();
+                                    }
+                                    playButton.setImageResource(R.drawable.pause_music_button);
+
+                                    startSong(isPlay);
+                                }
+
+                                // update time text
+                                int currentTime = musicMedia.getCurrentPosition();
+                                long songDuration = musicMedia.getDuration();
+
+                                long leftTime = songDuration - currentTime;
+                                long songLeftMin = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                                long songLeftSec = TimeUnit.MILLISECONDS.toSeconds(leftTime) - TimeUnit.MINUTES.toSeconds(songLeftMin);
+
+                                songLengthTV.setText(String.format("-" + "%02d:%02d", songLeftMin, songLeftSec));
+
+                                update();
+                            }
+                        }
+                    }
+                });
             }
         }
     };

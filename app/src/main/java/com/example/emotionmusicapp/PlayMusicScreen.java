@@ -85,7 +85,7 @@ public class PlayMusicScreen extends AppCompatActivity {
     //--------------------------------------------------------------------------------------------//
     Handler musicHandler = new Handler();
 
-    // Thread to update time for SeekBar
+    // Thread to update time for SeekBar and skip to the next song after previous song was finished
     Runnable musicRunnable = new Runnable() {
         @SuppressLint("DefaultLocale")
         @Override

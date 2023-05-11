@@ -1,2 +1,2 @@
 # EmotionMusicApp
-An app that will help you relaxing with the emotion music world after a hard working day
+A music app using Java and Firebase that provides songs based on user current emotions. It will help users relaxing with the emotion musics world after a hard working day.
